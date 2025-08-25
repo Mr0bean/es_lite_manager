@@ -57,4 +57,7 @@ docker-compose.override.yml
 
 # Temporary files
 tmp/
-temp/!/server/data/connections.json
+temp/
+
+# Claude Code related files (do not upload)
+CLAUDE.md
