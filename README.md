@@ -47,48 +47,262 @@
 
 ### 🚀 Quick Start
 
-#### Prerequisites
-- **Node.js** >= 16.0.0 
-- **npm** >= 7.0.0
-- **Elasticsearch** >= 7.0.0
-
-#### 📦 Installation
+#### 🐳 Docker (Recommended)
 
 ```bash
-# Clone the repository
+# Pull and run - No configuration needed!
+docker run -d \
+  -p 8080:80 \
+  -p 9021:9021 \
+  --name es-manager-app \
+  19963666/es_lite_manager:latest
+
+# Access: http://localhost:8080
+```
+
+#### 📦 Manual Installation
+
+Prerequisites: **Node.js** >= 16.0.0, **npm** >= 7.0.0
+
+```bash
+# Clone and install
 git clone https://github.com/username/es-lite-manager.git
 cd es-lite-manager
-
-# Install dependencies
 npm install
 
-# Configure environment
+# Quick setup (uses defaults)
 cp .env.example .env
 cp server/.env.example server/.env
+
+# Start services
+npm run server &
+npm run dev
+
+# Access: http://localhost:3420
+```
+
+#### ⚙️ Detailed Setup (Optional)
+
+<details>
+<summary>Click to expand detailed configuration and troubleshooting</summary>
+
+##### Configuration Files
+
+**Important**: Before starting the application, you need to configure the environment files properly.
+
+##### Frontend Configuration (`.env`)
+```bash
+# API Configuration - ⚠️ IMPORTANT: Must match backend port
+API_BASE_URL=http://localhost:9022
+
+# Frontend server port
+FRONTEND_PORT=3420
+
+# Elasticsearch connection (for reference only)
+ES_HOST=localhost
+ES_PORT=9200
+ES_USERNAME=elastic
+ES_PASSWORD=your_actual_password  # Replace with actual password
+```
+
+##### Backend Configuration (`server/.env`)
+```bash
+# Server port - ⚠️ IMPORTANT: Use PORT not SERVER_PORT  
+PORT=9022
+
+# Elasticsearch connection
+ES_NODE=http://localhost:9200
+ES_USERNAME=elastic
+ES_PASSWORD=your_actual_password  # Replace with actual password
+
+# Connection settings
+ES_REQUEST_TIMEOUT=30000
+ES_PING_TIMEOUT=3000
+ES_MAX_RETRIES=3
+```
+
+##### Vite Proxy Configuration
+Ensure `vite.config.js` has the correct proxy target:
+```javascript
+proxy: {
+  '/api': {
+    target: 'http://localhost:9022',  // Must match backend PORT
+    changeOrigin: true,
+    rewrite: (path) => path.replace(/^\/api/, '')
+  }
+}
 ```
 
 #### ⚡ Development
 
 ```bash
-# Start backend server (Terminal 1)
+# Step 1: Start backend server (Terminal 1)
 npm run server
+# Expected output: 
+# ES Manager Server running at http://0.0.0.0:9022
 
-# Start frontend dev server (Terminal 2) 
+# Step 2: Start frontend dev server (Terminal 2) 
 npm run dev
+# Expected output:
+# ➜  Local:   http://localhost:3420/
 
-# Open browser: http://localhost:3420
+# Step 3: Open browser and access the application
+# Frontend: http://localhost:3420
+# Backend API: http://localhost:9022
 ```
 
-#### 🐳 Production Deployment
+##### ✅ Verification Steps
+```bash
+# Check backend health
+curl http://localhost:9022/health
+# Expected: {"connected":false,"error":""}
+
+# Check frontend loading
+curl -s http://localhost:3420/ | head -5
+# Expected: HTML content with Vite dev server
+```
+
+##### 🔧 Common Issues & Solutions
+
+**Port Conflict Error**
+```bash
+# If you see: Error: listen EADDRINUSE :::3420 or :::9022
+# Find and kill the process using the port
+lsof -i :3420
+lsof -i :9022
+kill -9 <PID>
+```
+
+**Backend Running on Wrong Port**
+```bash
+# If backend shows port 3000 instead of 9022
+# Edit server/.env and ensure:
+PORT=9022  # Not SERVER_PORT=9022
+```
+
+**Frontend Can't Connect to Backend**
+```bash
+# Check these files match:
+# .env: API_BASE_URL=http://localhost:9022
+# vite.config.js: target: 'http://localhost:9022'
+# server/.env: PORT=9022
+```
+
+**Elasticsearch Connection Issues**
+- The app will start successfully even without Elasticsearch
+- Use the "Connection Management" page to configure ES clusters
+- Or start a test ES instance:
+```bash
+docker run -d --name elasticsearch-test \
+  -p 9200:9200 \
+  -e "discovery.type=single-node" \
+  -e "xpack.security.enabled=false" \
+  elasticsearch:8.10.0
+```
+
+##### 🚀 Quick Start Script
+Create a `quick-start.sh` file for easy deployment:
+```bash
+#!/bin/bash
+echo "🚀 ES Lite Manager Quick Deployment"
+
+# Install dependencies
+npm install
+
+# Setup environment files if they don't exist
+[ ! -f ".env" ] && cp .env.example .env && echo "✅ Frontend config created"
+[ ! -f "server/.env" ] && cp server/.env.example server/.env && echo "✅ Backend config created"
+
+# Start services
+echo "🌟 Starting backend server..."
+npm run server &
+
+echo "🎨 Starting frontend server..."
+npm run dev &
+
+echo "🎉 Deployment complete!"
+echo "📱 Frontend: http://localhost:3420"
+echo "🔧 Backend: http://localhost:9022"
+echo "Press Ctrl+C to stop services"
+wait
+```
+
+Usage: `chmod +x quick-start.sh && ./quick-start.sh`
+
+#### 🐳 Docker Deployment
+
+##### Option 1: Pull from Docker Hub (Recommended)
 
 ```bash
-# Using Docker Compose (Recommended)
-docker-compose up -d
+# Pull and run the latest image
+docker run -d \
+  -p 8080:80 \
+  -p 9021:9021 \
+  --name es-manager-app \
+  19963666/es_lite_manager:latest
 
-# Or build and run manually
-npm run build
-npm run server
+# Access the application
+# Frontend: http://localhost:8080
+# Backend API: http://localhost:9021
 ```
+
+##### Option 2: Build locally and run
+
+```bash
+# Build Docker image
+docker build -t es-manager:latest .
+
+# Run container
+docker run -d \
+  -p 8080:80 \
+  -p 9021:9021 \
+  --name es-manager-app \
+  es-manager:latest
+```
+
+##### Option 3: Using Docker Compose
+
+```bash
+# Using Docker Compose (includes all services)
+docker-compose up -d
+```
+
+##### Configure Elasticsearch Connection
+
+The container connects to `http://host.docker.internal:3402` by default. To connect to a different Elasticsearch instance:
+
+```bash
+# Run with custom ES configuration
+docker run -d \
+  -p 8080:80 \
+  -p 9021:9021 \
+  -e ES_HOST=your-es-server.com \
+  -e ES_PORT=9200 \
+  -e ES_USERNAME=elastic \
+  -e ES_PASSWORD=your_password \
+  --name es-manager-app \
+  19963666/es_lite_manager:latest
+```
+
+##### Container Management
+
+```bash
+# View logs
+docker logs es-manager-app
+
+# Stop container
+docker stop es-manager-app
+
+# Remove container
+docker rm es-manager-app
+
+# Update to latest version
+docker pull 19963666/es_lite_manager:latest
+docker stop es-manager-app && docker rm es-manager-app
+docker run -d -p 8080:80 -p 9021:9021 --name es-manager-app 19963666/es_lite_manager:latest
+```
+
+**📖 For detailed Docker deployment instructions, see: [Docker Build & Deployment Guide](./DOCKER_BUILD_GUIDE.md)**
 
 ### 🏗️ Architecture
 
@@ -164,32 +378,220 @@ npm install
 # 配置环境
 cp .env.example .env
 cp server/.env.example server/.env
+```
 
-# 编辑配置文件，设置你的 Elasticsearch 连接信息
+#### ⚙️ 重要配置说明
+
+**关键提醒**: 启动前必须正确配置环境文件，特别注意端口配置的一致性。
+
+##### 前端配置 (`.env`)
+```bash
+# API 配置 - ⚠️ 重要：必须与后端端口一致
+API_BASE_URL=http://localhost:9022
+
+# 前端服务端口
+FRONTEND_PORT=3420
+
+# Elasticsearch 连接配置（仅作参考）
+ES_HOST=localhost
+ES_PORT=9200
+ES_USERNAME=elastic
+ES_PASSWORD=your_actual_password  # 请替换为实际密码
+```
+
+##### 后端配置 (`server/.env`)
+```bash
+# 服务器端口 - ⚠️ 重要：使用 PORT 而不是 SERVER_PORT
+PORT=9022
+
+# Elasticsearch 连接
+ES_NODE=http://localhost:9200
+ES_USERNAME=elastic
+ES_PASSWORD=your_actual_password  # 请替换为实际密码
+
+# 连接参数
+ES_REQUEST_TIMEOUT=30000
+ES_PING_TIMEOUT=3000
+ES_MAX_RETRIES=3
+```
+
+##### Vite 代理配置检查
+确保 `vite.config.js` 中的代理目标正确：
+```javascript
+proxy: {
+  '/api': {
+    target: 'http://localhost:9022',  // 必须与后端 PORT 一致
+    changeOrigin: true,
+    rewrite: (path) => path.replace(/^\/api/, '')
+  }
+}
 ```
 
 #### ⚡ 开发运行
 
 ```bash
-# 启动后端服务（终端1）
+# 步骤1：启动后端服务（终端1）
 npm run server
+# 预期输出：ES Manager Server running at http://0.0.0.0:9022
 
-# 启动前端开发服务（终端2）
+# 步骤2：启动前端开发服务（终端2）
 npm run dev
+# 预期输出：➜  Local:   http://localhost:3420/
 
-# 浏览器访问：http://localhost:3420
+# 步骤3：在浏览器中访问应用
+# 前端地址：http://localhost:3420
+# 后端 API：http://localhost:9022
 ```
 
-#### 🐳 生产部署
+##### ✅ 部署验证步骤
+```bash
+# 检查后端健康状态
+curl http://localhost:9022/health
+# 预期输出：{"connected":false,"error":""}
+
+# 检查前端页面加载
+curl -s http://localhost:3420/ | head -5
+# 预期输出：HTML 内容
+```
+
+##### 🔧 常见问题解决
+
+**端口占用错误**
+```bash
+# 如果看到：Error: listen EADDRINUSE :::3420 或 :::9022
+# 查找并终止占用端口的进程
+lsof -i :3420
+lsof -i :9022
+kill -9 <进程ID>
+```
+
+**后端运行在错误端口**
+```bash
+# 如果后端显示运行在端口 3000 而不是 9022
+# 编辑 server/.env 确保使用：
+PORT=9022  # 不是 SERVER_PORT=9022
+```
+
+**前端无法连接后端**
+```bash
+# 检查以下文件中的端口配置是否一致：
+# .env: API_BASE_URL=http://localhost:9022
+# vite.config.js: target: 'http://localhost:9022'
+# server/.env: PORT=9022
+```
+
+**Elasticsearch 连接问题**
+- 应用可以在没有 Elasticsearch 的情况下正常启动
+- 使用"连接管理"页面配置 ES 集群连接
+- 或启动测试 ES 实例：
+```bash
+docker run -d --name elasticsearch-test \
+  -p 9200:9200 \
+  -e "discovery.type=single-node" \
+  -e "xpack.security.enabled=false" \
+  elasticsearch:8.10.0
+```
+
+##### 🚀 一键启动脚本
+创建 `quick-start.sh` 脚本快速部署：
+```bash
+#!/bin/bash
+echo "🚀 ES Lite Manager 快速部署"
+
+npm install
+
+[ ! -f ".env" ] && cp .env.example .env && echo "✅ 前端配置已创建"
+[ ! -f "server/.env" ] && cp server/.env.example server/.env && echo "✅ 后端配置已创建"
+
+echo "🌟 启动后端服务..."
+npm run server &
+
+echo "🎨 启动前端服务..."
+npm run dev &
+
+echo "🎉 部署完成！"
+echo "📱 前端：http://localhost:3420"
+echo "🔧 后端：http://localhost:9022"
+echo "按 Ctrl+C 停止服务"
+wait
+```
+
+使用方法：`chmod +x quick-start.sh && ./quick-start.sh`
+
+#### 🐳 Docker 部署
+
+##### 方式一：从 Docker Hub 拉取（推荐）
 
 ```bash
-# 使用 Docker Compose（推荐）
-docker-compose up -d
+# 拉取并运行最新镜像
+docker run -d \
+  -p 8080:80 \
+  -p 9021:9021 \
+  --name es-manager-app \
+  19963666/es_lite_manager:latest
 
-# 或手动构建运行
-npm run build
-npm run server
+# 访问应用
+# 前端界面: http://localhost:8080
+# 后端 API: http://localhost:9021
 ```
+
+##### 方式二：本地构建运行
+
+```bash
+# 构建 Docker 镜像
+docker build -t es-manager:latest .
+
+# 运行容器
+docker run -d \
+  -p 8080:80 \
+  -p 9021:9021 \
+  --name es-manager-app \
+  es-manager:latest
+```
+
+##### 方式三：使用 Docker Compose
+
+```bash
+# 使用 Docker Compose（包含所有服务）
+docker-compose up -d
+```
+
+##### 配置 Elasticsearch 连接
+
+容器默认连接到 `http://host.docker.internal:3402`。如需连接不同的 Elasticsearch 实例：
+
+```bash
+# 使用自定义 ES 配置运行
+docker run -d \
+  -p 8080:80 \
+  -p 9021:9021 \
+  -e ES_HOST=your-es-server.com \
+  -e ES_PORT=9200 \
+  -e ES_USERNAME=elastic \
+  -e ES_PASSWORD=your_password \
+  --name es-manager-app \
+  19963666/es_lite_manager:latest
+```
+
+##### 容器管理
+
+```bash
+# 查看日志
+docker logs es-manager-app
+
+# 停止容器
+docker stop es-manager-app
+
+# 删除容器
+docker rm es-manager-app
+
+# 更新到最新版本
+docker pull 19963666/es_lite_manager:latest
+docker stop es-manager-app && docker rm es-manager-app
+docker run -d -p 8080:80 -p 9021:9021 --name es-manager-app 19963666/es_lite_manager:latest
+```
+
+**📖 详细的 Docker 部署说明请参考: [Docker 构建与部署指南](./DOCKER_BUILD_GUIDE.md)**
 
 ### 📁 项目结构
 
