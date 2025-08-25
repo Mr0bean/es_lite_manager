@@ -118,6 +118,10 @@
             <el-icon><Grid /></el-icon>
             <span>映射管理</span>
           </el-menu-item>
+          <el-menu-item index="/plugins">
+            <el-icon><Box /></el-icon>
+            <span>插件管理</span>
+          </el-menu-item>
           <el-menu-item index="/connections">
             <el-icon><Link /></el-icon>
             <span>连接管理</span>
@@ -134,7 +138,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { Search, Files, Document, DataAnalysis, Setting, Tools, Grid, CircleCheckFilled, CircleCloseFilled, ArrowDown, InfoFilled, Refresh, Link } from '@element-plus/icons-vue'
+import { Search, Files, Document, DataAnalysis, Setting, Tools, Grid, Box, CircleCheckFilled, CircleCloseFilled, ArrowDown, InfoFilled, Refresh, Link } from '@element-plus/icons-vue'
 import { checkConnection, getConnections, getCurrentConnection, switchConnection } from './api/elasticsearch'
 import { ElMessage } from 'element-plus'
 

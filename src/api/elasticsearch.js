@@ -108,3 +108,14 @@ export const updateIndexMapping = (index, mapping, connectionId = null) => {
   const params = connectionId ? { connectionId } : {}
   return api.put(`/indices/${encodeURIComponent(index)}/mapping`, mapping, { params }).then(res => res.data)
 }
+
+// 插件管理API
+export const getPlugins = (connectionId = null) => {
+  const params = connectionId ? { connectionId } : {}
+  return api.get('/plugins', { params }).then(res => res.data)
+}
+
+export const getNodesStats = (connectionId = null) => {
+  const params = connectionId ? { connectionId } : {}
+  return api.get('/nodes/stats', { params }).then(res => res.data)
+}

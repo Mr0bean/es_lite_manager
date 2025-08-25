@@ -40,6 +40,11 @@ const routes = [
     path: '/connections',
     name: 'Connections',
     component: () => import('../views/Connections.vue')
+  },
+  {
+    path: '/plugins',
+    name: 'Plugins',
+    component: () => import('../views/Plugins.vue')
   }
 ]
 

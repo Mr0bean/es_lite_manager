@@ -470,6 +470,75 @@ app.put('/indices/:index/mapping', async (req, res) => {
   }
 })
 
+// 获取插件信息
+app.get('/plugins', async (req, res) => {
+  try {
+    const { connectionId } = req.query
+    const client = connectionManager.getClient(connectionId)
+    
+    // 获取集群节点信息，包含插件信息
+    const nodesInfo = await client.nodes.info({
+      node_id: '_all',
+      metric: 'plugins'
+    })
+    
+    // 整理插件信息
+    const pluginsData = {}
+    const allPlugins = new Set()
+    
+    Object.entries(nodesInfo.nodes).forEach(([nodeId, nodeInfo]) => {
+      const nodeName = nodeInfo.name || nodeId
+      pluginsData[nodeId] = {
+        name: nodeName,
+        host: nodeInfo.host,
+        version: nodeInfo.version,
+        plugins: nodeInfo.plugins || []
+      }
+      
+      // 收集所有插件
+      nodeInfo.plugins?.forEach(plugin => {
+        allPlugins.add(JSON.stringify({
+          name: plugin.name,
+          description: plugin.description,
+          version: plugin.version,
+          classname: plugin.classname
+        }))
+      })
+    })
+    
+    // 转换为插件列表格式
+    const pluginsList = Array.from(allPlugins).map(pluginStr => JSON.parse(pluginStr))
+    
+    res.json({
+      nodes: pluginsData,
+      plugins: pluginsList,
+      totalNodes: Object.keys(pluginsData).length,
+      totalPlugins: pluginsList.length
+    })
+  } catch (error) {
+    console.error('获取插件信息失败:', error)
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// 获取集群节点统计信息
+app.get('/nodes/stats', async (req, res) => {
+  try {
+    const { connectionId } = req.query
+    const client = connectionManager.getClient(connectionId)
+    
+    const nodesStats = await client.nodes.stats({
+      node_id: '_all',
+      metric: ['os', 'process', 'jvm', 'indices', 'fs']
+    })
+    
+    res.json(nodesStats)
+  } catch (error) {
+    console.error('获取节点统计失败:', error)
+    res.status(500).json({ error: error.message })
+  }
+})
+
 app.listen(port, host, () => {
   console.log(`ES Manager Server running at http://${host}:${port}`)
 })
