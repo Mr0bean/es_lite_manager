@@ -1,0 +1,32 @@
+{
+  "name": "es-manager",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "node server/index.js",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:restart": "docker-compose restart es-app"
+  },
+  "dependencies": {
+    "@elastic/elasticsearch": "^8.10.0",
+    "axios": "^1.6.2",
+    "chart.js": "^4.4.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "element-plus": "^2.4.3",
+    "express": "^4.18.2",
+    "vue": "^3.3.11",
+    "vue-chartjs": "^5.3.0",
+    "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.5.2",
+    "vite": "^5.0.8"
+  }
+}
