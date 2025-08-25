@@ -2,6 +2,56 @@
 
 [**English**](#english) | [**中文**](#中文)
 
+## 📋 目录 / Table of Contents
+
+### English
+- [✨ Key Features](#-key-features)
+  - [🔍 Advanced Search Interface](#-advanced-search-interface)
+  - [📚 Index Management](#-index-management)
+  - [📝 Document Management](#-document-management)
+  - [📊 Statistics Dashboard](#-statistics-dashboard)
+  - [🎯 Strategy Management](#-strategy-management)
+  - [🔤 Analyzer Toolkit](#-analyzer-toolkit)
+  - [🗂️ Mapping Management](#️-mapping-management)
+  - [🔌 Plugin Management](#-plugin-management)
+  - [🌐 Connection Management](#-connection-management)
+  - [🎨 Modern User Experience](#-modern-user-experience)
+- [🚀 Quick Start](#-quick-start)
+  - [🐳 Docker (Recommended)](#-docker-recommended)
+  - [📦 Manual Installation](#-manual-installation)
+  - [⚙️ Detailed Setup (Optional)](#️-detailed-setup-optional)
+  - [⚡ Development](#-development)
+  - [🐳 Docker Deployment](#-docker-deployment)
+- [🏗️ Architecture](#️-architecture)
+- [📄 License](#-license)
+
+### 中文
+- [✨ 功能特性](#-功能特性)
+  - [🔍 高级搜索界面](#-高级搜索界面)
+  - [📚 索引管理](#-索引管理)
+  - [📝 文档管理](#-文档管理)
+  - [📊 统计仪表板](#-统计仪表板)
+  - [🎯 策略管理](#-策略管理)
+  - [🔤 分析器工具包](#-分析器工具包)
+  - [🗂️ 映射管理](#️-映射管理)
+  - [🔌 插件管理](#-插件管理)
+  - [🌐 连接管理](#-连接管理)
+  - [🎨 现代用户体验](#-现代用户体验)
+- [🚀 快速开始](#-快速开始)
+  - [📦 安装配置](#-安装配置)
+  - [⚙️ 重要配置说明](#️-重要配置说明)
+  - [⚡ 开发运行](#-开发运行)
+  - [🐳 Docker 部署](#-docker-部署)
+- [📁 项目结构](#-项目结构)
+- [⚙️ 配置说明](#️-配置说明)
+- [🛡️ 安全特性](#️-安全特性)
+- [📊 监控和分析](#-监控和分析)
+- [🤝 贡献指南](#-贡献指南)
+- [📈 发展路线图](#-发展路线图)
+- [📄 开源协议](#-开源协议)
+- [🙏 致谢](#-致谢)
+- [📞 支持](#-支持)
+
 ---
 
 ## English
@@ -19,24 +69,122 @@
 
 ### ✨ Key Features
 
-#### 🌐 Multi-Cluster Management
-- **Dynamic Connections**: Seamlessly manage multiple Elasticsearch clusters
-- **Real-time Status**: Live connection monitoring with automatic failover detection  
+#### 🔍 Advanced Search Interface
+Powerful search capabilities with multiple query types and real-time results.
+
+<div align="center">
+  <img src="images/1_search.png" alt="Advanced Search Interface" width="800" />
+</div>
+
+- **Multi-Query Support**: Match, term, range, bool, wildcard, and fuzzy queries
+- **Real-time Results**: Instant search results with syntax highlighting
+- **Query Builder**: Visual query constructor with preview functionality
+- **Advanced Filters**: Complex filtering and sorting options
+
+#### 📚 Index Management
+Complete lifecycle management for Elasticsearch indices with detailed monitoring.
+
+<div align="center">
+  <img src="images/2_index_manager.png" alt="Index Management" width="800" />
+</div>
+
+<div align="center">
+  <img src="images/3_index_manager_detail.png" alt="Index Management Detail" width="800" />
+</div>
+
+- **Index Lifecycle**: Create, configure, monitor, and delete indices
+- **Health Monitoring**: Real-time index health and performance metrics
+- **Settings Management**: Configure index settings and mappings
+- **Bulk Operations**: Perform bulk operations on multiple indices
+
+#### 📝 Document Management
+Comprehensive document CRUD operations with bulk processing capabilities.
+
+<div align="center">
+  <img src="images/4_document_manager.png" alt="Document Management" width="800" />
+</div>
+
+<div align="center">
+  <img src="images/5._document_edit.png" alt="Document Editor" width="800" />
+</div>
+
+- **Document CRUD**: Create, read, update, and delete documents
+- **Bulk Operations**: Process multiple documents efficiently
+- **JSON Editor**: Syntax-highlighted JSON editor with validation
+- **Search Integration**: Search and filter documents within indices
+
+#### 📊 Statistics Dashboard
+Rich visualizations for cluster health, performance metrics, and usage analytics.
+
+<div align="center">
+  <img src="images/6_statistic.png" alt="Statistics Dashboard" width="800" />
+</div>
+
+- **Cluster Health**: Real-time cluster status and node information
+- **Performance Metrics**: Response times, throughput, and error rates
+- **Usage Analytics**: Index usage patterns and storage statistics
+- **Interactive Charts**: Dynamic charts with drill-down capabilities
+
+#### 🎯 Strategy Management
+Configure and monitor Index Lifecycle Management (ILM) policies.
+
+<div align="center">
+  <img src="images/7_strag.png" alt="Strategy Management" width="800" />
+</div>
+
+- **ILM Policies**: Create and manage index lifecycle policies
+- **Policy Configuration**: Define hot, warm, and cold storage phases
+- **Automation Rules**: Set up automatic index management rules
+- **Policy Monitoring**: Track policy execution and compliance
+
+#### 🔤 Analyzer Toolkit
+Test and debug built-in and custom text analyzers.
+
+<div align="center">
+  <img src="images/8_tokenizer.png" alt="Analyzer Toolkit" width="800" />
+</div>
+
+- **Analyzer Testing**: Test text analysis with different analyzers
+- **Token Visualization**: View tokenization results in real-time
+- **Custom Analyzers**: Create and test custom analyzer configurations
+- **Debug Tools**: Troubleshoot analysis issues with detailed output
+
+#### 🗂️ Mapping Management
+Interactive mapping editor with field type validation.
+
+<div align="center">
+  <img src="images/9_mapping.png" alt="Mapping Management" width="800" />
+</div>
+
+- **Schema Editor**: Visual mapping editor with field type validation
+- **Field Management**: Add, modify, and delete mapping fields
+- **Type Validation**: Automatic validation of field types and settings
+- **Mapping Preview**: Preview mapping changes before applying
+
+#### 🔌 Plugin Management
+Manage and monitor Elasticsearch plugins.
+
+<div align="center">
+  <img src="images/10_plugin.png" alt="Plugin Management" width="800" />
+</div>
+
+- **Plugin Discovery**: List installed and available plugins
+- **Installation Management**: Install and uninstall plugins
+- **Plugin Information**: View detailed plugin information and dependencies
+- **Health Monitoring**: Monitor plugin status and performance
+
+#### 🌐 Connection Management
+Seamlessly manage multiple Elasticsearch clusters with secure credential storage.
+
+<div align="center">
+  <img src="images/11_connect_manager.png" alt="Connection Management" width="800" />
+</div>
+
+- **Multi-Cluster Support**: Manage multiple Elasticsearch clusters
+- **Dynamic Connections**: Add, edit, and remove cluster connections
 - **Secure Storage**: Encrypted credential management with base64 encoding
+- **Connection Testing**: Test connections before saving
 - **Quick Switch**: One-click cluster switching in the navigation bar
-
-#### 📊 Comprehensive Data Operations
-- **Index Management**: Full lifecycle management - create, configure, monitor, and delete indices
-- **Advanced Search**: Multi-query support (match, term, range, bool, wildcard, fuzzy)
-- **Document CRUD**: Complete document operations with bulk processing capabilities
-- **Schema Management**: Interactive mapping editor with field type validation
-
-#### 🔧 Advanced Analytics & Tools
-- **Query Builder**: Visual query constructor with preview and optimization suggestions
-- **Analyzer Toolkit**: Test and debug built-in and custom text analyzers
-- **ILM Policies**: Index Lifecycle Management policy configuration and monitoring
-- **Statistics Dashboard**: Rich visualizations for cluster health, performance metrics, and usage analytics
-- **Aggregation Engine**: Complex aggregation queries with chart-based result visualization
 
 #### 🎨 Modern User Experience
 - **Responsive Design**: Optimized for desktop, tablet, and mobile devices
@@ -332,24 +480,122 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### ✨ 功能特性
 
-#### 🌐 多集群管理
-- **动态连接管理**: 无缝管理多个 Elasticsearch 集群
-- **实时状态监控**: 实时连接状态监控和自动故障转移检测
+#### 🔍 高级搜索界面
+强大的搜索功能，支持多种查询类型和实时结果展示。
+
+<div align="center">
+  <img src="images/1_search.png" alt="高级搜索界面" width="800" />
+</div>
+
+- **多查询支持**: Match、term、range、bool、wildcard 和 fuzzy 查询
+- **实时结果**: 即时搜索结果，支持语法高亮
+- **查询构建器**: 可视化查询构造器，提供预览功能
+- **高级过滤**: 复杂的过滤和排序选项
+
+#### 📚 索引管理
+完整的 Elasticsearch 索引生命周期管理，包含详细监控。
+
+<div align="center">
+  <img src="images/2_index_manager.png" alt="索引管理" width="800" />
+</div>
+
+<div align="center">
+  <img src="images/3_index_manager_detail.png" alt="索引管理详情" width="800" />
+</div>
+
+- **索引生命周期**: 创建、配置、监控和删除索引
+- **健康监控**: 实时索引健康和性能指标
+- **设置管理**: 配置索引设置和映射
+- **批量操作**: 对多个索引执行批量操作
+
+#### 📝 文档管理
+全面的文档 CRUD 操作，支持批量处理功能。
+
+<div align="center">
+  <img src="images/4_document_manager.png" alt="文档管理" width="800" />
+</div>
+
+<div align="center">
+  <img src="images/5._document_edit.png" alt="文档编辑器" width="800" />
+</div>
+
+- **文档 CRUD**: 创建、读取、更新和删除文档
+- **批量操作**: 高效处理多个文档
+- **JSON 编辑器**: 语法高亮的 JSON 编辑器，支持验证
+- **搜索集成**: 在索引内搜索和过滤文档
+
+#### 📊 统计仪表板
+集群健康状况、性能指标和使用分析的丰富可视化。
+
+<div align="center">
+  <img src="images/6_statistic.png" alt="统计仪表板" width="800" />
+</div>
+
+- **集群健康**: 实时集群状态和节点信息
+- **性能指标**: 响应时间、吞吐量和错误率
+- **使用分析**: 索引使用模式和存储统计
+- **交互式图表**: 动态图表，支持钻取功能
+
+#### 🎯 策略管理
+配置和监控索引生命周期管理（ILM）策略。
+
+<div align="center">
+  <img src="images/7_strag.png" alt="策略管理" width="800" />
+</div>
+
+- **ILM 策略**: 创建和管理索引生命周期策略
+- **策略配置**: 定义热、温、冷存储阶段
+- **自动化规则**: 设置自动索引管理规则
+- **策略监控**: 跟踪策略执行和合规性
+
+#### 🔤 分析器工具包
+测试和调试内置及自定义文本分析器。
+
+<div align="center">
+  <img src="images/8_tokenizer.png" alt="分析器工具包" width="800" />
+</div>
+
+- **分析器测试**: 使用不同分析器测试文本分析
+- **分词可视化**: 实时查看分词结果
+- **自定义分析器**: 创建和测试自定义分析器配置
+- **调试工具**: 使用详细输出排查分析问题
+
+#### 🗂️ 映射管理
+交互式映射编辑器，支持字段类型验证。
+
+<div align="center">
+  <img src="images/9_mapping.png" alt="映射管理" width="800" />
+</div>
+
+- **模式编辑器**: 可视化映射编辑器，支持字段类型验证
+- **字段管理**: 添加、修改和删除映射字段
+- **类型验证**: 字段类型和设置的自动验证
+- **映射预览**: 应用前预览映射更改
+
+#### 🔌 插件管理
+管理和监控 Elasticsearch 插件。
+
+<div align="center">
+  <img src="images/10_plugin.png" alt="插件管理" width="800" />
+</div>
+
+- **插件发现**: 列出已安装和可用插件
+- **安装管理**: 安装和卸载插件
+- **插件信息**: 查看详细的插件信息和依赖关系
+- **健康监控**: 监控插件状态和性能
+
+#### 🌐 连接管理
+无缝管理多个 Elasticsearch 集群，支持安全凭据存储。
+
+<div align="center">
+  <img src="images/11_connect_manager.png" alt="连接管理" width="800" />
+</div>
+
+- **多集群支持**: 管理多个 Elasticsearch 集群
+- **动态连接**: 添加、编辑和删除集群连接
 - **安全存储**: 使用 base64 编码的加密凭据管理
+- **连接测试**: 保存前测试连接
 - **快速切换**: 导航栏中一键切换集群
-
-#### 📊 全面数据操作
-- **索引管理**: 完整的生命周期管理 - 创建、配置、监控和删除索引
-- **高级搜索**: 多查询类型支持（match、term、range、bool、wildcard、fuzzy）
-- **文档 CRUD**: 完整的文档操作，支持批量处理
-- **模式管理**: 交互式映射编辑器，支持字段类型验证
-
-#### 🔧 高级分析和工具
-- **查询构建器**: 可视化查询构造器，提供预览和优化建议
-- **分析器工具包**: 测试和调试内置及自定义文本分析器
-- **ILM 策略**: 索引生命周期管理策略配置和监控
-- **统计仪表板**: 集群健康状况、性能指标和使用分析的丰富可视化
-- **聚合引擎**: 复杂聚合查询，支持基于图表的结果可视化
 
 #### 🎨 现代用户体验
 - **响应式设计**: 针对桌面、平板和移动设备优化
