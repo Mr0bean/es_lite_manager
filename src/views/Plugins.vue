@@ -168,7 +168,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Monitor, Grid, Tools, Box, Search, Setting, Shield, DataAnalysis, Document } from '@element-plus/icons-vue'
+import { Monitor, Grid, Tools, Box, Search, Setting, Lock, TrendCharts, Document } from '@element-plus/icons-vue'
 import * as api from '../api/elasticsearch'
 import RefreshTimer from '../components/RefreshTimer.vue'
 
@@ -261,8 +261,8 @@ const getPluginIcon = (plugin) => {
   const type = getPluginType(plugin)
   const iconMap = {
     '分词器': Tools,
-    '安全': Shield,
-    '监控': DataAnalysis,
+    '安全': Lock,
+    '监控': TrendCharts,
     '数据处理': Document,
     '其他': Setting
   }
