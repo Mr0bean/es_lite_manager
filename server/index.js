@@ -105,7 +105,13 @@ app.get('/indices', async (req, res) => {
     const { connectionId } = req.query
     const client = connectionManager.getClient(connectionId)
     const indices = await client.cat.indices({ format: 'json' })
-    res.json(indices)
+    
+    // 过滤系统索引（以点开头的索引）
+    const filteredIndices = indices.filter(index => 
+      !index.index.startsWith('.') || index.index === '.kibana'
+    )
+    
+    res.json(filteredIndices)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -130,6 +136,14 @@ app.delete('/indices/:index', async (req, res) => {
   try {
     const { index } = req.params
     const { connectionId } = req.query
+    
+    // 禁止删除系统索引
+    if (index.startsWith('.')) {
+      return res.status(400).json({ 
+        error: `索引 ${index} 是系统保留索引，禁止删除` 
+      })
+    }
+    
     const client = connectionManager.getClient(connectionId)
     const result = await client.indices.delete({ index })
     res.json(result)
@@ -259,6 +273,14 @@ app.get('/indices/:index/policy', async (req, res) => {
   try {
     const { index } = req.params
     const { connectionId } = req.query
+    
+    // 检查是否为系统保留索引
+    if (index.startsWith('.') && index !== '.kibana') {
+      return res.status(400).json({ 
+        error: `索引 ${index} 是系统保留索引，无法访问其策略信息` 
+      })
+    }
+    
     const client = connectionManager.getClient(connectionId)
     const settings = await client.indices.getSettings({ index })
     const indexSettings = settings[index]?.settings?.index
@@ -280,6 +302,14 @@ app.get('/indices/:index/analyzers', async (req, res) => {
   try {
     const { index } = req.params
     const { connectionId } = req.query
+    
+    // 检查是否为系统保留索引
+    if (index.startsWith('.') && index !== '.kibana') {
+      return res.status(400).json({ 
+        error: `索引 ${index} 是系统保留索引，无法访问其分词器信息` 
+      })
+    }
+    
     const client = connectionManager.getClient(connectionId)
     const mapping = await client.indices.getMapping({ index })
     const settings = await client.indices.getSettings({ index })
@@ -393,6 +423,14 @@ app.get('/indices/:index/mapping', async (req, res) => {
   try {
     const { index } = req.params
     const { connectionId } = req.query
+    
+    // 检查是否为系统保留索引  
+    if (index.startsWith('.') && index !== '.kibana') {
+      return res.status(400).json({ 
+        error: `索引 ${index} 是系统保留索引，无法访问其映射信息` 
+      })
+    }
+    
     const client = connectionManager.getClient(connectionId)
     const mapping = await client.indices.getMapping({ index })
     res.json(mapping[index])
@@ -407,6 +445,14 @@ app.put('/indices/:index/mapping', async (req, res) => {
   try {
     const { index } = req.params
     const { connectionId } = req.query
+    
+    // 禁止修改系统索引映射
+    if (index.startsWith('.')) {
+      return res.status(400).json({ 
+        error: `索引 ${index} 是系统保留索引，禁止修改其映射` 
+      })
+    }
+    
     const { properties } = req.body
     const client = connectionManager.getClient(connectionId)
     

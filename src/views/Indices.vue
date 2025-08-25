@@ -50,7 +50,7 @@
       </template>
     </el-dialog>
 
-    <el-dialog v-model="showDetailsDialog" title="索引详情" width="800px">
+    <el-dialog v-model="showDetailsDialog" title="索引详情" width="900px">
       <el-descriptions :column="1" border>
         <el-descriptions-item label="索引名称">{{ currentIndex?.index }}</el-descriptions-item>
         <el-descriptions-item label="健康状态">{{ currentIndex?.health }}</el-descriptions-item>
@@ -72,6 +72,62 @@
         </el-descriptions-item>
       </el-descriptions>
       
+      <!-- 快捷操作按钮区域 -->
+      <el-divider content-position="left">
+        <span style="color: #606266; font-size: 14px;">快捷操作</span>
+      </el-divider>
+      <div class="quick-actions">
+        <el-row :gutter="12">
+          <el-col :span="6">
+            <el-card class="action-card" shadow="hover" @click="navigateToDocuments">
+              <div class="action-content">
+                <el-icon class="action-icon" color="#409EFF"><Document /></el-icon>
+                <div class="action-info">
+                  <div class="action-title">文档管理</div>
+                  <div class="action-desc">管理索引中的文档</div>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+          
+          <el-col :span="6">
+            <el-card class="action-card" shadow="hover" @click="navigateToStats">
+              <div class="action-content">
+                <el-icon class="action-icon" color="#67C23A"><TrendCharts /></el-icon>
+                <div class="action-info">
+                  <div class="action-title">统计分析</div>
+                  <div class="action-desc">查看索引统计信息</div>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+          
+          <el-col :span="6">
+            <el-card class="action-card" shadow="hover" @click="navigateToAnalyzers">
+              <div class="action-content">
+                <el-icon class="action-icon" color="#E6A23C"><Tools /></el-icon>
+                <div class="action-info">
+                  <div class="action-title">分词器管理</div>
+                  <div class="action-desc">测试分词器效果</div>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+          
+          <el-col :span="6">
+            <el-card class="action-card" shadow="hover" @click="navigateToMappings">
+              <div class="action-content">
+                <el-icon class="action-icon" color="#F56C6C"><Grid /></el-icon>
+                <div class="action-info">
+                  <div class="action-title">映射管理</div>
+                  <div class="action-desc">查看和编辑映射</div>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+      </div>
+      
       <!-- 策略详情对话框 -->
       <el-dialog v-model="showPolicyDetails" title="ILM策略详情" width="700px" append-to-body>
         <div v-if="indexPolicy.policy">
@@ -86,10 +142,14 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { Document, TrendCharts, Tools, Grid } from '@element-plus/icons-vue'
 import * as api from '../api/elasticsearch'
 import RefreshTimer from '../components/RefreshTimer.vue'
 import storageManager from '../utils/storage'
+
+const router = useRouter()
 
 const indices = ref([])
 const loading = ref(false)
@@ -199,6 +259,30 @@ const handleDelete = async (row) => {
   }
 }
 
+// 导航方法
+const navigateToDocuments = () => {
+  showDetailsDialog.value = false
+  storageManager.setLastSelectedIndex(currentIndex.value.index)
+  router.push('/documents')
+}
+
+const navigateToStats = () => {
+  showDetailsDialog.value = false
+  storageManager.setLastSelectedIndex(currentIndex.value.index)
+  router.push('/stats')
+}
+
+const navigateToAnalyzers = () => {
+  showDetailsDialog.value = false
+  router.push('/analyzers')
+}
+
+const navigateToMappings = () => {
+  showDetailsDialog.value = false
+  storageManager.setLastSelectedIndex(currentIndex.value.index)
+  router.push('/mappings')
+}
+
 onMounted(() => {
   refreshIndices()
 })
@@ -253,5 +337,52 @@ onMounted(() => {
 .toolbar {
   display: flex;
   gap: 12px;
+}
+
+/* 快捷操作区域样式 */
+.quick-actions {
+  margin-top: 16px;
+}
+
+.action-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #e4e7ed;
+}
+
+.action-card:hover {
+  transform: translateY(-2px);
+  border-color: #409EFF;
+  box-shadow: 0 6px 20px rgba(64, 158, 255, 0.15);
+}
+
+.action-content {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+}
+
+.action-icon {
+  font-size: 24px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.action-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.action-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #303133;
+  margin-bottom: 4px;
+}
+
+.action-desc {
+  font-size: 12px;
+  color: #909399;
+  line-height: 1.4;
 }
 </style>
