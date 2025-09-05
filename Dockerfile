@@ -1,5 +1,5 @@
 # 多阶段构建：第一阶段构建前端
-FROM node:18-alpine AS frontend-builder
+FROM node:24-alpine AS frontend-builder
 
 WORKDIR /app
 
@@ -15,7 +15,7 @@ RUN npm config set registry https://registry.npmmirror.com/ && \
     npm run build
 
 # 第二阶段：运行时镜像
-FROM node:18-alpine
+FROM node:24-alpine
 
 # 安装nginx和必要的系统依赖
 RUN apk add --no-cache nginx curl
