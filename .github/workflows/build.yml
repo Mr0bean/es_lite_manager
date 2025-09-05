@@ -13,7 +13,7 @@ jobs:
     
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [windows-latest]  # 先只构建 Windows
         node-version: [20]
         
     steps:
@@ -32,46 +32,16 @@ jobs:
     - name: Build web application
       run: npm run build:prod
 
-    - name: Build Electron app (macOS)
-      if: matrix.os == 'macos-latest'
-      run: npm run dist:mac:prod
-      env:
-        CSC_IDENTITY_AUTO_DISCOVERY: false
-
     - name: Build Electron app (Windows)
-      if: matrix.os == 'windows-latest'
       run: npm run dist:win:prod
 
-    - name: Build Electron app (Linux)
-      if: matrix.os == 'ubuntu-latest'
-      run: npm run dist:linux:prod
-
-    - name: Upload artifacts (macOS)
-      if: matrix.os == 'macos-latest'
-      uses: actions/upload-artifact@v4
-      with:
-        name: macos-builds
-        path: |
-          dist-electron/*.dmg
-          dist-electron/*.zip
-        retention-days: 30
-
     - name: Upload artifacts (Windows)
-      if: matrix.os == 'windows-latest'
       uses: actions/upload-artifact@v4
       with:
         name: windows-builds
         path: |
           dist-electron/*.exe
-        retention-days: 30
-
-    - name: Upload artifacts (Linux)
-      if: matrix.os == 'ubuntu-latest'
-      uses: actions/upload-artifact@v4
-      with:
-        name: linux-builds
-        path: |
-          dist-electron/*.AppImage
+          dist-electron/*.msi
         retention-days: 30
 
   release:
@@ -109,36 +79,10 @@ jobs:
           - Cross-platform Electron app distribution
           
           ### 支持平台 / Supported Platforms
-          - **macOS**: Intel (x64) 和 Apple Silicon (arm64)
           - **Windows**: 64-bit (x64)
-          - **Linux**: 64-bit (x64)
           
           ### 安装说明 / Installation
-          - **macOS**: 下载 `.dmg` 文件并安装
-          - **Windows**: 下载 `.exe` 安装程序或便携版
-          - **Linux**: 下载 `.AppImage` (便携) 或 `.deb` (Ubuntu/Debian)
-
-    - name: Upload macOS DMG
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./artifacts/macos-builds/ES Manager-${{ github.ref_name }}.dmg
-        asset_name: ES-Manager-${{ github.ref_name }}-macOS.dmg
-        asset_content_type: application/octet-stream
-      continue-on-error: true
-
-    - name: Upload macOS ZIP
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./artifacts/macos-builds/ES Manager-${{ github.ref_name }}-mac.zip
-        asset_name: ES-Manager-${{ github.ref_name }}-macOS.zip
-        asset_content_type: application/zip
-      continue-on-error: true
+          - **Windows**: 下载 `.exe` 安装程序
 
     - name: Upload Windows Installer
       uses: actions/upload-release-asset@v1
@@ -146,29 +90,15 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./artifacts/windows-builds/ES Manager Setup ${{ github.ref_name }}.exe
+        asset_path: ./artifacts/windows-builds/ES Manager Setup*.exe
         asset_name: ES-Manager-Setup-${{ github.ref_name }}-Windows.exe
         asset_content_type: application/octet-stream
       continue-on-error: true
 
-    - name: Upload Windows Portable
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./artifacts/windows-builds/ES Manager ${{ github.ref_name }}.exe
-        asset_name: ES-Manager-${{ github.ref_name }}-Windows-Portable.exe
-        asset_content_type: application/octet-stream
-      continue-on-error: true
-
-    - name: Upload Linux AppImage
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./artifacts/linux-builds/ES Manager-${{ github.ref_name }}.AppImage
-        asset_name: ES-Manager-${{ github.ref_name }}-Linux.AppImage
-        asset_content_type: application/octet-stream
-      continue-on-error: true
+    - name: Find and Upload Windows Files
+      run: |
+        echo "Looking for Windows build artifacts..."
+        ls -la ./artifacts/windows-builds/
+        for file in ./artifacts/windows-builds/*; do
+          echo "Found: $file"
+        done
