@@ -15,9 +15,6 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
         node-version: [20]
-        include:
-          - os: ubuntu-latest
-            build-android: true
         
     steps:
     - name: Check out Git repository
@@ -46,43 +43,8 @@ jobs:
       run: npm run dist:win:prod
 
     - name: Build Electron app (Linux)
-      if: matrix.os == 'ubuntu-latest' && !matrix.build-android
+      if: matrix.os == 'ubuntu-latest'
       run: npm run dist:linux:prod
-
-    - name: Set up JDK 17 (Android)
-      if: matrix.build-android
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-
-    - name: Setup Android SDK (Android)
-      if: matrix.build-android
-      uses: android-actions/setup-android@v3
-      with:
-        api-level: 34
-        build-tools: 34.0.0
-
-    - name: Initialize Capacitor (Android)
-      if: matrix.build-android
-      run: |
-        npm run cap:init
-        npm run cap:add:android
-
-    - name: Build Android APK
-      if: matrix.build-android
-      run: |
-        npm run cap:build:android
-        cd android
-        ./gradlew assembleRelease
-        
-    - name: Sign Android APK
-      if: matrix.build-android
-      run: |
-        echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > app/release.jks
-        cd android
-        ./gradlew assembleRelease -Pandroid.injected.signing.store.file=../app/release.jks -Pandroid.injected.signing.store.password="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" -Pandroid.injected.signing.key.alias="${{ secrets.ANDROID_KEY_ALIAS }}" -Pandroid.injected.signing.key.password="${{ secrets.ANDROID_KEY_PASSWORD }}"
-      continue-on-error: true
 
     - name: Upload artifacts (macOS)
       if: matrix.os == 'macos-latest'
@@ -104,22 +66,13 @@ jobs:
         retention-days: 30
 
     - name: Upload artifacts (Linux)
-      if: matrix.os == 'ubuntu-latest' && !matrix.build-android
+      if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v4
       with:
         name: linux-builds
         path: |
           dist-electron/*.AppImage
           dist-electron/*.deb
-        retention-days: 30
-
-    - name: Upload artifacts (Android)
-      if: matrix.build-android
-      uses: actions/upload-artifact@v4
-      with:
-        name: android-builds
-        path: |
-          android/app/build/outputs/apk/release/*.apk
         retention-days: 30
 
   release:
@@ -160,13 +113,11 @@ jobs:
           - **macOS**: Intel (x64) 和 Apple Silicon (arm64)
           - **Windows**: 64-bit (x64)
           - **Linux**: 64-bit (x64)
-          - **Android**: APK (Android 7.0+)
           
           ### 安装说明 / Installation
           - **macOS**: 下载 `.dmg` 文件并安装
           - **Windows**: 下载 `.exe` 安装程序或便携版
           - **Linux**: 下载 `.AppImage` (便携) 或 `.deb` (Ubuntu/Debian)
-          - **Android**: 下载 `.apk` 文件并启用"未知来源"安装
 
     - name: Upload macOS DMG
       uses: actions/upload-release-asset@v1
@@ -232,15 +183,4 @@ jobs:
         asset_path: ./artifacts/linux-builds/es-manager_${{ github.ref_name }}_amd64.deb
         asset_name: es-manager_${{ github.ref_name }}_amd64.deb
         asset_content_type: application/octet-stream
-      continue-on-error: true
-
-    - name: Upload Android APK
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./artifacts/android-builds/app-release.apk
-        asset_name: ES-Manager-${{ github.ref_name }}-Android.apk
-        asset_content_type: application/vnd.android.package-archive
       continue-on-error: true
