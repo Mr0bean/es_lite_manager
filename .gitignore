@@ -16,7 +16,9 @@ yarn-error.log*
 
 # Build outputs
 dist/
-build/
+!build/
+build/*
+!build/icon.*
 .nuxt/
 .next/
 
