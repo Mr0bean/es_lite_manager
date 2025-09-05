@@ -23,18 +23,20 @@ jobs:
             artifact-path: |
               dist-electron/*.exe
               dist-electron/*.msi
+            node-version: 20
           - os: macos-latest
             build-command: npm run dist:mac:prod
             artifact-name: macos-builds
             artifact-path: |
               dist-electron/*.dmg
               dist-electron/*.zip
+            node-version: 20
           - os: ubuntu-latest
             build-command: npm run dist:linux:prod
             artifact-name: linux-builds
             artifact-path: |
               dist-electron/*.AppImage
-        node-version: [20]
+            node-version: 20
         
     steps:
     - name: Check out Git repository
