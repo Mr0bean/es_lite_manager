@@ -1,7 +1,13 @@
 import express from 'express'
 import cors from 'cors'
+import path from 'path'
+import fs from 'fs'
+import { fileURLToPath } from 'url'
 import { serverConfig, validateConfig } from './config.js'
 import connectionManager from './connectionManager.js'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // 验证和显示配置
 validateConfig()
@@ -11,6 +17,28 @@ const { host, port } = serverConfig
 
 app.use(cors(serverConfig.cors))
 app.use(express.json())
+
+// 静态文件服务 - 在生产环境下服务前端文件
+// 优先使用环境变量指定的路径
+let distPath
+if (process.env.DIST_PATH) {
+  distPath = process.env.DIST_PATH
+  console.log('Using DIST_PATH from env:', distPath)
+} else {
+  // 检查多个可能的路径
+  const possibleDistPaths = [
+    path.join(__dirname, '../app.asar.unpacked/dist'), // Electron 打包路径
+    path.join(__dirname, '../dist'), // 开发环境路径
+  ]
+  
+  distPath = possibleDistPaths.find(p => {
+    const exists = fs.existsSync(p)
+    if (exists) console.log('Using static files path:', p)
+    return exists
+  }) || possibleDistPaths[1] // 默认使用开发路径
+}
+
+app.use(express.static(distPath))
 
 app.get('/health', async (req, res) => {
   try {
@@ -537,6 +565,32 @@ app.get('/nodes/stats', async (req, res) => {
     console.error('获取节点统计失败:', error)
     res.status(500).json({ error: error.message })
   }
+})
+
+// SPA路由支持 - 所有非API路由返回index.html
+app.get('*', (req, res) => {
+  // 跳过API路由
+  if (req.path.startsWith('/api') || 
+      req.path.startsWith('/health') || 
+      req.path.startsWith('/connections') ||
+      req.path.startsWith('/indices') ||
+      req.path.startsWith('/search') ||
+      req.path.startsWith('/documents') ||
+      req.path.startsWith('/stats') ||
+      req.path.startsWith('/policies') ||
+      req.path.startsWith('/analyze') ||
+      req.path.startsWith('/plugins') ||
+      req.path.startsWith('/nodes')) {
+    return res.status(404).json({ error: 'API endpoint not found' })
+  }
+  
+  const indexPath = path.join(distPath, 'index.html')
+  if (!fs.existsSync(indexPath)) {
+    console.error('index.html not found at:', indexPath)
+    return res.status(404).send('index.html not found')
+  }
+  console.log('Serving index.html from:', indexPath)
+  res.sendFile(indexPath)
 })
 
 app.listen(port, host, () => {

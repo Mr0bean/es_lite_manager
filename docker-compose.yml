@@ -35,14 +35,15 @@ services:
     environment:
       - NODE_ENV=production
       - HOST=0.0.0.0
-      - PORT=9021
+      - PORT=3501
       - ES_HOST=elasticsearch
       - ES_PORT=9200
       - ES_PROTOCOL=http
       - CORS_ORIGIN=*
+      - SERVER_PORT=3501
     ports:
-      - "8080:80"      # 前端nginx端口
-      - "9021:9021"    # 后端API端口
+      - "3502:80"      # 前端nginx端口
+      - "3501:3501"    # 后端API端口
     depends_on:
       elasticsearch:
         condition: service_healthy
@@ -51,7 +52,7 @@ services:
     volumes:
       - ./logs:/app/logs
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9021/api/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:3501/health"]
       interval: 30s
       timeout: 10s
       retries: 3

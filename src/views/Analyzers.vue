@@ -2,16 +2,16 @@
   <div class="analyzers-container">
     <div class="page-header">
       <div class="header-top">
-        <h2>分词器管理</h2>
+        <h2>{{ $t('analyzers.title') }}</h2>
         <div class="header-actions">
           <el-button type="warning" @click="clearCache" style="margin-right: 8px;">
             <el-icon><Delete /></el-icon>
-            清除缓存
+            {{ $t('analyzers.clearCache') }}
           </el-button>
           <RefreshTimer :on-refresh="refreshData" />
         </div>
       </div>
-      <p class="page-description">查看和测试Elasticsearch分词器配置</p>
+      <p class="page-description">{{ $t('analyzers.description') }}</p>
     </div>
 
     <el-row :gutter="20">
@@ -20,10 +20,10 @@
         <el-card>
           <template #header>
             <div class="card-header">
-              <span>索引分词器配置</span>
+              <span>{{ $t('analyzers.indexAnalyzerConfig') }}</span>
               <el-select 
                 v-model="selectedIndex" 
-                placeholder="选择索引" 
+                :placeholder="$t('analyzers.placeholders.selectIndex')" 
                 @change="loadIndexAnalyzers"
                 style="width: 200px"
               >
@@ -39,19 +39,19 @@
           
           <div v-if="loadingAnalyzers" class="loading-container">
             <el-icon class="is-loading"><Loading /></el-icon>
-            <span>加载中...</span>
+            <span>{{ $t('analyzers.loading') }}</span>
           </div>
           
           <div v-else-if="indexAnalyzers">
             <!-- 默认分词器 -->
-            <el-descriptions title="默认分词器" :column="1" border>
-              <el-descriptions-item label="分词器">
+            <el-descriptions :title="$t('analyzers.defaultAnalyzer')" :column="1" border>
+              <el-descriptions-item :label="$t('analyzers.fields.analyzer')">
                 <el-tag>{{ indexAnalyzers.default_analyzer }}</el-tag>
               </el-descriptions-item>
             </el-descriptions>
             
             <!-- 自定义分词器 -->
-            <el-descriptions title="自定义分词器" :column="1" border style="margin-top: 20px">
+            <el-descriptions :title="$t('analyzers.customAnalyzers')" :column="1" border style="margin-top: 20px">
               <el-descriptions-item 
                 v-for="(config, name) in indexAnalyzers.custom_analyzers" 
                 :key="name"
@@ -77,16 +77,16 @@
                   @click="viewAnalyzerConfig(name, config)"
                   style="margin-left: 10px;"
                 >
-                  查看配置
+                  {{ $t('analyzers.viewConfig') }}
                 </el-button>
               </el-descriptions-item>
               <el-descriptions-item v-if="Object.keys(indexAnalyzers.custom_analyzers).length === 0">
-                <span class="text-muted">无自定义分词器</span>
+                <span class="text-muted">{{ $t('analyzers.noCustomAnalyzers') }}</span>
               </el-descriptions-item>
             </el-descriptions>
             
             <!-- 字段分词器 -->
-            <el-descriptions title="字段分词器" :column="1" border style="margin-top: 20px">
+            <el-descriptions :title="$t('analyzers.fieldAnalyzers')" :column="1" border style="margin-top: 20px">
               <el-descriptions-item 
                 v-for="(analyzer, field) in indexAnalyzers.field_analyzers" 
                 :key="field"
@@ -95,17 +95,17 @@
                 <el-tag>{{ analyzer }}</el-tag>
               </el-descriptions-item>
               <el-descriptions-item v-if="Object.keys(indexAnalyzers.field_analyzers).length === 0">
-                <span class="text-muted">所有字段使用默认分词器</span>
+                <span class="text-muted">{{ $t('analyzers.allFieldsUseDefault') }}</span>
               </el-descriptions-item>
             </el-descriptions>
           </div>
           
           <div v-else-if="selectedIndex">
-            <el-empty description="请选择索引查看分词器配置" />
+            <el-empty :description="$t('analyzers.selectIndexToView')" />
           </div>
           
           <div v-else>
-            <el-empty description="请选择索引" />
+            <el-empty :description="$t('analyzers.selectIndex')" />
           </div>
         </el-card>
       </el-col>
@@ -114,13 +114,13 @@
       <el-col :span="12">
         <el-card>
           <template #header>
-            <span>分词器测试</span>
+            <span>{{ $t('analyzers.analyzerTest') }}</span>
           </template>
           
           <el-form :model="analyzeForm" label-width="80px">
-            <el-form-item label="索引">
-              <el-select v-model="analyzeForm.index" placeholder="选择索引（可选）">
-                <el-option label="不指定索引" value="" />
+            <el-form-item :label="$t('analyzers.fields.index')">
+              <el-select v-model="analyzeForm.index" :placeholder="$t('analyzers.placeholders.selectIndexOptional')">
+                <el-option :label="$t('analyzers.placeholders.noIndexSpecified')" value="" />
                 <el-option
                   v-for="index in indices"
                   :key="index.index"
@@ -130,11 +130,11 @@
               </el-select>
             </el-form-item>
             
-            <el-form-item label="分词器">
-              <el-select v-model="analyzeForm.analyzer" placeholder="选择分词器">
+            <el-form-item :label="$t('analyzers.fields.analyzer')">
+              <el-select v-model="analyzeForm.analyzer" :placeholder="$t('analyzers.placeholders.selectAnalyzer')">
                 <el-option-group 
                   v-if="indexAnalyzers && Object.keys(indexAnalyzers.custom_analyzers).length > 0" 
-                  label="自定义分词器"
+                  :label="$t('analyzers.customAnalyzers')"
                 >
                   <el-option
                     v-for="(config, analyzer) in indexAnalyzers.custom_analyzers"
@@ -143,7 +143,7 @@
                     :value="analyzer"
                   />
                 </el-option-group>
-                <el-option-group label="通用分词器">
+                <el-option-group :label="$t('analyzers.generalAnalyzers')">
                   <el-option
                     v-for="analyzer in builtinAnalyzers.general_analyzers"
                     :key="analyzer"
@@ -151,7 +151,7 @@
                     :value="analyzer"
                   />
                 </el-option-group>
-                <el-option-group label="语言分词器">
+                <el-option-group :label="$t('analyzers.languageAnalyzers')">
                   <el-option
                     v-for="analyzer in builtinAnalyzers.language_analyzers"
                     :key="analyzer"
@@ -161,7 +161,7 @@
                 </el-option-group>
                 <el-option-group 
                   v-if="indexAnalyzers && Object.keys(indexAnalyzers.field_analyzers).length > 0" 
-                  label="字段分词器"
+                  :label="$t('analyzers.fieldAnalyzers')"
                 >
                   <el-option
                     v-for="(config, field) in indexAnalyzers.field_analyzers"
@@ -173,12 +173,12 @@
               </el-select>
             </el-form-item>
             
-            <el-form-item label="测试文本">
+            <el-form-item :label="$t('analyzers.fields.testText')">
               <el-input
                 v-model="analyzeForm.text"
                 type="textarea"
                 :rows="3"
-                placeholder="输入要分词的文本"
+                :placeholder="$t('analyzers.placeholders.enterTestText')"
               />
             </el-form-item>
             
@@ -189,14 +189,14 @@
                 :loading="analyzingText"
                 :disabled="!analyzeForm.text || !analyzeForm.analyzer"
               >
-                测试分词
+                {{ $t('analyzers.testText') }}
               </el-button>
             </el-form-item>
           </el-form>
           
           <!-- 分词结果 -->
           <div v-if="analyzeResult" style="margin-top: 20px">
-            <el-divider>分词结果</el-divider>
+            <el-divider>{{ $t('analyzers.testResult') }}</el-divider>
             <div class="analyze-result">
               <div class="tokens">
                 <el-tag 
@@ -210,11 +210,11 @@
               </div>
               <div class="token-details" style="margin-top: 15px">
                 <el-table :data="analyzeResult.tokens" size="small" max-height="300" stripe>
-                  <el-table-column prop="token" label="词元" width="120" />
-                  <el-table-column prop="type" label="类型" width="100" />
-                  <el-table-column prop="position" label="位置" width="60" />
-                  <el-table-column prop="start_offset" label="起始" width="60" />
-                  <el-table-column prop="end_offset" label="结束" width="60" />
+                  <el-table-column prop="token" :label="$t('analyzers.fields.token')" width="120" />
+                  <el-table-column prop="type" :label="$t('analyzers.fields.type')" width="100" />
+                  <el-table-column prop="position" :label="$t('analyzers.fields.position')" width="60" />
+                  <el-table-column prop="start_offset" :label="$t('analyzers.fields.startOffset')" width="60" />
+                  <el-table-column prop="end_offset" :label="$t('analyzers.fields.endOffset')" width="60" />
                 </el-table>
               </div>
             </div>
@@ -226,11 +226,11 @@
     <!-- 内置分词器列表 -->
     <el-card style="margin-top: 20px">
       <template #header>
-        <span>内置分词器参考</span>
+        <span>{{ $t('analyzers.builtinAnalyzers') }}</span>
       </template>
       
       <el-tabs v-model="activeTab">
-        <el-tab-pane label="通用分词器" name="general">
+        <el-tab-pane :label="$t('analyzers.generalAnalyzers')" name="general">
           <div class="analyzer-grid">
             <el-tooltip 
               v-for="analyzer in builtinAnalyzers.general_analyzers" 
@@ -249,7 +249,7 @@
           </div>
         </el-tab-pane>
         
-        <el-tab-pane label="语言分词器" name="language">
+        <el-tab-pane :label="$t('analyzers.languageAnalyzers')" name="language">
           <div class="analyzer-grid">
             <el-tooltip 
               v-for="analyzer in builtinAnalyzers.language_analyzers" 
@@ -268,7 +268,7 @@
           </div>
         </el-tab-pane>
         
-        <el-tab-pane label="分词器" name="tokenizers">
+        <el-tab-pane :label="$t('analyzers.tokenizers')" name="tokenizers">
           <div class="analyzer-grid">
             <el-tooltip 
               v-for="tokenizer in builtinAnalyzers.tokenizers" 
@@ -286,7 +286,7 @@
           </div>
         </el-tab-pane>
         
-        <el-tab-pane label="词元过滤器" name="filters">
+        <el-tab-pane :label="$t('analyzers.tokenFilters')" name="filters">
           <div class="analyzer-grid">
             <el-tooltip 
               v-for="filter in builtinAnalyzers.token_filters" 
@@ -309,7 +309,7 @@
     <!-- 分词器配置详情对话框 -->
     <el-dialog 
       v-model="showConfigDialog" 
-      :title="`分词器配置: ${currentAnalyzerName}`"
+      :title="`${$t('analyzers.analyzerConfig')}: ${currentAnalyzerName}`"
       width="600px"
     >
       <pre class="config-json">{{ JSON.stringify(currentAnalyzerConfig, null, 2) }}</pre>
@@ -321,6 +321,9 @@
 import { ref, reactive, onMounted, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Refresh, Loading, Delete } from '@element-plus/icons-vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 import { 
   getIndices, 
   getIndexAnalyzers, 
@@ -337,7 +340,7 @@ const STORAGE_KEYS = {
 
 // 获取分词器描述
 const getAnalyzerDescription = (name) => {
-  return analyzerDescriptions[name] || '暂无描述信息'
+  return analyzerDescriptions[name] || t('analyzers.noDescriptionAvailable')
 }
 
 // 本地存储工具函数
@@ -345,7 +348,7 @@ const saveToStorage = (key, value) => {
   try {
     localStorage.setItem(key, JSON.stringify(value))
   } catch (error) {
-    console.warn('保存到本地存储失败:', error)
+    console.warn('Failed to save to localStorage:', error)
   }
 }
 
@@ -354,7 +357,7 @@ const loadFromStorage = (key, defaultValue = null) => {
     const stored = localStorage.getItem(key)
     return stored ? JSON.parse(stored) : defaultValue
   } catch (error) {
-    console.warn('从本地存储读取失败:', error)
+    console.warn('Failed to read from localStorage:', error)
     return defaultValue
   }
 }
@@ -479,7 +482,7 @@ const loadIndices = async () => {
   try {
     indices.value = await getIndices()
   } catch (error) {
-    ElMessage.error('获取索引列表失败: ' + error.message)
+    ElMessage.error(t('errors.loadIndicesFailed') + ': ' + error.message)
   }
 }
 
@@ -490,7 +493,7 @@ const loadIndexAnalyzers = async () => {
   try {
     indexAnalyzers.value = await getIndexAnalyzers(selectedIndex.value)
   } catch (error) {
-    ElMessage.error('获取分词器配置失败: ' + error.message)
+    ElMessage.error(t('errors.loadAnalyzersFailed') + ': ' + error.message)
     indexAnalyzers.value = null
   } finally {
     loadingAnalyzers.value = false
@@ -501,14 +504,14 @@ const loadBuiltinAnalyzers = async () => {
   try {
     builtinAnalyzers.value = await getBuiltinAnalyzers()
   } catch (error) {
-    ElMessage.error('获取内置分词器列表失败: ' + error.message)
+    ElMessage.error(t('errors.loadBuiltinAnalyzersFailed') + ': ' + error.message)
   }
 }
 
 const quickTest = (analyzerName) => {
   analyzeForm.analyzer = analyzerName
   if (!analyzeForm.text.trim()) {
-    analyzeForm.text = '这是一个测试文本 This is a test text'
+    analyzeForm.text = t('analyzers.testSamples.defaultText')
   }
   testAnalyzer()
 }
@@ -522,7 +525,7 @@ const testAnalyzer = async () => {
       text: analyzeForm.text
     })
   } catch (error) {
-    ElMessage.error('分词测试失败: ' + error.message)
+    ElMessage.error(t('errors.analyzeTestFailed') + ': ' + error.message)
   } finally {
     analyzingText.value = false
   }
@@ -540,7 +543,7 @@ const validateCachedData = async () => {
   if (selectedIndex.value) {
     const indexExists = indices.value.some(index => index.index === selectedIndex.value)
     if (!indexExists) {
-      console.log(`缓存的索引 '${selectedIndex.value}' 不存在，已清空选择`)
+      console.log(`Cached index '${selectedIndex.value}' no longer exists, cleared selection`)
       selectedIndex.value = ''
       saveToStorage(STORAGE_KEYS.SELECTED_INDEX, '')
     }
@@ -550,7 +553,7 @@ const validateCachedData = async () => {
   if (analyzeForm.index) {
     const indexExists = indices.value.some(index => index.index === analyzeForm.index)
     if (!indexExists) {
-      console.log(`分词器测试中的索引 '${analyzeForm.index}' 不存在，已清空选择`)
+      console.log(`Analyzer test index '${analyzeForm.index}' no longer exists, cleared selection`)
       analyzeForm.index = ''
     }
   }
@@ -571,9 +574,9 @@ const clearCache = () => {
     analyzeResult.value = null
     indexAnalyzers.value = null
     
-    ElMessage.success('缓存已清除')
+    ElMessage.success(t('analyzers.cacheCleared'))
   } catch (error) {
-    ElMessage.error('清除缓存失败: ' + error.message)
+    ElMessage.error(t('errors.clearCacheFailed') + ': ' + error.message)
   }
 }
 
@@ -602,7 +605,7 @@ watch(() => analyzeForm.index, async (newIndex) => {
         indexAnalyzers.value = analyzers
       }
     } catch (error) {
-      console.warn('获取索引分词器配置失败:', error.message)
+      console.warn('Failed to get index analyzer config:', error.message)
     }
   }
 })

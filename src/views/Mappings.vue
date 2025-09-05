@@ -2,10 +2,10 @@
   <div class="mappings-container">
     <div class="page-header">
       <div class="header-top">
-        <h2>索引映射管理</h2>
+        <h2>{{ $t('mappings.title') }}</h2>
         <RefreshTimer :on-refresh="refreshData" />
       </div>
-      <p class="page-description">查看和管理Elasticsearch索引的字段映射配置</p>
+      <p class="page-description">{{ $t('mappings.description') }}</p>
     </div>
 
     <el-row :gutter="20">
@@ -14,10 +14,10 @@
         <el-card>
           <template #header>
             <div class="card-header">
-              <span>索引映射概览</span>
+              <span>{{ $t('mappings.indexMappingOverview') }}</span>
               <el-select 
                 v-model="selectedIndex" 
-                placeholder="选择索引" 
+                :placeholder="$t('mappings.placeholders.selectIndex')" 
                 @change="loadIndexMapping"
                 style="width: 200px"
               >
@@ -33,18 +33,18 @@
           
           <div v-if="loadingMapping" class="loading-container">
             <el-icon class="is-loading"><Loading /></el-icon>
-            <span>加载映射信息中...</span>
+            <span>{{ $t('mappings.loadingMapping') }}</span>
           </div>
           
           <div v-else-if="indexMapping && selectedIndex">
             <el-descriptions :column="1" border>
-              <el-descriptions-item label="索引名称">{{ selectedIndex }}</el-descriptions-item>
-              <el-descriptions-item label="字段总数">{{ fieldCount }}</el-descriptions-item>
-              <el-descriptions-item label="映射版本">{{ mappingVersion || 'N/A' }}</el-descriptions-item>
+              <el-descriptions-item :label="$t('mappings.fields.indexName')">{{ selectedIndex }}</el-descriptions-item>
+              <el-descriptions-item :label="$t('mappings.fields.fieldCount')">{{ fieldCount }}</el-descriptions-item>
+              <el-descriptions-item :label="$t('mappings.fields.mappingVersion')">{{ mappingVersion || 'N/A' }}</el-descriptions-item>
             </el-descriptions>
             
             <div style="margin-top: 20px">
-              <h4>字段类型统计</h4>
+              <h4>{{ $t('mappings.fieldTypeStats') }}</h4>
               <div class="field-stats">
                 <el-tag 
                   v-for="(count, type) in fieldTypeStats" 
@@ -59,11 +59,11 @@
           </div>
           
           <div v-else-if="selectedIndex">
-            <el-empty description="无法获取映射信息" />
+            <el-empty :description="$t('mappings.placeholders.cannotGetMapping')" />
           </div>
           
           <div v-else>
-            <el-empty description="请选择索引" />
+            <el-empty :description="$t('mappings.placeholders.selectIndexFirst')" />
           </div>
         </el-card>
       </el-col>
@@ -72,13 +72,13 @@
       <el-col :span="12">
         <el-card>
           <template #header>
-            <span>字段详情</span>
+            <span>{{ $t('mappings.fieldDetails') }}</span>
           </template>
           
           <div v-if="indexMapping && selectedIndex">
             <el-input
               v-model="fieldSearchText"
-              placeholder="搜索字段名称"
+              :placeholder="$t('mappings.placeholders.searchFieldName')"
               prefix-icon="Search"
               style="margin-bottom: 15px"
             />
@@ -90,8 +90,8 @@
               max-height="500"
               size="small"
             >
-              <el-table-column prop="name" label="字段名" width="150" />
-              <el-table-column prop="type" label="类型" width="120">
+              <el-table-column prop="name" :label="$t('mappings.fields.fieldName')" width="150" />
+              <el-table-column prop="type" :label="$t('mappings.fields.fieldType')" width="120">
               <template #default="scope">
                 <el-tooltip :content="getFieldTypeDescription(scope.row.type)" placement="top">
                   <el-tag :type="getFieldTypeColor(scope.row.type)" size="small">
@@ -100,7 +100,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-              <el-table-column prop="properties" label="属性" min-width="200">
+              <el-table-column prop="properties" :label="$t('mappings.fields.properties')" min-width="200">
                 <template #default="scope">
                   <div class="field-properties">
                     <el-tooltip 
@@ -119,16 +119,16 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="100">
+              <el-table-column :label="$t('mappings.fields.operations')" width="100">
                 <template #default="scope">
-                  <el-button size="small" @click="viewFieldDetail(scope.row)">详情</el-button>
+                  <el-button size="small" @click="viewFieldDetail(scope.row)">{{ $t('mappings.details') }}</el-button>
                 </template>
               </el-table-column>
             </el-table>
           </div>
           
           <div v-else>
-            <el-empty description="请选择索引查看字段详情" />
+            <el-empty :description="$t('mappings.placeholders.selectIndexToViewFields')" />
           </div>
         </el-card>
       </el-col>
@@ -138,10 +138,10 @@
     <el-card style="margin-top: 20px" v-if="indexMapping && selectedIndex">
       <template #header>
         <div class="card-header">
-          <span>完整映射JSON</span>
+          <span>{{ $t('mappings.fullMappingJson') }}</span>
           <el-button size="small" @click="copyMapping">
             <el-icon><CopyDocument /></el-icon>
-            复制
+            {{ $t('mappings.copy') }}
           </el-button>
         </div>
       </template>
@@ -152,15 +152,15 @@
     </el-card>
     
     <!-- 字段详情对话框 -->
-    <el-dialog v-model="showFieldDialog" title="字段详情" width="600px">
+    <el-dialog v-model="showFieldDialog" :title="$t('mappings.fields.fieldDetails')" width="600px">
       <div v-if="currentField">
         <el-descriptions :column="1" border>
-          <el-descriptions-item label="字段名称">{{ currentField.name }}</el-descriptions-item>
-          <el-descriptions-item label="字段类型">{{ currentField.type }}</el-descriptions-item>
+          <el-descriptions-item :label="$t('mappings.fields.fieldName')">{{ currentField.name }}</el-descriptions-item>
+          <el-descriptions-item :label="$t('mappings.fields.fieldType')">{{ currentField.type }}</el-descriptions-item>
         </el-descriptions>
         
         <div style="margin-top: 20px">
-          <h4>字段配置</h4>
+          <h4>{{ $t('mappings.fieldConfig') }}</h4>
           <div class="field-config">
             <pre>{{ JSON.stringify(currentField.config, null, 2) }}</pre>
           </div>
@@ -174,6 +174,9 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Refresh, Loading, Search, CopyDocument } from '@element-plus/icons-vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 import * as api from '../api/elasticsearch'
 import RefreshTimer from '../components/RefreshTimer.vue'
 import storageManager from '../utils/storage'
@@ -405,7 +408,7 @@ const loadIndices = async () => {
     }
   } catch (error) {
     console.error('Failed to load indices:', error)
-    ElMessage.error('加载索引失败: ' + error.message)
+    ElMessage.error(t('errors.loadIndicesFailed') + ': ' + error.message)
   }
 }
 
@@ -423,7 +426,7 @@ const loadIndexMapping = async () => {
     console.log('Loaded mapping:', result)
   } catch (error) {
     console.error('Failed to load mapping:', error)
-    ElMessage.error('加载映射失败: ' + error.message)
+    ElMessage.error(t('errors.loadMappingsFailed') + ': ' + error.message)
     indexMapping.value = null
   } finally {
     loadingMapping.value = false
@@ -440,9 +443,9 @@ const viewFieldDetail = (field) => {
 const copyMapping = async () => {
   try {
     await navigator.clipboard.writeText(JSON.stringify(indexMapping.value, null, 2))
-    ElMessage.success('映射JSON已复制到剪贴板')
+    ElMessage.success(t('success.mappingCopied'))
   } catch (error) {
-    ElMessage.error('复制失败')
+    ElMessage.error(t('errors.copyFailed'))
   }
 }
 

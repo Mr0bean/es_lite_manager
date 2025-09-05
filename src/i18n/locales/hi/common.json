@@ -1,0 +1,85 @@
+{
+  "app": {
+    "title": "ES प्रबंधक",
+    "loading": "लोड हो रहा है...",
+    "error": "एक त्रुटि हुई",
+    "success": "सफलता",
+    "warning": "चेतावनी",
+    "info": "जानकारी"
+  },
+  "connection": {
+    "status": "कनेक्शन स्थिति",
+    "connected": "कनेक्टेड",
+    "disconnected": "डिस्कनेक्टेड",
+    "notConnected": "ES कनेक्ट नहीं है",
+    "switchConnection": "कनेक्शन बदलें",
+    "manageConnections": "कनेक्शन प्रबंधित करें",
+    "refreshStatus": "स्थिति रीफ्रेश करें",
+    "currentConnection": "वर्तमान कनेक्शन",
+    "clusterName": "क्लस्टर नाम",
+    "nodeName": "नोड नाम",
+    "version": "संस्करण",
+    "connectionTime": "कनेक्शन समय",
+    "running": "चल रहा है"
+  },
+  "menu": {
+    "search": "खोजें",
+    "indices": "इंडेक्स प्रबंधन",
+    "documents": "दस्तावेज़ प्रबंधन",
+    "stats": "सांख्यिकीय विश्लेषण",
+    "policies": "नीति प्रबंधन",
+    "analyzers": "विश्लेषक प्रबंधन",
+    "mappings": "मैपिंग प्रबंधन",
+    "plugins": "प्लगइन प्रबंधन",
+    "connections": "कनेक्शन प्रबंधन",
+    "settings": "सिस्टम सेटिंग्स"
+  },
+  "actions": {
+    "create": "बनाएं",
+    "edit": "संपादित करें",
+    "delete": "हटाएं",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "confirm": "पुष्टि करें",
+    "refresh": "रीफ्रेश करें",
+    "search": "खोजें",
+    "filter": "फ़िल्टर",
+    "export": "निर्यात",
+    "import": "आयात",
+    "close": "बंद करें",
+    "submit": "सबमिट करें",
+    "reset": "रीसेट",
+    "add": "जोड़ें",
+    "remove": "हटाएं",
+    "update": "अपडेट करें",
+    "view": "देखें",
+    "download": "डाउनलोड",
+    "upload": "अपलोड"
+  },
+  "status": {
+    "online": "ऑनलाइन",
+    "offline": "ऑफलाइन",
+    "healthy": "स्वस्थ",
+    "unhealthy": "अस्वस्थ",
+    "active": "सक्रिय",
+    "inactive": "निष्क्रिय",
+    "enabled": "सक्षम",
+    "disabled": "अक्षम",
+    "pending": "लंबित",
+    "processing": "प्रसंस्करण",
+    "completed": "पूर्ण",
+    "failed": "विफल"
+  },
+  "messages": {
+    "refreshSuccess": "रीफ्रेश सफल",
+    "switchConnectionSuccess": "कनेक्शन स्विच सफल",
+    "switchConnectionFailed": "कनेक्शन स्विच विफल",
+    "loadConnectionsFailed": "कनेक्शन लोड करने में विफल"
+  },
+  "language": {
+    "selectLanguage": "भाषा चुनें",
+    "eastAsian": "पूर्वी एशियाई भाषाएं",
+    "european": "यूरोपीय भाषाएं",
+    "others": "अन्य भाषाएं"
+  }
+}

@@ -2,11 +2,55 @@
   "name": "es-manager",
   "version": "1.0.0",
   "type": "module",
+  "main": "src-electron/main.js",
+  "homepage": "./",
   "scripts": {
     "dev": "vite",
+    "dev:staging": "vite --mode staging",
     "build": "vite build",
+    "build:dev": "vite build --mode development",
+    "build:staging": "vite build --mode staging",
+    "build:prod": "vite build --mode production",
     "preview": "vite preview",
     "server": "node server/index.js",
+    "server:dev": "cross-env NODE_ENV=development node server/index.js",
+    "server:staging": "cross-env NODE_ENV=staging node server/index.js",
+    "server:prod": "cross-env NODE_ENV=production node server/index.js",
+    "electron": "electron .",
+    "electron:dev": "concurrently \"npm run server:dev\" \"npm run dev\" \"wait-on http://localhost:9020 http://localhost:9021 && cross-env NODE_ENV=development electron .\"",
+    "electron:staging": "concurrently \"npm run server:staging\" \"npm run dev:staging\" \"wait-on http://localhost:9020 http://localhost:9021 && cross-env NODE_ENV=staging electron .\"",
+    "pack": "npm run build && electron-builder --dir",
+    "pack:dev": "npm run build:dev && electron-builder --dir --config electron-builder.json",
+    "pack:staging": "npm run build:staging && electron-builder --dir --config electron-builder.json",
+    "pack:prod": "npm run build:prod && electron-builder --dir --config electron-builder.json",
+    "dist": "npm run build:prod && electron-builder --publish=never",
+    "dist:dev": "npm run build:dev && cross-env NODE_ENV=development electron-builder --publish=never",
+    "dist:staging": "npm run build:staging && cross-env NODE_ENV=staging electron-builder --publish=never",
+    "dist:prod": "npm run build:prod && cross-env NODE_ENV=production electron-builder --publish=never",
+    "dist:mac": "npm run build:prod && electron-builder --mac --publish=never",
+    "dist:mac:dev": "npm run build:dev && cross-env NODE_ENV=development electron-builder --mac --publish=never",
+    "dist:mac:staging": "npm run build:staging && cross-env NODE_ENV=staging electron-builder --mac --publish=never",
+    "dist:mac:prod": "npm run build:prod && cross-env NODE_ENV=production electron-builder --mac --publish=never",
+    "dist:win": "npm run build:prod && electron-builder --win --publish=never",
+    "dist:win:dev": "npm run build:dev && cross-env NODE_ENV=development electron-builder --win --publish=never",
+    "dist:win:staging": "npm run build:staging && cross-env NODE_ENV=staging electron-builder --win --publish=never",
+    "dist:win:prod": "npm run build:prod && cross-env NODE_ENV=production electron-builder --win --publish=never",
+    "dist:linux": "npm run build:prod && electron-builder --linux --publish=never",
+    "dist:linux:dev": "npm run build:dev && cross-env NODE_ENV=development electron-builder --linux --publish=never",
+    "dist:linux:staging": "npm run build:staging && cross-env NODE_ENV=staging electron-builder --linux --publish=never",
+    "dist:linux:prod": "npm run build:prod && cross-env NODE_ENV=production electron-builder --linux --publish=never",
+    "dist:all": "npm run build:prod && electron-builder -mwl --publish=never",
+    "dist:all:staging": "npm run build:staging && cross-env NODE_ENV=staging electron-builder -mwl --publish=never",
+    "electron:build:mac": "npm run dist:mac",
+    "electron:build:win": "npm run dist:win",
+    "electron:build:linux": "npm run dist:linux",
+    "build:ci": "npm run build:prod && npm run dist:all",
+    "build:ci:staging": "npm run build:staging && npm run dist:all:staging",
+    "cap:init": "npx cap init",
+    "cap:add:android": "npx cap add android",
+    "cap:sync": "npm run build:prod && npx cap sync",
+    "cap:build:android": "npm run build:prod && npx cap sync && npx cap build android",
+    "cap:open:android": "npx cap open android",
     "docker:build": "docker-compose build",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
@@ -23,10 +67,99 @@
     "express": "^4.18.2",
     "vue": "^3.3.11",
     "vue-chartjs": "^5.3.0",
+    "vue-i18n": "^9.14.5",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@intlify/unplugin-vue-i18n": "^6.0.8",
     "@vitejs/plugin-vue": "^4.5.2",
-    "vite": "^5.0.8"
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.0.0",
+    "electron": "^37.4.0",
+    "electron-builder": "^26.0.12",
+    "vite": "^5.0.8",
+    "wait-on": "^8.0.4"
+  },
+  "build": {
+    "appId": "com.elasticsearch.manager",
+    "productName": "ES Manager",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "dist/**/*",
+      "server/**/*",
+      "src-electron/main.js",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "server/**/*",
+      "dist/**/*",
+      "node_modules/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.icns"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
   }
 }

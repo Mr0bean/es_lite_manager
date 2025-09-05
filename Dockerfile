@@ -40,13 +40,13 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # 创建日志目录
 RUN mkdir -p /app/logs /var/log/nginx
 
-# 暴露端口 (nginx前端80, 后端API 9021)
-EXPOSE 80 9021
+# 暴露端口 (nginx前端80, 后端API 3501)
+EXPOSE 80 3501
 
 # 设置环境变量
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0
-ENV PORT=9021
+ENV PORT=3501
 
 # 创建启动脚本
 RUN printf '#!/bin/sh\n\
@@ -60,14 +60,14 @@ nginx &\n\
 \n\
 # 启动后端API服务器\n\
 cd /app\n\
-PORT=$PORT node server/index.js &\n\
+node server/index.js &\n\
 \n\
 # 等待所有后台进程\n\
 wait\n' > /app/start.sh && chmod +x /app/start.sh
 
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost/health && curl -f http://localhost:9021/health || exit 1
+  CMD curl -f http://localhost/health && curl -f http://localhost:3501/health || exit 1
 
 # 启动应用
 ENTRYPOINT ["/app/start.sh"]

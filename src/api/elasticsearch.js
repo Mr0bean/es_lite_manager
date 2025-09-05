@@ -1,9 +1,51 @@
 import axios from 'axios'
+import { config, log, LogLevel, isElectron } from '../config/env'
 
+// 动态获取API基础URL
+const getApiBaseUrl = () => {
+  if (isElectron()) {
+    const savedPort = localStorage.getItem('backendPort')
+    const port = savedPort ? parseInt(savedPort) : config.ports.backend
+    return `http://localhost:${port}`
+  }
+  return '/api'
+}
+
+// 创建 axios 实例
 const api = axios.create({
-  baseURL: '/api',
-  timeout: 10000
+  baseURL: getApiBaseUrl(),
+  timeout: config.api.timeout
 })
+
+// 更新API基础URL的方法
+export const updateApiBaseUrl = () => {
+  api.defaults.baseURL = getApiBaseUrl()
+  log(LogLevel.INFO, 'API Base URL updated to:', api.defaults.baseURL)
+}
+
+// 请求拦截器
+api.interceptors.request.use(
+  (config) => {
+    log(LogLevel.DEBUG, 'API Request:', config.method?.toUpperCase(), config.url)
+    return config
+  },
+  (error) => {
+    log(LogLevel.ERROR, 'API Request Error:', error)
+    return Promise.reject(error)
+  }
+)
+
+// 响应拦截器
+api.interceptors.response.use(
+  (response) => {
+    log(LogLevel.DEBUG, 'API Response:', response.status, response.config.url)
+    return response
+  },
+  (error) => {
+    log(LogLevel.ERROR, 'API Response Error:', error.response?.status, error.config?.url, error.message)
+    return Promise.reject(error)
+  }
+)
 
 // 连接管理API
 export const getConnections = () => api.get('/connections').then(res => res.data)

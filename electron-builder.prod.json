@@ -1,0 +1,23 @@
+{
+  "extends": "./electron-builder.json",
+  "productName": "ES Manager",
+  "directories": {
+    "output": "dist-electron-prod"
+  },
+  "extraMetadata": {
+    "environment": "production"
+  },
+  "mac": {
+    "bundleId": "com.elasticsearch.manager"
+  },
+  "nsis": {
+    "productName": "ES Manager"
+  },
+  "publish": [
+    {
+      "provider": "github",
+      "owner": "your-github-username",
+      "repo": "es-manager"
+    }
+  ]
+}

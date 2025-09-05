@@ -1,0 +1,16 @@
+{
+  "extends": "./electron-builder.json",
+  "productName": "ES Manager (Dev)",
+  "directories": {
+    "output": "dist-electron-dev"
+  },
+  "extraMetadata": {
+    "environment": "development"
+  },
+  "mac": {
+    "bundleId": "com.elasticsearch.manager.dev"
+  },
+  "nsis": {
+    "productName": "ES Manager Dev"
+  }
+}

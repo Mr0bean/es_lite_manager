@@ -9,34 +9,34 @@
         :disabled="disabled"
         size="small"
       >
-        刷新
+        {{ $t('actions.refresh') }}
       </el-button>
       <el-dropdown @command="handleAutoRefresh" :disabled="disabled">
         <el-button size="small" type="info" :disabled="disabled">
-          定时刷新 <el-icon><ArrowDown /></el-icon>
+          {{ $t('pages.search.autoRefresh') }} <el-icon><ArrowDown /></el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item :command="0" :class="{ 'is-active': autoRefreshInterval === 0 }">
-              <el-icon><Close /></el-icon> 关闭
+              <el-icon><Close /></el-icon> {{ $t('pages.search.autoRefreshIntervals.disable') }}
             </el-dropdown-item>
             <el-dropdown-item :command="5000" :class="{ 'is-active': autoRefreshInterval === 5000 }">
-              5秒
+              {{ $t('pages.search.autoRefreshIntervals.5s') }}
             </el-dropdown-item>
             <el-dropdown-item :command="10000" :class="{ 'is-active': autoRefreshInterval === 10000 }">
-              10秒
+              {{ $t('pages.search.autoRefreshIntervals.10s') }}
             </el-dropdown-item>
             <el-dropdown-item :command="30000" :class="{ 'is-active': autoRefreshInterval === 30000 }">
-              30秒
+              {{ $t('pages.search.autoRefreshIntervals.30s') }}
             </el-dropdown-item>
             <el-dropdown-item :command="60000" :class="{ 'is-active': autoRefreshInterval === 60000 }">
-              1分钟
+              {{ $t('pages.search.autoRefreshIntervals.1m') }}
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
       <span v-if="autoRefreshInterval > 0" class="refresh-status">
-        下次刷新: {{ nextRefreshCountdown }}s
+        {{ $t('pages.search.nextRefresh') }}: {{ nextRefreshCountdown }}s
       </span>
     </div>
   </div>
@@ -46,6 +46,9 @@
 import { ref, onUnmounted } from 'vue'
 import { Refresh, ArrowDown, Close } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 // 定义 props
 const props = defineProps({
@@ -69,16 +72,16 @@ let countdownTimer = null
 // 手动刷新
 const handleRefresh = async () => {
   if (props.disabled) {
-    ElMessage.warning('请先完成必要的配置')
+    ElMessage.warning(t('warnings.pleaseCompleteConfig'))
     return
   }
   
   refreshing.value = true
   try {
     await props.onRefresh()
-    ElMessage.success('刷新成功')
+    ElMessage.success(t('messages.refreshSuccess'))
   } catch (error) {
-    ElMessage.error('刷新失败: ' + error.message)
+    ElMessage.error(t('errors.refreshFailed') + ': ' + error.message)
   } finally {
     refreshing.value = false
   }
@@ -100,7 +103,7 @@ const handleAutoRefresh = (interval) => {
   
   if (interval > 0) {
     if (props.disabled) {
-      ElMessage.warning('请先完成必要的配置再启用定时刷新')
+      ElMessage.warning(t('warnings.pleaseCompleteConfigForAutoRefresh'))
       autoRefreshInterval.value = 0
       return
     }
@@ -123,10 +126,10 @@ const handleAutoRefresh = (interval) => {
       }
     }, interval)
     
-    ElMessage.success(`已启用定时刷新，间隔 ${interval / 1000} 秒`)
+    ElMessage.success(t('success.autoRefreshEnabled', { interval: interval / 1000 }))
   } else {
     nextRefreshCountdown.value = 0
-    ElMessage.info('已关闭定时刷新')
+    ElMessage.info(t('success.autoRefreshDisabled'))
   }
 }
 

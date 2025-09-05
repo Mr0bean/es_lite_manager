@@ -2,8 +2,13 @@
   <el-container class="app-container">
     <el-header class="app-header">
       <div class="header-content">
-        <h1>Elasticsearch Manager</h1>
-        <div class="connection-status">
+        <h1>{{ $t('app.title') }}</h1>
+        <div class="header-right">
+          <!-- 语言切换器 -->
+          <LanguageSwitcher />
+          
+          <!-- 连接状态 -->
+          <div class="connection-status">
           <!-- 连接切换器 -->
           <el-dropdown @command="handleConnectionCommand" trigger="click" class="connection-dropdown">
             <el-tag 
@@ -15,14 +20,14 @@
                 <component :is="connectionStatus ? 'CircleCheckFilled' : 'CircleCloseFilled'" />
               </el-icon>
               <span class="connection-text">
-                {{ currentConnectionName || 'ES 未连接' }}
+                {{ currentConnectionName || $t('connection.notConnected') }}
               </span>
               <el-icon class="arrow-icon"><ArrowDown /></el-icon>
             </el-tag>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item disabled>
-                  <strong>切换连接</strong>
+                  <strong>{{ $t('connection.switchConnection') }}</strong>
                 </el-dropdown-item>
                 <el-dropdown-item divided v-for="conn in availableConnections" :key="conn.id" :command="conn.id" :disabled="conn.isCurrent">
                   <div class="dropdown-connection-item">
@@ -33,11 +38,11 @@
                 </el-dropdown-item>
                 <el-dropdown-item divided command="manage">
                   <el-icon><Setting /></el-icon>
-                  管理连接
+                  {{ $t('connection.manageConnections') }}
                 </el-dropdown-item>
                 <el-dropdown-item command="refresh">
                   <el-icon><Refresh /></el-icon>
-                  刷新状态
+                  {{ $t('connection.refreshStatus') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -58,31 +63,32 @@
             </template>
             <div class="connection-info">
               <div class="info-item">
-                <span class="info-label">当前连接:</span>
+                <span class="info-label">{{ $t('connection.currentConnection') }}:</span>
                 <span class="info-value">{{ currentConnectionName }}</span>
               </div>
               <div class="info-item">
-                <span class="info-label">集群名称:</span>
+                <span class="info-label">{{ $t('connection.clusterName') }}:</span>
                 <span class="info-value">{{ connectionInfo.cluster_name || 'N/A' }}</span>
               </div>
               <div class="info-item">
-                <span class="info-label">节点名称:</span>
+                <span class="info-label">{{ $t('connection.nodeName') }}:</span>
                 <span class="info-value">{{ connectionInfo.name || 'N/A' }}</span>
               </div>
               <div class="info-item">
-                <span class="info-label">版本:</span>
+                <span class="info-label">{{ $t('connection.version') }}:</span>
                 <span class="info-value">{{ connectionInfo.version?.number || 'N/A' }}</span>
               </div>
               <div class="info-item">
-                <span class="info-label">状态:</span>
-                <el-tag size="small" type="success">运行中</el-tag>
+                <span class="info-label">{{ $t('connection.status') }}:</span>
+                <el-tag size="small" type="success">{{ $t('connection.running') }}</el-tag>
               </div>
               <div class="info-item">
-                <span class="info-label">连接时间:</span>
+                <span class="info-label">{{ $t('connection.connectionTime') }}:</span>
                 <span class="info-value">{{ formatTime(connectionTime) }}</span>
               </div>
             </div>
           </el-popover>
+          </div>
         </div>
       </div>
     </el-header>
@@ -92,39 +98,43 @@
         <el-menu :default-active="$route.path" router>
           <el-menu-item index="/">
             <el-icon><Search /></el-icon>
-            <span>搜索</span>
+            <span>{{ $t('menu.search') }}</span>
           </el-menu-item>
           <el-menu-item index="/indices">
             <el-icon><Files /></el-icon>
-            <span>索引管理</span>
+            <span>{{ $t('menu.indices') }}</span>
           </el-menu-item>
           <el-menu-item index="/documents">
             <el-icon><Document /></el-icon>
-            <span>文档管理</span>
+            <span>{{ $t('menu.documents') }}</span>
           </el-menu-item>
           <el-menu-item index="/stats">
             <el-icon><DataAnalysis /></el-icon>
-            <span>统计分析</span>
+            <span>{{ $t('menu.stats') }}</span>
           </el-menu-item>
           <el-menu-item index="/policies">
             <el-icon><Setting /></el-icon>
-            <span>策略管理</span>
+            <span>{{ $t('menu.policies') }}</span>
           </el-menu-item>
           <el-menu-item index="/analyzers">
             <el-icon><Tools /></el-icon>
-            <span>分词器管理</span>
+            <span>{{ $t('menu.analyzers') }}</span>
           </el-menu-item>
           <el-menu-item index="/mappings">
             <el-icon><Grid /></el-icon>
-            <span>映射管理</span>
+            <span>{{ $t('menu.mappings') }}</span>
           </el-menu-item>
           <el-menu-item index="/plugins">
             <el-icon><Box /></el-icon>
-            <span>插件管理</span>
+            <span>{{ $t('menu.plugins') }}</span>
           </el-menu-item>
           <el-menu-item index="/connections">
             <el-icon><Link /></el-icon>
-            <span>连接管理</span>
+            <span>{{ $t('menu.connections') }}</span>
+          </el-menu-item>
+          <el-menu-item index="/settings">
+            <el-icon><Setting /></el-icon>
+            <span>{{ $t('menu.settings') }}</span>
           </el-menu-item>
         </el-menu>
       </el-aside>
@@ -138,10 +148,15 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { Search, Files, Document, DataAnalysis, Setting, Tools, Grid, Box, CircleCheckFilled, CircleCloseFilled, ArrowDown, InfoFilled, Refresh, Link } from '@element-plus/icons-vue'
 import { checkConnection, getConnections, getCurrentConnection, switchConnection } from './api/elasticsearch'
 import { ElMessage } from 'element-plus'
+import LanguageSwitcher from './components/LanguageSwitcher.vue'
 
+const router = useRouter()
+const { t } = useI18n()
 const connectionStatus = ref(false)
 const connectionInfo = ref(null)
 const connectionTime = ref(null)
@@ -191,14 +206,14 @@ const loadConnections = async () => {
 const handleConnectionCommand = async (command) => {
   if (command === 'manage') {
     // 跳转到连接管理页面
-    window.location.href = '/connections'
+    router.push('/connections')
     return
   }
   
   if (command === 'refresh') {
     // 刷新连接状态
     await Promise.all([checkESConnection(), loadConnections()])
-    ElMessage.success('刷新成功')
+    ElMessage.success(t('messages.refreshSuccess'))
     return
   }
   
@@ -207,11 +222,11 @@ const handleConnectionCommand = async (command) => {
     switchingConnection.value = true
     try {
       await switchConnection(command)
-      ElMessage.success('连接切换成功')
+      ElMessage.success(t('messages.switchConnectionSuccess'))
       // 刷新状态
       await Promise.all([checkESConnection(), loadConnections()])
     } catch (error) {
-      ElMessage.error('连接切换失败: ' + error.message)
+      ElMessage.error(t('messages.switchConnectionFailed') + ': ' + error.message)
     } finally {
       switchingConnection.value = false
     }
@@ -286,8 +301,14 @@ onMounted(async () => {
   animation: fadeInLeft 0.8s ease-out;
 }
 
-.connection-status {
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
   animation: fadeInRight 0.8s ease-out;
+}
+
+.connection-status {
   display: flex;
   align-items: center;
   gap: 10px;

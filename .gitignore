@@ -7,6 +7,9 @@ yarn-error.log*
 # Environment variables
 .env
 .env.local
+.env.development
+.env.production
+.env.staging
 .env.development.local
 .env.test.local
 .env.production.local
@@ -58,6 +61,9 @@ docker-compose.override.yml
 # Temporary files
 tmp/
 temp/
+deploy-temp/
 
 # Claude Code related files (do not upload)
+.claude/
 CLAUDE.md
+/dist-electron/

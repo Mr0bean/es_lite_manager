@@ -1,0 +1,512 @@
+{
+  "app": {
+    "title": "ES 管理器",
+    "loading": "加载中...",
+    "error": "发生错误",
+    "success": "成功",
+    "warning": "警告",
+    "info": "信息"
+  },
+  "connection": {
+    "status": "连接状态",
+    "connected": "已连接",
+    "disconnected": "已断开",
+    "notConnected": "ES 未连接",
+    "switchConnection": "切换连接",
+    "manageConnections": "管理连接",
+    "refreshStatus": "刷新状态",
+    "currentConnection": "当前连接",
+    "clusterName": "集群名称",
+    "nodeName": "节点名称",
+    "version": "版本",
+    "connectionTime": "连接时间",
+    "running": "运行中"
+  },
+  "menu": {
+    "search": "搜索",
+    "indices": "索引管理",
+    "documents": "文档管理",
+    "stats": "统计分析",
+    "policies": "策略管理",
+    "analyzers": "分词器管理",
+    "mappings": "映射管理", 
+    "plugins": "插件管理",
+    "connections": "连接管理",
+    "settings": "系统设置"
+  },
+  "actions": {
+    "create": "创建",
+    "edit": "编辑",
+    "delete": "删除",
+    "save": "保存",
+    "cancel": "取消",
+    "confirm": "确认",
+    "refresh": "刷新",
+    "search": "搜索",
+    "filter": "筛选",
+    "export": "导出",
+    "import": "导入",
+    "close": "关闭",
+    "submit": "提交",
+    "reset": "重置",
+    "add": "添加",
+    "remove": "移除",
+    "update": "更新",
+    "view": "查看",
+    "download": "下载",
+    "upload": "上传"
+  },
+  "jsonEditor": {
+    "format": "格式化",
+    "validate": "验证", 
+    "compress": "压缩",
+    "clear": "清空",
+    "enableWordWrap": "自动换行",
+    "disableWordWrap": "取消换行",
+    "validJson": "✓ 有效JSON",
+    "invalidJson": "✗ 无效JSON",
+    "characters": "字符",
+    "placeholder": "请输入有效的JSON格式数据",
+    "formatSuccess": "JSON格式化成功",
+    "formatError": "JSON格式错误",
+    "validateSuccess": "JSON格式正确",
+    "validateError": "JSON格式错误",
+    "compressSuccess": "JSON压缩成功",
+    "clearSuccess": "内容已清空",
+    "wordWrapEnabled": "已开启自动换行",
+    "wordWrapDisabled": "已关闭自动换行"
+  },
+  "jsonViewer": {
+    "copy": "复制",
+    "format": "格式化",
+    "compress": "压缩",
+    "expand": "展开",
+    "collapse": "折叠",
+    "copiedToClipboard": "已复制到剪贴板",
+    "items": "项",
+    "keys": "键"
+  },
+  "status": {
+    "online": "在线",
+    "offline": "离线",
+    "healthy": "健康",
+    "unhealthy": "不健康",
+    "active": "活跃",
+    "inactive": "非活跃",
+    "enabled": "已启用",
+    "disabled": "已禁用",
+    "pending": "待处理",
+    "processing": "处理中",
+    "completed": "已完成",
+    "failed": "失败"
+  },
+  "messages": {
+    "refreshSuccess": "刷新成功",
+    "switchConnectionSuccess": "连接切换成功",
+    "switchConnectionFailed": "连接切换失败",
+    "loadConnectionsFailed": "加载连接失败"
+  },
+  "language": {
+    "selectLanguage": "选择语言",
+    "eastAsian": "东亚语言",
+    "european": "欧洲语言",
+    "others": "其他语言"
+  },
+  "pages": {
+    "search": {
+      "title": "搜索管理",
+      "queryBuilder": "查询构建器",
+      "enableAggs": "启用聚合查询",
+      "executeQuery": "执行查询",
+      "clearSearch": "清空",
+      "queryResults": "查询结果",
+      "generatedQuery": "生成的查询语句",
+      "aggregationResults": "聚合结果",
+      "hitCount": "命中",
+      "timeCost": "耗时",
+      "autoRefresh": "定时刷新",
+      "nextRefresh": "下次刷新",
+      "fields": {
+        "index": "索引",
+        "queryType": "查询类型",
+        "field": "字段",
+        "value": "值",
+        "exactValue": "精确值",
+        "minValue": "最小值",
+        "maxValue": "最大值",
+        "searchValue": "搜索值",
+        "fieldName": "字段名",
+        "greaterEqual": "大于等于",
+        "lessEqual": "小于等于"
+      },
+      "queryTypes": {
+        "matchAll": "匹配所有文档"
+      },
+      "aggregations": {
+        "title": "聚合查询构建器",
+        "name": "聚合名称",
+        "type": "聚合类型",
+        "addAggregation": "添加聚合",
+        "aggregation": "聚合",
+        "returnCount": "返回数量",
+        "rangeConfig": "范围配置",
+        "addRange": "添加范围",
+        "to": "到",
+        "timeInterval": "时间间隔",
+        "interval": "间隔",
+        "dateField": "日期字段名",
+        "numericField": "数值字段名",
+        "intervalValue": "间隔值",
+        "metricAggs": "指标聚合",
+        "bucketAggs": "桶聚合",
+        "types": {
+          "avg": "平均值 (avg)",
+          "max": "最大值 (max)",
+          "min": "最小值 (min)",
+          "sum": "求和 (sum)",
+          "valueCount": "计数 (value_count)",
+          "stats": "统计 (stats)",
+          "terms": "词项聚合 (terms)",
+          "range": "范围聚合 (range)",
+          "dateHistogram": "日期直方图 (date_histogram)",
+          "histogram": "直方图 (histogram)"
+        },
+        "timeIntervals": {
+          "1m": "1分钟",
+          "1h": "1小时",
+          "1d": "1天",
+          "1w": "1周",
+          "1M": "1月",
+          "1y": "1年"
+        },
+        "statsLabels": {
+          "count": "数量",
+          "min": "最小值",
+          "max": "最大值",
+          "avg": "平均值",
+          "sum": "总和",
+          "value": "值",
+          "range": "范围",
+          "docCount": "文档数"
+        }
+      },
+      "autoRefreshIntervals": {
+        "disable": "关闭",
+        "5s": "5秒",
+        "10s": "10秒",
+        "30s": "30秒",
+        "1m": "1分钟"
+      }
+    },
+    "indices": {
+      "title": "索引管理",
+      "createIndex": "创建索引",
+      "indexDetails": "索引详情",
+      "quickActions": "快捷操作",
+      "fields": {
+        "indexName": "索引名称",
+        "healthStatus": "健康状态",
+        "status": "状态",
+        "primaryShards": "主分片",
+        "replicas": "副本",
+        "docCount": "文档数",
+        "deletedDocs": "删除文档数",
+        "storeSize": "存储大小",
+        "shardCount": "分片数",
+        "replicaCount": "副本数",
+        "ilmPolicy": "ILM策略"
+      },
+      "actions": {
+        "documentManagement": "文档管理",
+        "statisticsAnalysis": "统计分析",
+        "analyzerManagement": "分词器管理",
+        "mappingManagement": "映射管理",
+        "manageDocs": "管理索引中的文档",
+        "viewStats": "查看索引统计信息",
+        "testAnalyzer": "测试分词器效果",
+        "editMapping": "查看和编辑映射"
+      },
+      "policy": {
+        "loading": "加载中...",
+        "notSet": "未设置策略",
+        "viewDetails": "查看详情",
+        "policyDetails": "ILM策略详情",
+        "policyName": "策略名称"
+      }
+    },
+    "documents": {
+      "title": "文档管理",
+      "newDocument": "新建文档",
+      "editDocument": "编辑文档",
+      "createDocument": "新建文档",
+      "documentDetails": "文档详情",
+      "fields": {
+        "documentId": "文档ID",
+        "summary": "摘要",
+        "operations": "操作",
+        "jsonData": "JSON数据"
+      }
+    },
+    "settings": {
+      "title": "系统设置",
+      "tabs": {
+        "basic": "基本设置",
+        "advanced": "高级设置",
+        "about": "关于"
+      },
+      "sections": {
+        "appConfig": "应用配置",
+        "portConfig": "端口配置",
+        "apiConfig": "API配置",
+        "debugOptions": "调试选项",
+        "cacheSettings": "缓存设置"
+      },
+      "fields": {
+        "appTitle": "应用标题",
+        "backendPort": "后端端口",
+        "frontendPort": "前端端口",
+        "apiTimeout": "API超时时间",
+        "enableDevTools": "启用开发工具",
+        "logLevel": "日志级别",
+        "clearCache": "清除缓存",
+        "clearAllCache": "清除所有缓存"
+      },
+      "hints": {
+        "defaultBackendPort": "默认端口: 9021 (修改后需要重新启动应用)",
+        "defaultFrontendPort": "默认端口: 9020 (仅供显示)",
+        "timeoutUnit": "单位: 毫秒 (默认: 10000ms)"
+      },
+      "about": {
+        "version": "版本 1.0.0",
+        "appName": "Elasticsearch Manager",
+        "currentEnv": "当前环境",
+        "runMode": "运行模式",
+        "backendUrl": "后端地址",
+        "electronApp": "Electron 桌面应用",
+        "webApp": "Web 应用",
+        "checkUpdate": "检查更新",
+        "resetDefault": "重置默认",
+        "saveSettings": "保存设置"
+      }
+    },
+    "connections": {
+      "title": "连接管理",
+      "newConnection": "新建连接",
+      "editConnection": "编辑连接",
+      "connectionDetails": "连接详情",
+      "testConnection": "测试连接",
+      "fields": {
+        "connectionName": "连接名称",
+        "protocol": "协议",
+        "host": "主机地址",
+        "port": "端口",
+        "username": "用户名",
+        "password": "密码",
+        "timeout": "超时时间",
+        "maxRetries": "最大重试次数"
+      }
+    },
+    "stats": {
+      "title": "统计分析"
+    },
+    "analyzers": {
+      "title": "分词器管理"
+    },
+    "mappings": {
+      "title": "映射管理"
+    },
+    "policies": {
+      "title": "策略管理"
+    },
+    "plugins": {
+      "title": "插件管理"
+    }
+  },
+  "placeholders": {
+    "selectIndex": "选择索引",
+    "enterIndexName": "请输入索引名称",
+    "enterConnectionName": "请输入连接名称",
+    "enterHostAddress": "请输入主机地址",
+    "enterUsername": "请输入用户名（可选）",
+    "enterPassword": "请输入密码（可选）",
+    "selectQueryType": "选择查询类型",
+    "selectLogLevel": "请选择",
+    "enterFieldName": "字段名",
+    "enterSearchValue": "搜索值",
+    "enterExactValue": "精确值",
+    "enterGreaterEqual": "大于等于",
+    "enterLessEqual": "小于等于",
+    "enterAggName": "聚合名称",
+    "selectAggType": "选择聚合类型",
+    "enterReturnCount": "10",
+    "enterStartValue": "起始值",
+    "enterEndValue": "结束值",
+    "enterDateField": "日期字段名",
+    "selectTimeInterval": "选择时间间隔",
+    "enterNumericField": "数值字段名",
+    "enterIntervalValue": "间隔值",
+    "enterValidJson": "请输入有效的JSON格式数据"
+  },
+  "validation": {
+    "connectionNameRequired": "请输入连接名称",
+    "hostRequired": "请输入主机地址",
+    "invalidHostFormat": "请输入有效的IP地址或主机名",
+    "portRequired": "请输入端口号",
+    "indexNameRequired": "请输入索引名称",
+    "indexRequired": "请选择索引",
+    "firstSelectIndex": "请先选择索引",
+    "jsonFormatError": "JSON格式错误，请检查输入"
+  },
+  "confirmations": {
+    "deleteIndex": "确定要删除索引 {name} 吗？此操作不可恢复！",
+    "deleteDocument": "确定要删除文档 {id} 吗？",
+    "deleteConnection": "确定要删除连接 \"{name}\" 吗？此操作不可恢复。",
+    "title": "警告"
+  },
+  "emptyStates": {
+    "selectIndexForAnalyzer": "请选择索引查看分词器配置",
+    "selectIndex": "请选择索引",
+    "selectIndexForStats": "请选择索引查看统计信息",
+    "selectIndexForFields": "请选择索引查看字段详情"
+  },
+  "success": {
+    "indexCreated": "索引创建成功",
+    "indexDeleted": "索引删除成功",
+    "documentCreated": "文档创建成功",
+    "documentUpdated": "文档更新成功",
+    "documentDeleted": "文档删除成功",
+    "querySuccess": "查询成功",
+    "settingsSaved": "设置已保存",
+    "settingsReset": "设置已重置为默认值",
+    "cacheCleared": "缓存已清除",
+    "mappingCopied": "映射JSON已复制到剪贴板",
+    "connectionTested": "连接测试成功！",
+    "connectionSwitched": "连接切换成功",
+    "connectionUpdated": "连接更新成功",
+    "connectionAdded": "连接添加成功",
+    "connectionDeleted": "连接删除成功",
+    "autoRefreshEnabled": "已启用定时刷新，间隔 {interval} 秒",
+    "autoRefreshDisabled": "已关闭定时刷新",
+    "jsonFormatted": "JSON格式化成功",
+    "jsonValid": "JSON格式正确",
+    "jsonCompressed": "JSON压缩成功",
+    "contentCleared": "内容已清空",
+    "wordWrapEnabled": "已开启自动换行",
+    "wordWrapDisabled": "已关闭自动换行",
+    "copiedToClipboard": "已复制到剪贴板",
+    "mappingCopied": "映射JSON已复制到剪贴板"
+  },
+  "errors": {
+    "loadIndicesFailed": "获取索引列表失败",
+    "createIndexFailed": "创建索引失败",
+    "deleteIndexFailed": "删除索引失败",
+    "loadDocumentsFailed": "加载文档失败",
+    "saveDocumentFailed": "保存文档失败",
+    "deleteDocumentFailed": "删除文档失败",
+    "queryFailed": "查询失败",
+    "refreshFailed": "刷新失败",
+    "saveSettingsFailed": "保存设置失败",
+    "loadStatsFailed": "获取统计信息失败",
+    "loadConnectionsFailed": "获取连接列表失败",
+    "testConnectionFailed": "连接测试失败",
+    "switchConnectionFailed": "连接切换失败",
+    "addConnectionFailed": "添加连接失败",
+    "updateConnectionFailed": "更新连接失败",
+    "deleteConnectionFailed": "删除连接失败",
+    "loadConnectionDetailsFailed": "获取连接详情失败",
+    "clearCacheFailed": "清除缓存失败",
+    "copyFailed": "复制失败",
+    "jsonFormatError": "JSON格式错误",
+    "loadAnalyzersFailed": "获取分词器配置失败",
+    "getBuiltinAnalyzersFailed": "获取内置分词器列表失败",
+    "analyzeTestFailed": "分词测试失败",
+    "loadMappingsFailed": "加载映射失败",
+    "loadPoliciesFailed": "获取策略列表失败",
+    "loadPluginsFailed": "获取插件信息失败",
+    "getIndexPolicyFailed": "获取索引策略失败",
+    "languageSwitchFailed": "语言切换失败",
+  },
+  "warnings": {
+    "pleaseCompleteConfig": "请先完成必要的配置",
+    "pleaseCompleteConfigForAutoRefresh": "请先完成必要的配置再启用定时刷新"
+  },
+  "info": {
+    "currentLatestVersion": "当前已是最新版本",
+    "languageSwitchSuccess": "语言切换成功，部分内容需要刷新页面后生效"
+  },
+  "analyzers": {
+    "title": "分词器管理",
+    "description": "查看和测试Elasticsearch分词器配置",
+    "indexAnalyzerConfig": "索引分词器配置",
+    "analyzerTest": "分词器测试",
+    "defaultAnalyzer": "默认分词器",
+    "customAnalyzers": "自定义分词器",
+    "fieldAnalyzers": "字段分词器",
+    "noCustomAnalyzers": "无自定义分词器",
+    "allFieldsUseDefault": "所有字段使用默认分词器",
+    "selectIndexToView": "请选择索引查看分词器配置",
+    "selectIndex": "请选择索引",
+    "testResult": "分词结果",
+    "builtinAnalyzers": "内置分词器参考",
+    "generalAnalyzers": "通用分词器",
+    "languageAnalyzers": "语言分词器",
+    "tokenizers": "分词器",
+    "tokenFilters": "词元过滤器",
+    "analyzerConfig": "分词器配置",
+    "noDescriptionAvailable": "暂无描述信息",
+    "clearCache": "清除缓存",
+    "loading": "加载中...",
+    "viewConfig": "查看配置",
+    "testText": "测试分词",
+    "cacheCleared": "缓存已清除",
+    "fields": {
+      "index": "索引",
+      "analyzer": "分词器",
+      "testText": "测试文本",
+      "token": "词元",
+      "type": "类型",
+      "position": "位置",
+      "startOffset": "起始",
+      "endOffset": "结束"
+    },
+    "placeholders": {
+      "selectIndex": "选择索引",
+      "selectIndexOptional": "选择索引（可选）",
+      "noIndexSpecified": "不指定索引",
+      "selectAnalyzer": "选择分词器",
+      "enterTestText": "输入要分词的文本"
+    },
+    "testSamples": {
+      "defaultText": "这是一个测试文本 This is a test text"
+    }
+  },
+  "mappings": {
+    "title": "索引映射管理",
+    "description": "查看和管理Elasticsearch索引的字段映射配置",
+    "indexMappingOverview": "索引映射概览",
+    "fieldDetails": "字段详情",
+    "fieldTypeStats": "字段类型统计",
+    "fullMappingJson": "完整映射JSON",
+    "fieldConfig": "字段配置",
+    "loadingMapping": "加载映射信息中...",
+    "copy": "复制",
+    "details": "详情",
+    "fields": {
+      "indexName": "索引名称",
+      "fieldCount": "字段总数", 
+      "mappingVersion": "映射版本",
+      "fieldName": "字段名",
+      "fieldType": "类型",
+      "properties": "属性",
+      "operations": "操作",
+      "fieldDetails": "字段详情"
+    },
+    "placeholders": {
+      "selectIndex": "选择索引",
+      "searchFieldName": "搜索字段名称",
+      "selectIndexToViewFields": "请选择索引查看字段详情",
+      "selectIndexFirst": "请选择索引",
+      "cannotGetMapping": "无法获取映射信息"
+    }
+  }
+}

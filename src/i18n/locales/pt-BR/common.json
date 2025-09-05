@@ -1,0 +1,85 @@
+{
+  "app": {
+    "title": "Gerenciador ES",
+    "loading": "Carregando...",
+    "error": "Ocorreu um erro",
+    "success": "Sucesso",
+    "warning": "Aviso",
+    "info": "Informação"
+  },
+  "connection": {
+    "status": "Status da conexão",
+    "connected": "Conectado",
+    "disconnected": "Desconectado",
+    "notConnected": "ES não conectado",
+    "switchConnection": "Alternar conexão",
+    "manageConnections": "Gerenciar conexões",
+    "refreshStatus": "Atualizar status",
+    "currentConnection": "Conexão atual",
+    "clusterName": "Nome do cluster",
+    "nodeName": "Nome do nó",
+    "version": "Versão",
+    "connectionTime": "Tempo de conexão",
+    "running": "Em execução"
+  },
+  "menu": {
+    "search": "Pesquisar",
+    "indices": "Gerenciamento de índices",
+    "documents": "Gerenciamento de documentos",
+    "stats": "Análise estatística",
+    "policies": "Gerenciamento de políticas",
+    "analyzers": "Gerenciamento de analisadores",
+    "mappings": "Gerenciamento de mapeamentos",
+    "plugins": "Gerenciamento de plugins",
+    "connections": "Gerenciamento de conexões",
+    "settings": "Configurações do sistema"
+  },
+  "actions": {
+    "create": "Criar",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "refresh": "Atualizar",
+    "search": "Pesquisar",
+    "filter": "Filtrar",
+    "export": "Exportar",
+    "import": "Importar",
+    "close": "Fechar",
+    "submit": "Enviar",
+    "reset": "Redefinir",
+    "add": "Adicionar",
+    "remove": "Remover",
+    "update": "Atualizar",
+    "view": "Visualizar",
+    "download": "Baixar",
+    "upload": "Carregar"
+  },
+  "status": {
+    "online": "Online",
+    "offline": "Offline",
+    "healthy": "Saudável",
+    "unhealthy": "Não saudável",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "enabled": "Habilitado",
+    "disabled": "Desabilitado",
+    "pending": "Pendente",
+    "processing": "Processando",
+    "completed": "Concluído",
+    "failed": "Falhou"
+  },
+  "messages": {
+    "refreshSuccess": "Atualização bem-sucedida",
+    "switchConnectionSuccess": "Troca de conexão bem-sucedida",
+    "switchConnectionFailed": "Falha na troca de conexão",
+    "loadConnectionsFailed": "Falha ao carregar conexões"
+  },
+  "language": {
+    "selectLanguage": "Selecionar idioma",
+    "eastAsian": "Idiomas do Leste Asiático",
+    "european": "Idiomas Europeus",
+    "others": "Outros idiomas"
+  }
+}

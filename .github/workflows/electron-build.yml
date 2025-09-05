@@ -1,0 +1,97 @@
+name: Electron Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Create release'
+        required: true
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            name: macOS
+            artifact: "*.dmg"
+          - os: ubuntu-latest
+            name: Linux
+            artifact: "*.AppImage"
+          - os: windows-latest
+            name: Windows
+            artifact: "*.exe"
+    
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build Electron app (macOS)
+        if: matrix.os == 'macos-latest'
+        env:
+          CSC_LINK: ${{ secrets.MAC_CERTS }}
+          CSC_KEY_PASSWORD: ${{ secrets.MAC_CERTS_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run electron:build:mac
+      
+      - name: Build Electron app (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run electron:build:linux
+      
+      - name: Build Electron app (Windows)
+        if: matrix.os == 'windows-latest'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_LINK: ${{ secrets.WIN_CERTS }}
+          CSC_KEY_PASSWORD: ${{ secrets.WIN_CERTS_PASSWORD }}
+        run: npm run electron:build:win
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}-build
+          path: |
+            dist_electron/${{ matrix.artifact }}
+            dist_electron/*.zip
+            dist_electron/*.deb
+            dist_electron/*.rpm
+            dist_electron/*.msi
+          retention-days: 7
+      
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/v') || github.event.inputs.release == 'true'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist_electron/${{ matrix.artifact }}
+            dist_electron/*.zip
+            dist_electron/*.deb
+            dist_electron/*.rpm
+            dist_electron/*.msi
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

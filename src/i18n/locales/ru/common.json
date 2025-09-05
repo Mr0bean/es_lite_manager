@@ -1,0 +1,85 @@
+{
+  "app": {
+    "title": "ES Менеджер",
+    "loading": "Загрузка...",
+    "error": "Произошла ошибка",
+    "success": "Успешно",
+    "warning": "Предупреждение",
+    "info": "Информация"
+  },
+  "connection": {
+    "status": "Статус подключения",
+    "connected": "Подключено",
+    "disconnected": "Отключено",
+    "notConnected": "ES не подключен",
+    "switchConnection": "Переключить подключение",
+    "manageConnections": "Управление подключениями",
+    "refreshStatus": "Обновить статус",
+    "currentConnection": "Текущее подключение",
+    "clusterName": "Имя кластера",
+    "nodeName": "Имя узла",
+    "version": "Версия",
+    "connectionTime": "Время подключения",
+    "running": "Работает"
+  },
+  "menu": {
+    "search": "Поиск",
+    "indices": "Управление индексами",
+    "documents": "Управление документами",
+    "stats": "Статистический анализ",
+    "policies": "Управление политиками",
+    "analyzers": "Управление анализаторами",
+    "mappings": "Управление маппингами",
+    "plugins": "Управление плагинами",
+    "connections": "Управление подключениями",
+    "settings": "Системные настройки"
+  },
+  "actions": {
+    "create": "Создать",
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "confirm": "Подтвердить",
+    "refresh": "Обновить",
+    "search": "Поиск",
+    "filter": "Фильтр",
+    "export": "Экспорт",
+    "import": "Импорт",
+    "close": "Закрыть",
+    "submit": "Отправить",
+    "reset": "Сброс",
+    "add": "Добавить",
+    "remove": "Удалить",
+    "update": "Обновить",
+    "view": "Просмотр",
+    "download": "Скачать",
+    "upload": "Загрузить"
+  },
+  "status": {
+    "online": "В сети",
+    "offline": "Не в сети",
+    "healthy": "Исправен",
+    "unhealthy": "Неисправен",
+    "active": "Активен",
+    "inactive": "Неактивен",
+    "enabled": "Включено",
+    "disabled": "Отключено",
+    "pending": "В ожидании",
+    "processing": "Обработка",
+    "completed": "Завершено",
+    "failed": "Ошибка"
+  },
+  "messages": {
+    "refreshSuccess": "Обновление успешно",
+    "switchConnectionSuccess": "Подключение успешно переключено",
+    "switchConnectionFailed": "Ошибка переключения подключения",
+    "loadConnectionsFailed": "Ошибка загрузки подключений"
+  },
+  "language": {
+    "selectLanguage": "Выберите язык",
+    "eastAsian": "Восточноазиатские языки",
+    "european": "Европейские языки",
+    "others": "Другие языки"
+  }
+}

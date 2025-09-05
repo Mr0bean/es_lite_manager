@@ -2,7 +2,7 @@
   <div class="search-container">
     <div class="search-header">
       <div class="header-top">
-        <h2>搜索管理</h2>
+        <h2>{{ $t('pages.search.title') }}</h2>
         <div class="header-actions">
           <el-button 
             type="primary" 
@@ -11,45 +11,45 @@
             :loading="refreshing"
             size="small"
           >
-            刷新
+            {{ $t('actions.refresh') }}
           </el-button>
           <el-dropdown @command="handleAutoRefresh">
             <el-button size="small" type="info">
-              定时刷新 <el-icon><ArrowDown /></el-icon>
+              {{ $t('pages.search.autoRefresh') }} <el-icon><ArrowDown /></el-icon>
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item :command="0" :class="{ 'is-active': autoRefreshInterval === 0 }">
-                  <el-icon><Close /></el-icon> 关闭
+                  <el-icon><Close /></el-icon> {{ $t('pages.search.autoRefreshIntervals.disable') }}
                 </el-dropdown-item>
                 <el-dropdown-item :command="5000" :class="{ 'is-active': autoRefreshInterval === 5000 }">
-                  5秒
+                  {{ $t('pages.search.autoRefreshIntervals.5s') }}
                 </el-dropdown-item>
                 <el-dropdown-item :command="10000" :class="{ 'is-active': autoRefreshInterval === 10000 }">
-                  10秒
+                  {{ $t('pages.search.autoRefreshIntervals.10s') }}
                 </el-dropdown-item>
                 <el-dropdown-item :command="30000" :class="{ 'is-active': autoRefreshInterval === 30000 }">
-                  30秒
+                  {{ $t('pages.search.autoRefreshIntervals.30s') }}
                 </el-dropdown-item>
                 <el-dropdown-item :command="60000" :class="{ 'is-active': autoRefreshInterval === 60000 }">
-                  1分钟
+                  {{ $t('pages.search.autoRefreshIntervals.1m') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
           <span v-if="autoRefreshInterval > 0" class="refresh-status">
-            下次刷新: {{ nextRefreshCountdown }}s
+            {{ $t('pages.search.nextRefresh') }}: {{ nextRefreshCountdown }}s
           </span>
         </div>
       </div>
       <el-form :inline="true" :model="searchForm" class="search-form">
-        <el-form-item label="索引">
-          <el-select v-model="searchForm.index" placeholder="选择索引" clearable style="width: 200px">
+        <el-form-item :label="$t('pages.search.fields.index')">
+          <el-select v-model="searchForm.index" :placeholder="$t('placeholders.selectIndex')" clearable style="width: 200px">
             <el-option v-for="idx in indices" :key="idx.index" :label="idx.index" :value="idx.index" />
           </el-select>
         </el-form-item>
-        <el-form-item label="查询类型">
-          <el-select v-model="searchForm.queryType" placeholder="选择查询类型" style="width: 200px">
+        <el-form-item :label="$t('pages.search.fields.queryType')">
+          <el-select v-model="searchForm.queryType" :placeholder="$t('placeholders.selectQueryType')" style="width: 200px">
             <el-option label="Match All" value="match_all" />
             <el-option label="Match" value="match" />
             <el-option label="Term" value="term" />
@@ -58,7 +58,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-checkbox v-model="searchForm.enableAggs" @change="onAggsToggle">启用聚合查询</el-checkbox>
+          <el-checkbox v-model="searchForm.enableAggs" @change="onAggsToggle">{{ $t('pages.search.enableAggs') }}</el-checkbox>
         </el-form-item>
       </el-form>
     </div>
@@ -66,88 +66,88 @@
     <div class="query-builder">
       <el-card>
         <template #header>
-          <span>查询构建器</span>
+          <span>{{ $t('pages.search.queryBuilder') }}</span>
         </template>
         
         <div v-if="searchForm.queryType === 'match_all'">
-          <p>匹配所有文档</p>
+          <p>{{ $t('pages.search.queryTypes.matchAll') }}</p>
         </div>
         
         <div v-else-if="searchForm.queryType === 'match'">
           <el-form :model="matchQuery" label-width="80px">
-            <el-form-item label="字段">
-              <el-input v-model="matchQuery.field" placeholder="字段名" />
+            <el-form-item :label="$t('pages.search.fields.field')">
+              <el-input v-model="matchQuery.field" :placeholder="$t('placeholders.enterFieldName')" />
             </el-form-item>
-            <el-form-item label="值">
-              <el-input v-model="matchQuery.value" placeholder="搜索值" />
+            <el-form-item :label="$t('pages.search.fields.value')">
+              <el-input v-model="matchQuery.value" :placeholder="$t('placeholders.enterSearchValue')" />
             </el-form-item>
           </el-form>
         </div>
 
         <div v-else-if="searchForm.queryType === 'term'">
           <el-form :model="termQuery" label-width="80px">
-            <el-form-item label="字段">
-              <el-input v-model="termQuery.field" placeholder="字段名" />
+            <el-form-item :label="$t('pages.search.fields.field')">
+              <el-input v-model="termQuery.field" :placeholder="$t('placeholders.enterFieldName')" />
             </el-form-item>
-            <el-form-item label="值">
-              <el-input v-model="termQuery.value" placeholder="精确值" />
+            <el-form-item :label="$t('pages.search.fields.value')">
+              <el-input v-model="termQuery.value" :placeholder="$t('placeholders.enterExactValue')" />
             </el-form-item>
           </el-form>
         </div>
 
         <div v-else-if="searchForm.queryType === 'range'">
           <el-form :model="rangeQuery" label-width="80px">
-            <el-form-item label="字段">
-              <el-input v-model="rangeQuery.field" placeholder="字段名" />
+            <el-form-item :label="$t('pages.search.fields.field')">
+              <el-input v-model="rangeQuery.field" :placeholder="$t('placeholders.enterFieldName')" />
             </el-form-item>
-            <el-form-item label="最小值">
-              <el-input v-model="rangeQuery.gte" placeholder="大于等于" />
+            <el-form-item :label="$t('pages.search.fields.minValue')">
+              <el-input v-model="rangeQuery.gte" :placeholder="$t('placeholders.enterGreaterEqual')" />
             </el-form-item>
-            <el-form-item label="最大值">
-              <el-input v-model="rangeQuery.lte" placeholder="小于等于" />
+            <el-form-item :label="$t('pages.search.fields.maxValue')">
+              <el-input v-model="rangeQuery.lte" :placeholder="$t('placeholders.enterLessEqual')" />
             </el-form-item>
           </el-form>
         </div>
 
         <!-- 聚合查询构建器 -->
         <div v-if="searchForm.enableAggs" class="aggs-builder">
-          <el-divider content-position="left">聚合查询构建器</el-divider>
+          <el-divider content-position="left">{{ $t('pages.search.aggregations.title') }}</el-divider>
           
           <div v-for="(agg, index) in aggregations" :key="index" class="agg-item">
             <el-card shadow="never" class="agg-card">
               <template #header>
                 <div class="agg-header">
-                  <span>聚合 {{ index + 1 }}</span>
+                  <span>{{ $t('pages.search.aggregations.aggregation') }} {{ index + 1 }}</span>
                   <el-button 
                     type="danger" 
                     size="small" 
                     @click="removeAggregation(index)"
                     :icon="Delete"
                   >
-                    删除
+                    {{ $t('actions.delete') }}
                   </el-button>
                 </div>
               </template>
               
               <el-form :model="agg" label-width="100px">
-                <el-form-item label="聚合名称">
-                  <el-input v-model="agg.name" placeholder="聚合名称" />
+                <el-form-item :label="$t('pages.search.aggregations.name')">
+                  <el-input v-model="agg.name" :placeholder="$t('placeholders.enterAggName')" />
                 </el-form-item>
-                <el-form-item label="聚合类型">
-                  <el-select v-model="agg.type" placeholder="选择聚合类型" style="width: 200px">
-                    <el-option-group label="指标聚合">
-                      <el-option label="平均值 (avg)" value="avg" />
-                      <el-option label="最大值 (max)" value="max" />
-                      <el-option label="最小值 (min)" value="min" />
-                      <el-option label="求和 (sum)" value="sum" />
-                      <el-option label="计数 (value_count)" value="value_count" />
-                      <el-option label="统计 (stats)" value="stats" />
+                <el-form-item :label="$t('pages.search.aggregations.type')">
+                  <el-select v-model="agg.type" :placeholder="$t('placeholders.selectAggType')" style="width: 200px">
+                    <el-option-group :label="$t('pages.search.aggregations.metricAggs')">
+                      <el-option :label="$t('pages.search.aggregations.types.avg')" value="avg" />
+                      <el-option :label="$t('pages.search.aggregations.types.max')" value="max" />
+                      <el-option :label="$t('pages.search.aggregations.types.min')" value="min" />
+                      <el-option :label="$t('pages.search.aggregations.types.sum')" value="sum" />
+                      <el-option :label="$t('pages.search.aggregations.types.valueCount')" value="value_count" />
+                      <el-option :label="$t('pages.search.aggregations.types.stats')" value="stats" />
                     </el-option-group>
-                    <el-option-group label="桶聚合">
-                      <el-option label="词项聚合 (terms)" value="terms" />
-                      <el-option label="范围聚合 (range)" value="range" />
-                      <el-option label="日期直方图 (date_histogram)" value="date_histogram" />
-                      <el-option label="直方图 (histogram)" value="histogram" />
+                    <el-option-group :label="$t('pages.search.aggregations.bucketAggs')">
+                      <el-option :label="$t('pages.search.aggregations.types.terms')" value="terms" />
+                      <el-option :label="$t('pages.search.aggregations.types.range')" value="range" />
+                      <el-option :label="$t('pages.search.aggregations.types.dateHistogram')" value="date_histogram" />
+                      <el-option :label="$t('pages.search.aggregations.types.histogram')" value="histogram" />
                     </el-option-group>
                   </el-select>
                 </el-form-item>
@@ -155,68 +155,68 @@
                 <!-- 指标聚合字段 -->
                 <el-form-item 
                   v-if="['avg', 'max', 'min', 'sum', 'value_count', 'stats'].includes(agg.type)" 
-                  label="字段"
+                  :label="$t('pages.search.fields.field')"
                 >
-                  <el-input v-model="agg.field" placeholder="字段名" />
+                  <el-input v-model="agg.field" :placeholder="$t('placeholders.enterFieldName')" />
                 </el-form-item>
                 
                 <!-- Terms聚合配置 -->
                 <template v-if="agg.type === 'terms'">
-                  <el-form-item label="字段">
-                    <el-input v-model="agg.field" placeholder="字段名" />
+                  <el-form-item :label="$t('pages.search.fields.field')">
+                    <el-input v-model="agg.field" :placeholder="$t('placeholders.enterFieldName')" />
                   </el-form-item>
-                  <el-form-item label="返回数量">
-                    <el-input-number v-model="agg.size" :min="1" :max="1000" placeholder="10" />
+                  <el-form-item :label="$t('pages.search.aggregations.returnCount')">
+                    <el-input-number v-model="agg.size" :min="1" :max="1000" :placeholder="$t('placeholders.enterReturnCount')" />
                   </el-form-item>
                 </template>
                 
                 <!-- Range聚合配置 -->
                 <template v-if="agg.type === 'range'">
-                  <el-form-item label="字段">
-                    <el-input v-model="agg.field" placeholder="字段名" />
+                  <el-form-item :label="$t('pages.search.fields.field')">
+                    <el-input v-model="agg.field" :placeholder="$t('placeholders.enterFieldName')" />
                   </el-form-item>
-                  <el-form-item label="范围配置">
+                  <el-form-item :label="$t('pages.search.aggregations.rangeConfig')">
                     <div v-for="(range, rIndex) in agg.ranges" :key="rIndex" class="range-item">
-                      <el-input v-model="range.from" placeholder="起始值" style="width: 100px" />
-                      <span style="margin: 0 10px">到</span>
-                      <el-input v-model="range.to" placeholder="结束值" style="width: 100px" />
+                      <el-input v-model="range.from" :placeholder="$t('placeholders.enterStartValue')" style="width: 100px" />
+                      <span style="margin: 0 10px">{{ $t('pages.search.aggregations.to') }}</span>
+                      <el-input v-model="range.to" :placeholder="$t('placeholders.enterEndValue')" style="width: 100px" />
                       <el-button 
                         type="danger" 
                         size="small" 
                         @click="removeRange(index, rIndex)"
                         style="margin-left: 10px"
                       >
-                        删除
+                        {{ $t('actions.delete') }}
                       </el-button>
                     </div>
-                    <el-button type="primary" size="small" @click="addRange(index)">添加范围</el-button>
+                    <el-button type="primary" size="small" @click="addRange(index)">{{ $t('pages.search.aggregations.addRange') }}</el-button>
                   </el-form-item>
                 </template>
                 
                 <!-- Date Histogram聚合配置 -->
                 <template v-if="agg.type === 'date_histogram'">
-                  <el-form-item label="字段">
-                    <el-input v-model="agg.field" placeholder="日期字段名" />
+                  <el-form-item :label="$t('pages.search.fields.field')">
+                    <el-input v-model="agg.field" :placeholder="$t('placeholders.enterDateField')" />
                   </el-form-item>
-                  <el-form-item label="时间间隔">
-                    <el-select v-model="agg.calendar_interval" placeholder="选择时间间隔">
-                      <el-option label="1分钟" value="1m" />
-                      <el-option label="1小时" value="1h" />
-                      <el-option label="1天" value="1d" />
-                      <el-option label="1周" value="1w" />
-                      <el-option label="1月" value="1M" />
-                      <el-option label="1年" value="1y" />
+                  <el-form-item :label="$t('pages.search.aggregations.timeInterval')">
+                    <el-select v-model="agg.calendar_interval" :placeholder="$t('placeholders.selectTimeInterval')">
+                      <el-option :label="$t('pages.search.aggregations.timeIntervals.1m')" value="1m" />
+                      <el-option :label="$t('pages.search.aggregations.timeIntervals.1h')" value="1h" />
+                      <el-option :label="$t('pages.search.aggregations.timeIntervals.1d')" value="1d" />
+                      <el-option :label="$t('pages.search.aggregations.timeIntervals.1w')" value="1w" />
+                      <el-option :label="$t('pages.search.aggregations.timeIntervals.1M')" value="1M" />
+                      <el-option :label="$t('pages.search.aggregations.timeIntervals.1y')" value="1y" />
                     </el-select>
                   </el-form-item>
                 </template>
                 
                 <!-- Histogram聚合配置 -->
                 <template v-if="agg.type === 'histogram'">
-                  <el-form-item label="字段">
-                    <el-input v-model="agg.field" placeholder="数值字段名" />
+                  <el-form-item :label="$t('pages.search.fields.field')">
+                    <el-input v-model="agg.field" :placeholder="$t('placeholders.enterNumericField')" />
                   </el-form-item>
-                  <el-form-item label="间隔">
-                    <el-input-number v-model="agg.interval" :min="1" placeholder="间隔值" />
+                  <el-form-item :label="$t('pages.search.aggregations.interval')">
+                    <el-input-number v-model="agg.interval" :min="1" :placeholder="$t('placeholders.enterIntervalValue')" />
                   </el-form-item>
                 </template>
               </el-form>
@@ -224,18 +224,18 @@
           </div>
           
           <el-button type="primary" @click="addAggregation" class="add-agg-btn">
-            添加聚合
+            {{ $t('pages.search.aggregations.addAggregation') }}
           </el-button>
         </div>
 
         <div class="query-actions">
-          <el-button type="primary" @click="executeSearch">执行查询</el-button>
-          <el-button @click="clearSearch">清空</el-button>
+          <el-button type="primary" @click="executeSearch">{{ $t('pages.search.executeQuery') }}</el-button>
+          <el-button @click="clearSearch">{{ $t('pages.search.clearSearch') }}</el-button>
         </div>
         
         <!-- 查询语句显示区域 -->
         <div class="query-display" v-if="currentQuery">
-          <el-divider content-position="left">生成的查询语句</el-divider>
+          <el-divider content-position="left">{{ $t('pages.search.generatedQuery') }}</el-divider>
           <div class="query-json">
             <pre>{{ JSON.stringify(currentQuery, null, 2) }}</pre>
           </div>
@@ -247,15 +247,15 @@
       <el-card>
         <template #header>
           <div class="results-header">
-            <span>查询结果</span>
-            <el-tag>命中: {{ searchResults.hits?.total?.value || 0 }}</el-tag>
-            <el-tag type="info">耗时: {{ searchResults.took }}ms</el-tag>
+            <span>{{ $t('pages.search.queryResults') }}</span>
+            <el-tag>{{ $t('pages.search.hitCount') }}: {{ searchResults.hits?.total?.value || 0 }}</el-tag>
+            <el-tag type="info">{{ $t('pages.search.timeCost') }}: {{ searchResults.took }}ms</el-tag>
           </div>
         </template>
         
         <!-- 聚合结果 -->
         <div v-if="searchResults.aggregations" class="aggregation-results">
-          <el-divider content-position="left">聚合结果</el-divider>
+          <el-divider content-position="left">{{ $t('pages.search.aggregationResults') }}</el-divider>
           <el-card v-for="(aggResult, aggName) in searchResults.aggregations" :key="aggName" class="agg-card">
             <template #header>
               <span class="agg-name">{{ aggName }}</span>
@@ -264,46 +264,46 @@
             <!-- Terms 聚合结果 -->
             <div v-if="aggResult.buckets" class="buckets-result">
               <el-table :data="aggResult.buckets" size="small">
-                <el-table-column prop="key" label="值" />
-                <el-table-column prop="doc_count" label="文档数" />
+                <el-table-column prop="key" :label="$t('pages.search.aggregations.statsLabels.value')" />
+                <el-table-column prop="doc_count" :label="$t('pages.search.aggregations.statsLabels.docCount')" />
               </el-table>
             </div>
             
             <!-- 指标聚合结果 -->
             <div v-else-if="aggResult.value !== undefined" class="metric-result">
               <el-descriptions :column="1" size="small">
-                <el-descriptions-item label="值">{{ aggResult.value }}</el-descriptions-item>
+                <el-descriptions-item :label="$t('pages.search.aggregations.statsLabels.value')">{{ aggResult.value }}</el-descriptions-item>
               </el-descriptions>
             </div>
             
             <!-- Stats 聚合结果 -->
             <div v-else-if="aggResult.count !== undefined" class="stats-result">
               <el-descriptions :column="2" size="small">
-                <el-descriptions-item label="数量">{{ aggResult.count }}</el-descriptions-item>
-                <el-descriptions-item label="最小值">{{ aggResult.min }}</el-descriptions-item>
-                <el-descriptions-item label="最大值">{{ aggResult.max }}</el-descriptions-item>
-                <el-descriptions-item label="平均值">{{ aggResult.avg }}</el-descriptions-item>
-                <el-descriptions-item label="总和">{{ aggResult.sum }}</el-descriptions-item>
+                <el-descriptions-item :label="$t('pages.search.aggregations.statsLabels.count')">{{ aggResult.count }}</el-descriptions-item>
+                <el-descriptions-item :label="$t('pages.search.aggregations.statsLabels.min')">{{ aggResult.min }}</el-descriptions-item>
+                <el-descriptions-item :label="$t('pages.search.aggregations.statsLabels.max')">{{ aggResult.max }}</el-descriptions-item>
+                <el-descriptions-item :label="$t('pages.search.aggregations.statsLabels.avg')">{{ aggResult.avg }}</el-descriptions-item>
+                <el-descriptions-item :label="$t('pages.search.aggregations.statsLabels.sum')">{{ aggResult.sum }}</el-descriptions-item>
               </el-descriptions>
             </div>
             
             <!-- Range 聚合结果 -->
             <div v-else-if="aggResult.buckets" class="range-result">
               <el-table :data="aggResult.buckets" size="small">
-                <el-table-column prop="key" label="范围" />
-                <el-table-column prop="doc_count" label="文档数" />
+                <el-table-column prop="key" :label="$t('pages.search.aggregations.statsLabels.range')" />
+                <el-table-column prop="doc_count" :label="$t('pages.search.aggregations.statsLabels.docCount')" />
               </el-table>
             </div>
           </el-card>
         </div>
 
         <el-table :data="searchResults.hits?.hits" style="width: 100%" stripe>
-          <el-table-column prop="_index" label="索引" width="150" />
+          <el-table-column prop="_index" :label="$t('pages.search.fields.index')" width="150" />
           <el-table-column prop="_id" label="ID" width="200" />
-          <el-table-column prop="_score" label="分数" width="100" />
-          <el-table-column label="源数据">
+          <el-table-column prop="_score" label="Score" width="100" />
+          <el-table-column :label="$t('pages.documents.fields.summary')">
             <template #default="scope">
-              <el-button size="small" @click="viewDocument(scope.row)">查看</el-button>
+              <el-button size="small" @click="viewDocument(scope.row)">{{ $t('actions.view') }}</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -321,7 +321,7 @@
       </el-card>
     </div>
 
-    <el-dialog v-model="showDocumentDialog" title="文档详情" width="800px">
+    <el-dialog v-model="showDocumentDialog" :title="$t('pages.documents.documentDetails')" width="800px">
       <JsonViewer :data="documentData" height="500px" />
     </el-dialog>
   </div>
@@ -330,10 +330,13 @@
 <script setup>
 import { ref, onMounted, watch, computed, onUnmounted } from 'vue'
 import { ElMessage } from 'element-plus'
+import { useI18n } from 'vue-i18n'
 import { Refresh, ArrowDown, Close, Delete } from '@element-plus/icons-vue'
 import * as api from '../api/elasticsearch'
 import JsonViewer from '../components/JsonViewer.vue'
 import storageManager from '../utils/storage'
+
+const { t } = useI18n()
 
 // 刷新功能相关的响应式数据
 const refreshing = ref(false)
@@ -474,7 +477,7 @@ const buildAggregations = () => {
 
 const executeSearch = async () => {
   if (!searchForm.value.index) {
-    ElMessage.warning('请选择索引')
+    ElMessage.warning(t('validation.indexRequired'))
     return
   }
 
@@ -498,9 +501,9 @@ const executeSearch = async () => {
     const result = await api.searchDocuments(searchParams)
     
     searchResults.value = result
-    ElMessage.success('查询成功')
+    ElMessage.success(t('success.querySuccess'))
   } catch (error) {
-    ElMessage.error('查询失败: ' + error.message)
+    ElMessage.error(t('errors.queryFailed') + ': ' + error.message)
   }
 }
 
@@ -552,16 +555,16 @@ const removeRange = (aggIndex, rangeIndex) => {
 // 刷新功能方法
 const refreshSearch = async () => {
   if (!searchForm.value.index) {
-    ElMessage.warning('请先选择索引')
+    ElMessage.warning(t('validation.firstSelectIndex'))
     return
   }
   
   refreshing.value = true
   try {
     await executeSearch()
-    ElMessage.success('刷新成功')
+    ElMessage.success(t('messages.refreshSuccess'))
   } catch (error) {
-    ElMessage.error('刷新失败: ' + error.message)
+    ElMessage.error(t('errors.refreshFailed') + ': ' + error.message)
   } finally {
     refreshing.value = false
   }
@@ -599,10 +602,10 @@ const handleAutoRefresh = (interval) => {
       }
     }, interval)
     
-    ElMessage.success(`已启用定时刷新，间隔 ${interval / 1000} 秒`)
+    ElMessage.success(t('success.autoRefreshEnabled', { interval: interval / 1000 }))
   } else {
     nextRefreshCountdown.value = 0
-    ElMessage.info('已关闭定时刷新')
+    ElMessage.info(t('success.autoRefreshDisabled'))
   }
 }
 
@@ -647,7 +650,7 @@ const loadIndices = async () => {
     }
   } catch (error) {
     console.error('Failed to load indices:', error)
-    ElMessage.error('加载索引失败: ' + error.message)
+    ElMessage.error(t('errors.loadIndicesFailed') + ': ' + error.message)
   }
 }
 

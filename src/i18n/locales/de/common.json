@@ -1,0 +1,85 @@
+{
+  "app": {
+    "title": "ES-Manager",
+    "loading": "Lädt...",
+    "error": "Ein Fehler ist aufgetreten",
+    "success": "Erfolg",
+    "warning": "Warnung",
+    "info": "Information"
+  },
+  "connection": {
+    "status": "Verbindungsstatus",
+    "connected": "Verbunden",
+    "disconnected": "Getrennt",
+    "notConnected": "ES nicht verbunden",
+    "switchConnection": "Verbindung wechseln",
+    "manageConnections": "Verbindungen verwalten",
+    "refreshStatus": "Status aktualisieren",
+    "currentConnection": "Aktuelle Verbindung",
+    "clusterName": "Cluster-Name",
+    "nodeName": "Knoten-Name",
+    "version": "Version",
+    "connectionTime": "Verbindungszeit",
+    "running": "Läuft"
+  },
+  "menu": {
+    "search": "Suchen",
+    "indices": "Index-Verwaltung",
+    "documents": "Dokument-Verwaltung",
+    "stats": "Statistische Analyse",
+    "policies": "Richtlinien-Verwaltung",
+    "analyzers": "Analyzer-Verwaltung",
+    "mappings": "Mapping-Verwaltung",
+    "plugins": "Plugin-Verwaltung",
+    "connections": "Verbindungs-Verwaltung",
+    "settings": "Systemeinstellungen"
+  },
+  "actions": {
+    "create": "Erstellen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "refresh": "Aktualisieren",
+    "search": "Suchen",
+    "filter": "Filtern",
+    "export": "Exportieren",
+    "import": "Importieren",
+    "close": "Schließen",
+    "submit": "Absenden",
+    "reset": "Zurücksetzen",
+    "add": "Hinzufügen",
+    "remove": "Entfernen",
+    "update": "Aktualisieren",
+    "view": "Ansehen",
+    "download": "Herunterladen",
+    "upload": "Hochladen"
+  },
+  "status": {
+    "online": "Online",
+    "offline": "Offline",
+    "healthy": "Gesund",
+    "unhealthy": "Ungesund",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "enabled": "Aktiviert",
+    "disabled": "Deaktiviert",
+    "pending": "Ausstehend",
+    "processing": "Verarbeitung",
+    "completed": "Abgeschlossen",
+    "failed": "Fehlgeschlagen"
+  },
+  "messages": {
+    "refreshSuccess": "Aktualisierung erfolgreich",
+    "switchConnectionSuccess": "Verbindungswechsel erfolgreich",
+    "switchConnectionFailed": "Verbindungswechsel fehlgeschlagen",
+    "loadConnectionsFailed": "Laden der Verbindungen fehlgeschlagen"
+  },
+  "language": {
+    "selectLanguage": "Sprache wählen",
+    "eastAsian": "Ostasiatische Sprachen",
+    "european": "Europäische Sprachen",
+    "others": "Andere Sprachen"
+  }
+}

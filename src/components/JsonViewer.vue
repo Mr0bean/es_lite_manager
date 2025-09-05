@@ -3,13 +3,13 @@
     <div class="json-viewer-header">
       <div class="json-viewer-actions">
         <el-button size="small" @click="copyToClipboard" :icon="CopyDocument">
-          复制
+          {{ $t('jsonViewer.copy') }}
         </el-button>
         <el-button size="small" @click="toggleFormat" :icon="Document">
-          {{ isFormatted ? '压缩' : '格式化' }}
+          {{ isFormatted ? $t('jsonViewer.compress') : $t('jsonViewer.format') }}
         </el-button>
         <el-button size="small" @click="toggleCollapse" :icon="Fold">
-          {{ isCollapsed ? '展开' : '折叠' }}
+          {{ isCollapsed ? $t('jsonViewer.expand') : $t('jsonViewer.collapse') }}
         </el-button>
       </div>
     </div>
@@ -28,6 +28,9 @@
 import { ref, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { CopyDocument, Document, Fold } from '@element-plus/icons-vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   data: {
@@ -83,10 +86,10 @@ const highlightedJson = computed(() => {
       const data = parsedData.value
       if (typeof data === 'object' && data !== null) {
         if (Array.isArray(data)) {
-          json = `[...] (${data.length} items)`
+          json = `[...] (${data.length} ${t('jsonViewer.items')})`
         } else {
           const keys = Object.keys(data)
-          json = `{...} (${keys.length} keys: ${keys.slice(0, 3).join(', ')}${keys.length > 3 ? '...' : ''})`
+          json = `{...} (${keys.length} ${t('jsonViewer.keys')}: ${keys.slice(0, 3).join(', ')}${keys.length > 3 ? '...' : ''})`
         }
       }
     } catch {
@@ -108,7 +111,7 @@ const highlightedJson = computed(() => {
 const copyToClipboard = async () => {
   try {
     await navigator.clipboard.writeText(formattedJson.value)
-    ElMessage.success('已复制到剪贴板')
+    ElMessage.success(t('jsonViewer.copiedToClipboard'))
   } catch {
     // 降级方案
     const textArea = document.createElement('textarea')
@@ -117,7 +120,7 @@ const copyToClipboard = async () => {
     textArea.select()
     document.execCommand('copy')
     document.body.removeChild(textArea)
-    ElMessage.success('已复制到剪贴板')
+    ElMessage.success(t('jsonViewer.copiedToClipboard'))
   }
 }
 

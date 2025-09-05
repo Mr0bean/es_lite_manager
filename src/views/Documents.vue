@@ -2,15 +2,15 @@
   <div class="documents-container">
     <div class="page-header">
       <div class="header-top">
-        <h2>文档管理</h2>
+        <h2>{{ $t('pages.documents.title') }}</h2>
         <RefreshTimer :on-refresh="loadDocuments" :disabled="!selectedIndex" />
       </div>
       <div class="toolbar">
-        <el-select v-model="selectedIndex" placeholder="选择索引" @change="loadDocuments" clearable>
+        <el-select v-model="selectedIndex" :placeholder="$t('placeholders.selectIndex')" @change="loadDocuments" clearable>
           <el-option v-for="idx in indices" :key="idx.index" :label="idx.index" :value="idx.index" />
         </el-select>
         <el-button type="primary" @click="showCreateDialog = true" :disabled="!selectedIndex">
-          新建文档
+          {{ $t('pages.documents.newDocument') }}
         </el-button>
       </div>
     </div>
@@ -23,16 +23,16 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="_id" label="文档ID" width="250" />
-      <el-table-column label="摘要">
+      <el-table-column prop="_id" :label="$t('pages.documents.fields.documentId')" width="250" />
+      <el-table-column :label="$t('pages.documents.fields.summary')">
         <template #default="scope">
           {{ getDocumentSummary(scope.row._source) }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="180">
+      <el-table-column :label="$t('pages.documents.fields.operations')" width="180">
         <template #default="scope">
-          <el-button size="small" @click="editDocument(scope.row)">编辑</el-button>
-          <el-button size="small" type="danger" @click="deleteDocument(scope.row)">删除</el-button>
+          <el-button size="small" @click="editDocument(scope.row)">{{ $t('actions.edit') }}</el-button>
+          <el-button size="small" type="danger" @click="deleteDocument(scope.row)">{{ $t('actions.delete') }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -48,12 +48,12 @@
       :page-sizes="[10, 20, 50, 100]"
     />
 
-    <el-dialog v-model="showCreateDialog" :title="editMode ? '编辑文档' : '新建文档'" width="900px">
+    <el-dialog v-model="showCreateDialog" :title="editMode ? $t('pages.documents.editDocument') : $t('pages.documents.createDocument')" width="900px">
       <el-form :model="documentForm" label-width="80px">
-        <el-form-item label="文档ID" v-if="editMode">
+        <el-form-item :label="$t('pages.documents.fields.documentId')" v-if="editMode">
           <el-input v-model="documentForm.id" disabled />
         </el-form-item>
-        <el-form-item label="JSON数据" required>
+        <el-form-item :label="$t('pages.documents.fields.jsonData')" required>
           <JsonEditor 
             v-model="documentForm.content"
             :rows="20"
@@ -62,8 +62,8 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="closeDialog">取消</el-button>
-        <el-button type="primary" @click="saveDocument">保存</el-button>
+        <el-button @click="closeDialog">{{ $t('actions.cancel') }}</el-button>
+        <el-button type="primary" @click="saveDocument">{{ $t('actions.save') }}</el-button>
       </template>
     </el-dialog>
   </div>
@@ -72,11 +72,13 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { useI18n } from 'vue-i18n'
 import * as api from '../api/elasticsearch'
 import JsonEditor from '../components/JsonEditor.vue'
 import RefreshTimer from '../components/RefreshTimer.vue'
 import storageManager from '../utils/storage'
 
+const { t } = useI18n()
 const indices = ref([])
 const selectedIndex = ref('')
 const documents = ref([])
@@ -118,7 +120,7 @@ const loadDocuments = async () => {
     documents.value = result.hits?.hits || []
     total.value = result.hits?.total?.value || 0
   } catch (error) {
-    ElMessage.error('加载文档失败: ' + error.message)
+    ElMessage.error(t('errors.loadDocumentsFailed') + ': ' + error.message)
   } finally {
     loading.value = false
   }
@@ -141,21 +143,21 @@ const editDocument = (row) => {
 const deleteDocument = async (row) => {
   try {
     await ElMessageBox.confirm(
-      `确定要删除文档 ${row._id} 吗？`,
-      '警告',
+      t('confirmations.deleteDocument', { id: row._id }),
+      t('confirmations.title'),
       {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+        confirmButtonText: t('actions.confirm'),
+        cancelButtonText: t('actions.cancel'),
         type: 'warning'
       }
     )
     
     await api.deleteDocument(selectedIndex.value, row._id)
-    ElMessage.success('文档删除成功')
+    ElMessage.success(t('success.documentDeleted'))
     loadDocuments()
   } catch (error) {
     if (error !== 'cancel') {
-      ElMessage.error('删除文档失败: ' + error.message)
+      ElMessage.error(t('errors.deleteDocumentFailed') + ': ' + error.message)
     }
   }
 }
@@ -166,19 +168,19 @@ const saveDocument = async () => {
     
     if (editMode.value) {
       await api.updateDocument(selectedIndex.value, documentForm.value.id, content)
-      ElMessage.success('文档更新成功')
+      ElMessage.success(t('success.documentUpdated'))
     } else {
       await api.createDocument(selectedIndex.value, content)
-      ElMessage.success('文档创建成功')
+      ElMessage.success(t('success.documentCreated'))
     }
     
     closeDialog()
     loadDocuments()
   } catch (error) {
     if (error instanceof SyntaxError) {
-      ElMessage.error('JSON格式错误，请检查输入')
+      ElMessage.error(t('validation.jsonFormatError'))
     } else {
-      ElMessage.error('保存文档失败: ' + error.message)
+      ElMessage.error(t('errors.saveDocumentFailed') + ': ' + error.message)
     }
   }
 }
@@ -191,9 +193,9 @@ const closeDialog = () => {
 
 const handleJsonValidation = (result) => {
   if (result.valid) {
-    console.log('JSON验证通过:', result.data)
+    console.log('JSON validation passed:', result.data)
   } else {
-    console.error('JSON验证失败:', result.error)
+    console.error('JSON validation failed:', result.error)
   }
 }
 
@@ -219,7 +221,7 @@ const loadIndices = async () => {
     }
   } catch (error) {
     console.error('Failed to load indices:', error)
-    ElMessage.error('加载索引失败: ' + error.message)
+    ElMessage.error(t('errors.loadIndicesFailed') + ': ' + error.message)
   }
 }
 

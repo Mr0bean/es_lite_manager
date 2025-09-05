@@ -30,7 +30,7 @@ export const esConfig = {
 // 服务器配置
 export const serverConfig = {
   host: process.env.HOST || '0.0.0.0',
-  port: parseInt(process.env.PORT) || 3000,
+  port: parseInt(process.env.PORT) || 9021,
   cors: {
     origin: process.env.CORS_ORIGIN || '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],

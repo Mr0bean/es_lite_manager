@@ -1,0 +1,85 @@
+{
+  "app": {
+    "title": "ES 管理器",
+    "loading": "載入中...",
+    "error": "發生錯誤",
+    "success": "成功",
+    "warning": "警告",
+    "info": "資訊"
+  },
+  "connection": {
+    "status": "連線狀態",
+    "connected": "已連線",
+    "disconnected": "已斷開",
+    "notConnected": "ES 未連線",
+    "switchConnection": "切換連線",
+    "manageConnections": "管理連線",
+    "refreshStatus": "重新整理狀態",
+    "currentConnection": "目前連線",
+    "clusterName": "叢集名稱",
+    "nodeName": "節點名稱",
+    "version": "版本",
+    "connectionTime": "連線時間",
+    "running": "執行中"
+  },
+  "menu": {
+    "search": "搜尋",
+    "indices": "索引管理",
+    "documents": "文件管理",
+    "stats": "統計分析",
+    "policies": "策略管理",
+    "analyzers": "分詞器管理",
+    "mappings": "映射管理",
+    "plugins": "外掛程式管理",
+    "connections": "連線管理",
+    "settings": "系統設定"
+  },
+  "actions": {
+    "create": "建立",
+    "edit": "編輯",
+    "delete": "刪除",
+    "save": "儲存",
+    "cancel": "取消",
+    "confirm": "確認",
+    "refresh": "重新整理",
+    "search": "搜尋",
+    "filter": "篩選",
+    "export": "匯出",
+    "import": "匯入",
+    "close": "關閉",
+    "submit": "提交",
+    "reset": "重設",
+    "add": "新增",
+    "remove": "移除",
+    "update": "更新",
+    "view": "檢視",
+    "download": "下載",
+    "upload": "上傳"
+  },
+  "status": {
+    "online": "線上",
+    "offline": "離線",
+    "healthy": "健康",
+    "unhealthy": "不健康",
+    "active": "活躍",
+    "inactive": "非活躍",
+    "enabled": "已啟用",
+    "disabled": "已停用",
+    "pending": "待處理",
+    "processing": "處理中",
+    "completed": "已完成",
+    "failed": "失敗"
+  },
+  "messages": {
+    "refreshSuccess": "重新整理成功",
+    "switchConnectionSuccess": "連線切換成功",
+    "switchConnectionFailed": "連線切換失敗",
+    "loadConnectionsFailed": "載入連線失敗"
+  },
+  "language": {
+    "selectLanguage": "選擇語言",
+    "eastAsian": "東亞語言",
+    "european": "歐洲語言",
+    "others": "其他語言"
+  }
+}

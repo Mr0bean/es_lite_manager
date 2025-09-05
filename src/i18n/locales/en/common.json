@@ -1,0 +1,514 @@
+{
+  "app": {
+    "title": "ES Manager",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information"
+  },
+  "connection": {
+    "status": "Connection Status",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "notConnected": "ES Not Connected",
+    "switchConnection": "Switch Connection",
+    "manageConnections": "Manage Connections",
+    "refreshStatus": "Refresh Status",
+    "currentConnection": "Current Connection",
+    "clusterName": "Cluster Name",
+    "nodeName": "Node Name",
+    "version": "Version",
+    "connectionTime": "Connection Time",
+    "running": "Running"
+  },
+  "menu": {
+    "search": "Search",
+    "indices": "Index Management",
+    "documents": "Document Management",
+    "stats": "Statistics Analysis",
+    "policies": "Policy Management",
+    "analyzers": "Analyzer Management",
+    "mappings": "Mapping Management",
+    "plugins": "Plugin Management",
+    "connections": "Connection Management",
+    "settings": "System Settings"
+  },
+  "actions": {
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "refresh": "Refresh",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "close": "Close",
+    "submit": "Submit",
+    "reset": "Reset",
+    "add": "Add",
+    "remove": "Remove",
+    "update": "Update",
+    "view": "View",
+    "download": "Download",
+    "upload": "Upload"
+  },
+  "jsonEditor": {
+    "format": "Format",
+    "validate": "Validate", 
+    "compress": "Compress",
+    "clear": "Clear",
+    "enableWordWrap": "Enable Word Wrap",
+    "disableWordWrap": "Disable Word Wrap",
+    "validJson": "✓ Valid JSON",
+    "invalidJson": "✗ Invalid JSON",
+    "characters": "characters",
+    "placeholder": "Please enter valid JSON data",
+    "formatSuccess": "JSON formatted successfully",
+    "formatError": "JSON format error",
+    "validateSuccess": "JSON format is correct",
+    "validateError": "JSON format error",
+    "compressSuccess": "JSON compressed successfully",
+    "clearSuccess": "Content cleared",
+    "wordWrapEnabled": "Word wrap enabled",
+    "wordWrapDisabled": "Word wrap disabled"
+  },
+  "jsonViewer": {
+    "copy": "Copy",
+    "format": "Format",
+    "compress": "Compress",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "copiedToClipboard": "Copied to clipboard",
+    "items": "items",
+    "keys": "keys"
+  },
+  "status": {
+    "online": "Online",
+    "offline": "Offline",
+    "healthy": "Healthy",
+    "unhealthy": "Unhealthy",
+    "active": "Active",
+    "inactive": "Inactive",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "pending": "Pending",
+    "processing": "Processing",
+    "completed": "Completed",
+    "failed": "Failed"
+  },
+  "messages": {
+    "refreshSuccess": "Refresh successful",
+    "switchConnectionSuccess": "Connection switched successfully",
+    "switchConnectionFailed": "Failed to switch connection",
+    "loadConnectionsFailed": "Failed to load connections"
+  },
+  "language": {
+    "selectLanguage": "Select Language",
+    "eastAsian": "East Asian Languages",
+    "european": "European Languages",
+    "others": "Other Languages"
+  },
+  "pages": {
+    "search": {
+      "title": "Search Management",
+      "queryBuilder": "Query Builder",
+      "enableAggs": "Enable Aggregations",
+      "executeQuery": "Execute Query",
+      "clearSearch": "Clear",
+      "queryResults": "Query Results",
+      "generatedQuery": "Generated Query",
+      "aggregationResults": "Aggregation Results",
+      "hitCount": "Hits",
+      "timeCost": "Time",
+      "autoRefresh": "Auto Refresh",
+      "nextRefresh": "Next Refresh",
+      "fields": {
+        "index": "Index",
+        "queryType": "Query Type",
+        "field": "Field",
+        "value": "Value",
+        "exactValue": "Exact Value",
+        "minValue": "Min Value",
+        "maxValue": "Max Value",
+        "searchValue": "Search Value",
+        "fieldName": "Field Name",
+        "greaterEqual": "Greater or Equal",
+        "lessEqual": "Less or Equal"
+      },
+      "queryTypes": {
+        "matchAll": "Match all documents"
+      },
+      "aggregations": {
+        "title": "Aggregation Query Builder",
+        "name": "Aggregation Name",
+        "type": "Aggregation Type",
+        "addAggregation": "Add Aggregation",
+        "aggregation": "Aggregation",
+        "returnCount": "Return Count",
+        "rangeConfig": "Range Configuration",
+        "addRange": "Add Range",
+        "to": "to",
+        "timeInterval": "Time Interval",
+        "interval": "Interval",
+        "dateField": "Date Field Name",
+        "numericField": "Numeric Field Name",
+        "intervalValue": "Interval Value",
+        "metricAggs": "Metric Aggregations",
+        "bucketAggs": "Bucket Aggregations",
+        "types": {
+          "avg": "Average (avg)",
+          "max": "Maximum (max)",
+          "min": "Minimum (min)",
+          "sum": "Sum (sum)",
+          "valueCount": "Count (value_count)",
+          "stats": "Statistics (stats)",
+          "terms": "Terms Aggregation (terms)",
+          "range": "Range Aggregation (range)",
+          "dateHistogram": "Date Histogram (date_histogram)",
+          "histogram": "Histogram (histogram)"
+        },
+        "timeIntervals": {
+          "1m": "1 minute",
+          "1h": "1 hour",
+          "1d": "1 day",
+          "1w": "1 week",
+          "1M": "1 month",
+          "1y": "1 year"
+        },
+        "statsLabels": {
+          "count": "Count",
+          "min": "Minimum",
+          "max": "Maximum",
+          "avg": "Average",
+          "sum": "Sum",
+          "value": "Value",
+          "range": "Range",
+          "docCount": "Document Count"
+        }
+      },
+      "autoRefreshIntervals": {
+        "disable": "Disable",
+        "5s": "5 seconds",
+        "10s": "10 seconds",
+        "30s": "30 seconds",
+        "1m": "1 minute"
+      }
+    },
+    "indices": {
+      "title": "Index Management",
+      "createIndex": "Create Index",
+      "indexDetails": "Index Details",
+      "quickActions": "Quick Actions",
+      "fields": {
+        "indexName": "Index Name",
+        "healthStatus": "Health Status",
+        "status": "Status",
+        "primaryShards": "Primary Shards",
+        "replicas": "Replicas",
+        "docCount": "Document Count",
+        "deletedDocs": "Deleted Documents",
+        "storeSize": "Store Size",
+        "shardCount": "Shard Count",
+        "replicaCount": "Replica Count",
+        "ilmPolicy": "ILM Policy"
+      },
+      "actions": {
+        "documentManagement": "Document Management",
+        "statisticsAnalysis": "Statistics Analysis",
+        "analyzerManagement": "Analyzer Management",
+        "mappingManagement": "Mapping Management",
+        "manageDocs": "Manage documents in index",
+        "viewStats": "View index statistics",
+        "testAnalyzer": "Test analyzer effects",
+        "editMapping": "View and edit mappings"
+      },
+      "policy": {
+        "loading": "Loading...",
+        "notSet": "No policy set",
+        "viewDetails": "View Details",
+        "policyDetails": "ILM Policy Details",
+        "policyName": "Policy Name"
+      }
+    },
+    "documents": {
+      "title": "Document Management",
+      "newDocument": "New Document",
+      "editDocument": "Edit Document",
+      "createDocument": "Create Document",
+      "documentDetails": "Document Details",
+      "fields": {
+        "documentId": "Document ID",
+        "summary": "Summary",
+        "operations": "Operations",
+        "jsonData": "JSON Data"
+      }
+    },
+    "settings": {
+      "title": "System Settings",
+      "tabs": {
+        "basic": "Basic Settings",
+        "advanced": "Advanced Settings",
+        "about": "About"
+      },
+      "sections": {
+        "appConfig": "Application Configuration",
+        "portConfig": "Port Configuration",
+        "apiConfig": "API Configuration",
+        "debugOptions": "Debug Options",
+        "cacheSettings": "Cache Settings"
+      },
+      "fields": {
+        "appTitle": "Application Title",
+        "backendPort": "Backend Port",
+        "frontendPort": "Frontend Port",
+        "apiTimeout": "API Timeout",
+        "enableDevTools": "Enable Dev Tools",
+        "logLevel": "Log Level",
+        "clearCache": "Clear Cache",
+        "clearAllCache": "Clear All Cache"
+      },
+      "hints": {
+        "defaultBackendPort": "Default port: 9021 (requires app restart after change)",
+        "defaultFrontendPort": "Default port: 9020 (display only)",
+        "timeoutUnit": "Unit: milliseconds (default: 10000ms)"
+      },
+      "about": {
+        "version": "Version 1.0.0",
+        "appName": "Elasticsearch Manager",
+        "currentEnv": "Current Environment",
+        "runMode": "Run Mode",
+        "backendUrl": "Backend URL",
+        "electronApp": "Electron Desktop App",
+        "webApp": "Web Application",
+        "checkUpdate": "Check Update",
+        "resetDefault": "Reset to Default",
+        "saveSettings": "Save Settings"
+      }
+    },
+    "connections": {
+      "title": "Connection Management",
+      "newConnection": "New Connection",
+      "editConnection": "Edit Connection",
+      "connectionDetails": "Connection Details",
+      "testConnection": "Test Connection",
+      "fields": {
+        "connectionName": "Connection Name",
+        "protocol": "Protocol",
+        "host": "Host Address",
+        "port": "Port",
+        "username": "Username",
+        "password": "Password",
+        "timeout": "Timeout",
+        "maxRetries": "Max Retries"
+      }
+    },
+    "stats": {
+      "title": "Statistics Analysis"
+    },
+    "analyzers": {
+      "title": "Analyzer Management"
+    },
+    "mappings": {
+      "title": "Mapping Management"
+    },
+    "policies": {
+      "title": "Policy Management"
+    },
+    "plugins": {
+      "title": "Plugin Management"
+    }
+  },
+  "placeholders": {
+    "selectIndex": "Select Index",
+    "enterIndexName": "Enter index name",
+    "enterConnectionName": "Enter connection name",
+    "enterHostAddress": "Enter host address",
+    "enterUsername": "Enter username (optional)",
+    "enterPassword": "Enter password (optional)",
+    "selectQueryType": "Select query type",
+    "selectLogLevel": "Please select",
+    "enterFieldName": "Field name",
+    "enterSearchValue": "Search value",
+    "enterExactValue": "Exact value",
+    "enterGreaterEqual": "Greater or equal",
+    "enterLessEqual": "Less or equal",
+    "enterAggName": "Aggregation name",
+    "selectAggType": "Select aggregation type",
+    "enterReturnCount": "10",
+    "enterStartValue": "Start value",
+    "enterEndValue": "End value",
+    "enterDateField": "Date field name",
+    "selectTimeInterval": "Select time interval",
+    "enterNumericField": "Numeric field name",
+    "enterIntervalValue": "Interval value",
+    "enterValidJson": "Enter valid JSON format data"
+  },
+  "validation": {
+    "connectionNameRequired": "Connection name is required",
+    "hostRequired": "Host address is required",
+    "invalidHostFormat": "Please enter a valid IP address or hostname",
+    "portRequired": "Port number is required",
+    "indexNameRequired": "Index name is required",
+    "indexRequired": "Please select an index",
+    "firstSelectIndex": "Please select an index first",
+    "jsonFormatError": "JSON format error, please check your input"
+  },
+  "confirmations": {
+    "deleteIndex": "Are you sure you want to delete index {name}? This action cannot be undone!",
+    "deleteDocument": "Are you sure you want to delete document {id}?",
+    "deleteConnection": "Are you sure you want to delete connection \"{name}\"? This action cannot be undone.",
+    "title": "Warning"
+  },
+  "emptyStates": {
+    "selectIndexForAnalyzer": "Please select an index to view analyzer configuration",
+    "selectIndex": "Please select an index",
+    "selectIndexForStats": "Please select an index to view statistics",
+    "selectIndexForFields": "Please select an index to view field details"
+  },
+  "success": {
+    "indexCreated": "Index created successfully",
+    "indexDeleted": "Index deleted successfully",
+    "documentCreated": "Document created successfully",
+    "documentUpdated": "Document updated successfully",
+    "documentDeleted": "Document deleted successfully",
+    "querySuccess": "Query executed successfully",
+    "settingsSaved": "Settings saved successfully",
+    "settingsReset": "Settings reset to default values",
+    "cacheCleared": "Cache cleared successfully",
+    "mappingCopied": "Mapping JSON copied to clipboard",
+    "connectionTested": "Connection test successful!",
+    "connectionSwitched": "Connection switched successfully",
+    "connectionUpdated": "Connection updated successfully",
+    "connectionAdded": "Connection added successfully",
+    "connectionDeleted": "Connection deleted successfully",
+    "autoRefreshEnabled": "Auto refresh enabled, interval {interval} seconds",
+    "autoRefreshDisabled": "Auto refresh disabled",
+    "jsonFormatted": "JSON formatted successfully",
+    "jsonValid": "JSON format is valid",
+    "jsonCompressed": "JSON compressed successfully",
+    "contentCleared": "Content cleared",
+    "wordWrapEnabled": "Word wrap enabled",
+    "wordWrapDisabled": "Word wrap disabled",
+    "copiedToClipboard": "Copied to clipboard",
+    "mappingCopied": "Mapping JSON copied to clipboard"
+  },
+  "errors": {
+    "loadIndicesFailed": "Failed to load indices list",
+    "createIndexFailed": "Failed to create index",
+    "deleteIndexFailed": "Failed to delete index",
+    "loadDocumentsFailed": "Failed to load documents",
+    "saveDocumentFailed": "Failed to save document",
+    "deleteDocumentFailed": "Failed to delete document",
+    "queryFailed": "Query failed",
+    "refreshFailed": "Refresh failed",
+    "saveSettingsFailed": "Failed to save settings",
+    "loadStatsFailed": "Failed to get statistics",
+    "loadConnectionsFailed": "Failed to get connections list",
+    "testConnectionFailed": "Connection test failed",
+    "switchConnectionFailed": "Failed to switch connection",
+    "addConnectionFailed": "Failed to add connection",
+    "updateConnectionFailed": "Failed to update connection",
+    "deleteConnectionFailed": "Failed to delete connection",
+    "loadConnectionDetailsFailed": "Failed to get connection details",
+    "clearCacheFailed": "Failed to clear cache",
+    "copyFailed": "Copy failed",
+    "jsonFormatError": "JSON format error",
+    "loadAnalyzersFailed": "Failed to get analyzer configuration",
+    "getBuiltinAnalyzersFailed": "Failed to get built-in analyzers list",
+    "analyzeTestFailed": "Analyzer test failed",
+    "loadMappingsFailed": "Failed to load mappings",
+    "loadPoliciesFailed": "Failed to get policies list",
+    "loadPluginsFailed": "Failed to get plugin information",
+    "getIndexPolicyFailed": "Failed to get index policy",
+    "languageSwitchFailed": "Language switch failed",
+    "loadAnalyzersFailed": "Failed to get analyzer configuration",
+    "clearCacheFailed": "Failed to clear cache"
+  },
+  "warnings": {
+    "pleaseCompleteConfig": "Please complete the required configuration first",
+    "pleaseCompleteConfigForAutoRefresh": "Please complete the required configuration before enabling auto refresh"
+  },
+  "info": {
+    "currentLatestVersion": "Current version is already the latest",
+    "languageSwitchSuccess": "Language switched successfully, some content requires page refresh to take effect"
+  },
+  "analyzers": {
+    "title": "Analyzer Management",
+    "description": "View and test Elasticsearch analyzer configurations",
+    "indexAnalyzerConfig": "Index Analyzer Configuration",
+    "analyzerTest": "Analyzer Test",
+    "defaultAnalyzer": "Default Analyzer",
+    "customAnalyzers": "Custom Analyzers",
+    "fieldAnalyzers": "Field Analyzers",
+    "noCustomAnalyzers": "No custom analyzers",
+    "allFieldsUseDefault": "All fields use default analyzer",
+    "selectIndexToView": "Please select an index to view analyzer configuration",
+    "selectIndex": "Please select an index",
+    "testResult": "Analysis Result",
+    "builtinAnalyzers": "Built-in Analyzers Reference",
+    "generalAnalyzers": "General Analyzers",
+    "languageAnalyzers": "Language Analyzers", 
+    "tokenizers": "Tokenizers",
+    "tokenFilters": "Token Filters",
+    "analyzerConfig": "Analyzer Configuration",
+    "noDescriptionAvailable": "No description available",
+    "clearCache": "Clear Cache",
+    "loading": "Loading...",
+    "viewConfig": "View Configuration",
+    "testText": "Test Analysis",
+    "cacheCleared": "Cache cleared",
+    "fields": {
+      "index": "Index",
+      "analyzer": "Analyzer",
+      "testText": "Test Text",
+      "token": "Token",
+      "type": "Type",
+      "position": "Position",
+      "startOffset": "Start",
+      "endOffset": "End"
+    },
+    "placeholders": {
+      "selectIndex": "Select index",
+      "selectIndexOptional": "Select index (optional)",
+      "noIndexSpecified": "No index specified",
+      "selectAnalyzer": "Select analyzer",
+      "enterTestText": "Enter text to analyze"
+    },
+    "testSamples": {
+      "defaultText": "这是一个测试文本 This is a test text"
+    }
+  },
+  "mappings": {
+    "title": "Index Mapping Management",
+    "description": "View and manage Elasticsearch index field mapping configurations",
+    "indexMappingOverview": "Index Mapping Overview",
+    "fieldDetails": "Field Details",
+    "fieldTypeStats": "Field Type Statistics",
+    "fullMappingJson": "Complete Mapping JSON",
+    "fieldConfig": "Field Configuration",
+    "loadingMapping": "Loading mapping information...",
+    "copy": "Copy",
+    "details": "Details",
+    "fields": {
+      "indexName": "Index Name",
+      "fieldCount": "Total Fields", 
+      "mappingVersion": "Mapping Version",
+      "fieldName": "Field Name",
+      "fieldType": "Type",
+      "properties": "Properties",
+      "operations": "Operations",
+      "fieldDetails": "Field Details"
+    },
+    "placeholders": {
+      "selectIndex": "Select index",
+      "searchFieldName": "Search field name",
+      "selectIndexToViewFields": "Please select an index to view field details",
+      "selectIndexFirst": "Please select an index",
+      "cannotGetMapping": "Cannot get mapping information"
+    }
+  }
+}

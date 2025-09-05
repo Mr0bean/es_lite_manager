@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
   {
@@ -45,11 +45,16 @@ const routes = [
     path: '/plugins',
     name: 'Plugins',
     component: () => import('../views/Plugins.vue')
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import('../views/Settings.vue')
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(), // 使用 hash 模式，兼容 Electron
   routes
 })
 

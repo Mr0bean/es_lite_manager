@@ -1,0 +1,85 @@
+{
+  "app": {
+    "title": "مدير ES",
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ",
+    "success": "نجاح",
+    "warning": "تحذير",
+    "info": "معلومات"
+  },
+  "connection": {
+    "status": "حالة الاتصال",
+    "connected": "متصل",
+    "disconnected": "غير متصل",
+    "notConnected": "ES غير متصل",
+    "switchConnection": "تبديل الاتصال",
+    "manageConnections": "إدارة الاتصالات",
+    "refreshStatus": "تحديث الحالة",
+    "currentConnection": "الاتصال الحالي",
+    "clusterName": "اسم المجموعة",
+    "nodeName": "اسم العقدة",
+    "version": "الإصدار",
+    "connectionTime": "وقت الاتصال",
+    "running": "قيد التشغيل"
+  },
+  "menu": {
+    "search": "بحث",
+    "indices": "إدارة الفهارس",
+    "documents": "إدارة المستندات",
+    "stats": "التحليل الإحصائي",
+    "policies": "إدارة السياسات",
+    "analyzers": "إدارة المحللات",
+    "mappings": "إدارة التعيينات",
+    "plugins": "إدارة المكونات الإضافية",
+    "connections": "إدارة الاتصالات",
+    "settings": "إعدادات النظام"
+  },
+  "actions": {
+    "create": "إنشاء",
+    "edit": "تحرير",
+    "delete": "حذف",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "refresh": "تحديث",
+    "search": "بحث",
+    "filter": "تصفية",
+    "export": "تصدير",
+    "import": "استيراد",
+    "close": "إغلاق",
+    "submit": "إرسال",
+    "reset": "إعادة تعيين",
+    "add": "إضافة",
+    "remove": "إزالة",
+    "update": "تحديث",
+    "view": "عرض",
+    "download": "تنزيل",
+    "upload": "رفع"
+  },
+  "status": {
+    "online": "متصل",
+    "offline": "غير متصل",
+    "healthy": "سليم",
+    "unhealthy": "غير سليم",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "enabled": "ممكّن",
+    "disabled": "معطّل",
+    "pending": "قيد الانتظار",
+    "processing": "قيد المعالجة",
+    "completed": "مكتمل",
+    "failed": "فشل"
+  },
+  "messages": {
+    "refreshSuccess": "تم التحديث بنجاح",
+    "switchConnectionSuccess": "تم تبديل الاتصال بنجاح",
+    "switchConnectionFailed": "فشل تبديل الاتصال",
+    "loadConnectionsFailed": "فشل تحميل الاتصالات"
+  },
+  "language": {
+    "selectLanguage": "اختر اللغة",
+    "eastAsian": "لغات شرق آسيا",
+    "european": "اللغات الأوروبية",
+    "others": "لغات أخرى"
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "app": {
+    "title": "Trình quản lý ES",
+    "loading": "Đang tải...",
+    "error": "Đã xảy ra lỗi",
+    "success": "Thành công",
+    "warning": "Cảnh báo",
+    "info": "Thông tin"
+  },
+  "connection": {
+    "status": "Trạng thái kết nối",
+    "connected": "Đã kết nối",
+    "disconnected": "Đã ngắt kết nối",
+    "notConnected": "ES chưa kết nối",
+    "switchConnection": "Chuyển kết nối",
+    "manageConnections": "Quản lý kết nối",
+    "refreshStatus": "Làm mới trạng thái",
+    "currentConnection": "Kết nối hiện tại",
+    "clusterName": "Tên cụm",
+    "nodeName": "Tên nút",
+    "version": "Phiên bản",
+    "connectionTime": "Thời gian kết nối",
+    "running": "Đang chạy"
+  },
+  "menu": {
+    "search": "Tìm kiếm",
+    "indices": "Quản lý chỉ mục",
+    "documents": "Quản lý tài liệu",
+    "stats": "Phân tích thống kê",
+    "policies": "Quản lý chính sách",
+    "analyzers": "Quản lý bộ phân tích",
+    "mappings": "Quản lý ánh xạ",
+    "plugins": "Quản lý plugin",
+    "connections": "Quản lý kết nối",
+    "settings": "Cài đặt hệ thống"
+  },
+  "actions": {
+    "create": "Tạo",
+    "edit": "Sửa",
+    "delete": "Xóa",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "refresh": "Làm mới",
+    "search": "Tìm kiếm",
+    "filter": "Lọc",
+    "export": "Xuất",
+    "import": "Nhập",
+    "close": "Đóng",
+    "submit": "Gửi",
+    "reset": "Đặt lại",
+    "add": "Thêm",
+    "remove": "Xóa",
+    "update": "Cập nhật",
+    "view": "Xem",
+    "download": "Tải xuống",
+    "upload": "Tải lên"
+  },
+  "status": {
+    "online": "Trực tuyến",
+    "offline": "Ngoại tuyến",
+    "healthy": "Khỏe mạnh",
+    "unhealthy": "Không khỏe mạnh",
+    "active": "Hoạt động",
+    "inactive": "Không hoạt động",
+    "enabled": "Đã bật",
+    "disabled": "Đã tắt",
+    "pending": "Đang chờ",
+    "processing": "Đang xử lý",
+    "completed": "Hoàn thành",
+    "failed": "Thất bại"
+  },
+  "messages": {
+    "refreshSuccess": "Làm mới thành công",
+    "switchConnectionSuccess": "Chuyển kết nối thành công",
+    "switchConnectionFailed": "Chuyển kết nối thất bại",
+    "loadConnectionsFailed": "Tải kết nối thất bại"
+  },
+  "language": {
+    "selectLanguage": "Chọn ngôn ngữ",
+    "eastAsian": "Ngôn ngữ Đông Á",
+    "european": "Ngôn ngữ châu Âu",
+    "others": "Ngôn ngữ khác"
+  }
+}

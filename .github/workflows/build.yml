@@ -1,0 +1,246 @@
+name: Build and Release Electron App
+
+on:
+  push:
+    branches: [ main, develop ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        node-version: [18]
+        include:
+          - os: ubuntu-latest
+            build-android: true
+        
+    steps:
+    - name: Check out Git repository
+      uses: actions/checkout@v4
+
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build web application
+      run: npm run build:prod
+
+    - name: Build Electron app (macOS)
+      if: matrix.os == 'macos-latest'
+      run: npm run dist:mac:prod
+      env:
+        CSC_IDENTITY_AUTO_DISCOVERY: false
+
+    - name: Build Electron app (Windows)
+      if: matrix.os == 'windows-latest'
+      run: npm run dist:win:prod
+
+    - name: Build Electron app (Linux)
+      if: matrix.os == 'ubuntu-latest' && !matrix.build-android
+      run: npm run dist:linux:prod
+
+    - name: Set up JDK 17 (Android)
+      if: matrix.build-android
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Setup Android SDK (Android)
+      if: matrix.build-android
+      uses: android-actions/setup-android@v3
+      with:
+        api-level: 34
+        build-tools: 34.0.0
+
+    - name: Initialize Capacitor (Android)
+      if: matrix.build-android
+      run: |
+        npm run cap:init
+        npm run cap:add:android
+
+    - name: Build Android APK
+      if: matrix.build-android
+      run: |
+        npm run cap:build:android
+        cd android
+        ./gradlew assembleRelease
+        
+    - name: Sign Android APK
+      if: matrix.build-android
+      run: |
+        echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > app/release.jks
+        cd android
+        ./gradlew assembleRelease -Pandroid.injected.signing.store.file=../app/release.jks -Pandroid.injected.signing.store.password="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" -Pandroid.injected.signing.key.alias="${{ secrets.ANDROID_KEY_ALIAS }}" -Pandroid.injected.signing.key.password="${{ secrets.ANDROID_KEY_PASSWORD }}"
+      continue-on-error: true
+
+    - name: Upload artifacts (macOS)
+      if: matrix.os == 'macos-latest'
+      uses: actions/upload-artifact@v4
+      with:
+        name: macos-builds
+        path: |
+          dist-electron/*.dmg
+          dist-electron/*.zip
+        retention-days: 30
+
+    - name: Upload artifacts (Windows)
+      if: matrix.os == 'windows-latest'
+      uses: actions/upload-artifact@v4
+      with:
+        name: windows-builds
+        path: |
+          dist-electron/*.exe
+        retention-days: 30
+
+    - name: Upload artifacts (Linux)
+      if: matrix.os == 'ubuntu-latest' && !matrix.build-android
+      uses: actions/upload-artifact@v4
+      with:
+        name: linux-builds
+        path: |
+          dist-electron/*.AppImage
+          dist-electron/*.deb
+        retention-days: 30
+
+    - name: Upload artifacts (Android)
+      if: matrix.build-android
+      uses: actions/upload-artifact@v4
+      with:
+        name: android-builds
+        path: |
+          android/app/build/outputs/apk/release/*.apk
+        retention-days: 30
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+    - name: Check out Git repository
+      uses: actions/checkout@v4
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: ./artifacts
+
+    - name: Display structure of downloaded files
+      run: ls -R ./artifacts
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref_name }}
+        release_name: ES Manager ${{ github.ref_name }}
+        draft: false
+        prerelease: false
+        body: |
+          ## ES Manager ${{ github.ref_name }}
+          
+          ### 新特性 / New Features
+          - Electron 应用跨平台发布
+          - Cross-platform Electron app distribution
+          
+          ### 支持平台 / Supported Platforms
+          - **macOS**: Intel (x64) 和 Apple Silicon (arm64)
+          - **Windows**: 64-bit (x64)
+          - **Linux**: 64-bit (x64)
+          - **Android**: APK (Android 7.0+)
+          
+          ### 安装说明 / Installation
+          - **macOS**: 下载 `.dmg` 文件并安装
+          - **Windows**: 下载 `.exe` 安装程序或便携版
+          - **Linux**: 下载 `.AppImage` (便携) 或 `.deb` (Ubuntu/Debian)
+          - **Android**: 下载 `.apk` 文件并启用"未知来源"安装
+
+    - name: Upload macOS DMG
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifacts/macos-builds/ES Manager-${{ github.ref_name }}.dmg
+        asset_name: ES-Manager-${{ github.ref_name }}-macOS.dmg
+        asset_content_type: application/octet-stream
+      continue-on-error: true
+
+    - name: Upload macOS ZIP
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifacts/macos-builds/ES Manager-${{ github.ref_name }}-mac.zip
+        asset_name: ES-Manager-${{ github.ref_name }}-macOS.zip
+        asset_content_type: application/zip
+      continue-on-error: true
+
+    - name: Upload Windows Installer
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifacts/windows-builds/ES Manager Setup ${{ github.ref_name }}.exe
+        asset_name: ES-Manager-Setup-${{ github.ref_name }}-Windows.exe
+        asset_content_type: application/octet-stream
+      continue-on-error: true
+
+    - name: Upload Windows Portable
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifacts/windows-builds/ES Manager ${{ github.ref_name }}.exe
+        asset_name: ES-Manager-${{ github.ref_name }}-Windows-Portable.exe
+        asset_content_type: application/octet-stream
+      continue-on-error: true
+
+    - name: Upload Linux AppImage
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifacts/linux-builds/ES Manager-${{ github.ref_name }}.AppImage
+        asset_name: ES-Manager-${{ github.ref_name }}-Linux.AppImage
+        asset_content_type: application/octet-stream
+      continue-on-error: true
+
+    - name: Upload Linux DEB
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifacts/linux-builds/es-manager_${{ github.ref_name }}_amd64.deb
+        asset_name: es-manager_${{ github.ref_name }}_amd64.deb
+        asset_content_type: application/octet-stream
+      continue-on-error: true
+
+    - name: Upload Android APK
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifacts/android-builds/app-release.apk
+        asset_name: ES-Manager-${{ github.ref_name }}-Android.apk
+        asset_content_type: application/vnd.android.package-archive
+      continue-on-error: true

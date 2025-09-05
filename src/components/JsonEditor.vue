@@ -3,30 +3,30 @@
     <div class="json-editor-header">
       <div class="json-editor-actions">
         <el-button size="small" @click="formatJson" type="primary" :icon="Document">
-          格式化
+          {{ $t('jsonEditor.format') }}
         </el-button>
         <el-button size="small" @click="validateJson" :icon="CircleCheck">
-          验证
+          {{ $t('jsonEditor.validate') }}
         </el-button>
         <el-button size="small" @click="compressJson" :icon="Minus">
-          压缩
+          {{ $t('jsonEditor.compress') }}
         </el-button>
         <el-button size="small" @click="clearContent" :icon="Delete">
-          清空
+          {{ $t('jsonEditor.clear') }}
         </el-button>
         <el-button size="small" @click="toggleWordWrap" :type="wordWrapEnabled ? 'primary' : ''">
-          {{ wordWrapEnabled ? '取消换行' : '自动换行' }}
+          {{ wordWrapEnabled ? $t('jsonEditor.disableWordWrap') : $t('jsonEditor.enableWordWrap') }}
         </el-button>
       </div>
       <div class="json-editor-status">
         <el-tag v-if="validationStatus === 'valid'" type="success" size="small">
-          ✓ 有效JSON
+          {{ $t('jsonEditor.validJson') }}
         </el-tag>
         <el-tag v-else-if="validationStatus === 'invalid'" type="danger" size="small">
-          ✗ 无效JSON
+          {{ $t('jsonEditor.invalidJson') }}
         </el-tag>
         <el-tag v-if="characterCount > 0" type="info" size="small">
-          {{ characterCount }} 字符
+          {{ characterCount }} {{ $t('jsonEditor.characters') }}
         </el-tag>
       </div>
     </div>
@@ -35,7 +35,7 @@
         ref="editorRef"
         v-model="localContent"
         :class="['json-textarea', { 'word-wrap-enabled': wordWrapEnabled }]"
-        :placeholder="placeholder"
+        :placeholder="placeholder || $t('jsonEditor.placeholder')"
         :rows="rows"
         @input="handleInput"
         @blur="handleBlur"
@@ -57,6 +57,9 @@
 import { ref, computed, watch, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Document, CircleCheck, Minus, Delete } from '@element-plus/icons-vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   modelValue: {
@@ -65,7 +68,7 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
-    default: '请输入有效的JSON格式数据'
+    default: ''
   },
   rows: {
     type: Number,
@@ -147,7 +150,7 @@ const formatJson = () => {
     const parsed = JSON.parse(localContent.value)
     localContent.value = JSON.stringify(parsed, null, 2)
     validationStatus.value = 'valid'
-    ElMessage.success('JSON格式化成功')
+    ElMessage.success(t('jsonEditor.formatSuccess'))
     
     // 自动调整textarea高度
     nextTick(() => {
@@ -155,7 +158,7 @@ const formatJson = () => {
     })
   } catch (error) {
     validationStatus.value = 'invalid'
-    ElMessage.error('JSON格式错误: ' + error.message)
+    ElMessage.error(t('jsonEditor.formatError') + ': ' + error.message)
   }
 }
 
@@ -164,11 +167,11 @@ const validateJson = () => {
   try {
     JSON.parse(localContent.value)
     validationStatus.value = 'valid'
-    ElMessage.success('JSON格式正确')
+    ElMessage.success(t('jsonEditor.validateSuccess'))
     emit('validate', { valid: true, data: JSON.parse(localContent.value) })
   } catch (error) {
     validationStatus.value = 'invalid'
-    ElMessage.error('JSON格式错误: ' + error.message)
+    ElMessage.error(t('jsonEditor.validateError') + ': ' + error.message)
     emit('validate', { valid: false, error: error.message })
   }
 }
@@ -189,10 +192,10 @@ const compressJson = () => {
     const parsed = JSON.parse(localContent.value)
     localContent.value = JSON.stringify(parsed)
     validationStatus.value = 'valid'
-    ElMessage.success('JSON压缩成功')
+    ElMessage.success(t('jsonEditor.compressSuccess'))
   } catch (error) {
     validationStatus.value = 'invalid'
-    ElMessage.error('JSON格式错误: ' + error.message)
+    ElMessage.error(t('jsonEditor.formatError') + ': ' + error.message)
   }
 }
 
@@ -200,7 +203,7 @@ const compressJson = () => {
 const clearContent = () => {
   localContent.value = ''
   validationStatus.value = ''
-  ElMessage.success('内容已清空')
+  ElMessage.success(t('jsonEditor.clearSuccess'))
 }
 
 // 调整textarea高度
@@ -214,7 +217,7 @@ const adjustTextareaHeight = () => {
 // 切换自动换行
 const toggleWordWrap = () => {
   wordWrapEnabled.value = !wordWrapEnabled.value
-  ElMessage.success(wordWrapEnabled.value ? '已开启自动换行' : '已关闭自动换行')
+  ElMessage.success(wordWrapEnabled.value ? t('jsonEditor.wordWrapEnabled') : t('jsonEditor.wordWrapDisabled'))
 }
 
 // 初始化验证
