@@ -101,7 +101,10 @@ jobs:
         fi
 
     - name: Build Android APK
-      run: npm run cap:build:android
+      run: |
+        npm run cap:sync
+        cd android
+        ./gradlew assembleDebug
 
     - name: Upload Android artifacts
       uses: actions/upload-artifact@v4
@@ -109,7 +112,6 @@ jobs:
         name: android-builds
         path: |
           android/app/build/outputs/apk/debug/*.apk
-          android/app/build/outputs/apk/release/*.apk
         retention-days: 30
 
   release:
