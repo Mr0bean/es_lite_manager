@@ -72,7 +72,6 @@ jobs:
         name: linux-builds
         path: |
           dist-electron/*.AppImage
-          dist-electron/*.deb
         retention-days: 30
 
   release:
@@ -171,16 +170,5 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./artifacts/linux-builds/ES Manager-${{ github.ref_name }}.AppImage
         asset_name: ES-Manager-${{ github.ref_name }}-Linux.AppImage
-        asset_content_type: application/octet-stream
-      continue-on-error: true
-
-    - name: Upload Linux DEB
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./artifacts/linux-builds/es-manager_${{ github.ref_name }}_amd64.deb
-        asset_name: es-manager_${{ github.ref_name }}_amd64.deb
         asset_content_type: application/octet-stream
       continue-on-error: true
