@@ -424,7 +424,7 @@
     "loadPoliciesFailed": "获取策略列表失败",
     "loadPluginsFailed": "获取插件信息失败",
     "getIndexPolicyFailed": "获取索引策略失败",
-    "languageSwitchFailed": "语言切换失败",
+    "languageSwitchFailed": "语言切换失败"
   },
   "warnings": {
     "pleaseCompleteConfig": "请先完成必要的配置",
