@@ -61,44 +61,27 @@ jobs:
     - name: Display structure of downloaded files
       run: ls -R ./artifacts
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
+    - name: Create Release with Assets
+      uses: softprops/action-gh-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ github.ref_name }}
-        release_name: ES Manager ${{ github.ref_name }}
+        name: ES Manager ${{ github.ref_name }}
         draft: false
         prerelease: false
         body: |
           ## ES Manager ${{ github.ref_name }}
           
           ### 新特性 / New Features
-          - Electron 应用跨平台发布
-          - Cross-platform Electron app distribution
+          - Electron Windows 桌面应用
+          - Elasticsearch 可视化管理工具
           
-          ### 支持平台 / Supported Platforms
+          ### 支持平台 / Supported Platforms  
           - **Windows**: 64-bit (x64)
           
           ### 安装说明 / Installation
           - **Windows**: 下载 `.exe` 安装程序
+        files: |
+          ./artifacts/windows-builds/*
 
-    - name: Upload Windows Installer
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./artifacts/windows-builds/ES Manager Setup*.exe
-        asset_name: ES-Manager-Setup-${{ github.ref_name }}-Windows.exe
-        asset_content_type: application/octet-stream
-      continue-on-error: true
-
-    - name: Find and Upload Windows Files
-      run: |
-        echo "Looking for Windows build artifacts..."
-        ls -la ./artifacts/windows-builds/
-        for file in ./artifacts/windows-builds/*; do
-          echo "Found: $file"
-        done
