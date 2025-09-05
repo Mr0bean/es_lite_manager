@@ -58,7 +58,7 @@
     "docker:restart": "docker-compose restart es-app"
   },
   "dependencies": {
-    "@elastic/elasticsearch": "^8.10.0",
+    "@elastic/elasticsearch": "^9.1.1",
     "axios": "^1.6.2",
     "chart.js": "^4.4.1",
     "cors": "^2.8.5",
