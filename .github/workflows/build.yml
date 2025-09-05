@@ -16,7 +16,24 @@ jobs:
     
     strategy:
       matrix:
-        os: [windows-latest]  # 先只构建 Windows
+        include:
+          - os: windows-latest
+            build-command: npm run dist:win:prod
+            artifact-name: windows-builds
+            artifact-path: |
+              dist-electron/*.exe
+              dist-electron/*.msi
+          - os: macos-latest
+            build-command: npm run dist:mac:prod
+            artifact-name: macos-builds
+            artifact-path: |
+              dist-electron/*.dmg
+              dist-electron/*.zip
+          - os: ubuntu-latest
+            build-command: npm run dist:linux:prod
+            artifact-name: linux-builds
+            artifact-path: |
+              dist-electron/*.AppImage
         node-version: [20]
         
     steps:
@@ -35,20 +52,61 @@ jobs:
     - name: Build web application
       run: npm run build:prod
 
-    - name: Build Electron app (Windows)
-      run: npm run dist:win:prod
+    - name: Build Electron app
+      run: ${{ matrix.build-command }}
 
-    - name: Upload artifacts (Windows)
+    - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: windows-builds
+        name: ${{ matrix.artifact-name }}
+        path: ${{ matrix.artifact-path }}
+        retention-days: 30
+
+  android-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check out Git repository
+      uses: actions/checkout@v4
+
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build web application
+      run: npm run build:prod
+
+    - name: Initialize Capacitor
+      run: npm run cap:init
+
+    - name: Add Android platform
+      run: npm run cap:add:android
+
+    - name: Build Android APK
+      run: npm run cap:build:android
+
+    - name: Upload Android artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: android-builds
         path: |
-          dist-electron/*.exe
-          dist-electron/*.msi
+          android/app/build/outputs/apk/debug/*.apk
+          android/app/build/outputs/apk/release/*.apk
         retention-days: 30
 
   release:
-    needs: build
+    needs: [build, android-build]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     
@@ -77,14 +135,21 @@ jobs:
           ## ES Manager ${{ github.ref_name }}
           
           ### 新特性 / New Features
-          - Electron Windows 桌面应用
-          - Elasticsearch 可视化管理工具
+          - 跨平台 Elasticsearch 可视化管理工具
+          - 完整的索引管理和文档操作功能
+          - 实时搜索和数据分析
           
           ### 支持平台 / Supported Platforms  
-          - **Windows**: 64-bit (x64)
+          - **Windows**: 64-bit (x64) - `.exe` 安装程序 / 便携版
+          - **macOS**: Intel 和 Apple Silicon - `.dmg` 安装包 / `.zip` 压缩包
+          - **Linux**: 64-bit (x64) - `.AppImage` 应用程序包
+          - **Android**: Android 7.0+ (API 24+) - `.apk` 安装包
           
           ### 安装说明 / Installation
-          - **Windows**: 下载 `.exe` 安装程序
+          - **Windows**: 下载 `.exe` 安装程序或便携版
+          - **macOS**: 下载 `.dmg` 安装包双击安装
+          - **Linux**: 下载 `.AppImage` 文件赋予执行权限后运行
+          - **Android**: 下载 `.apk` 文件安装（需开启未知来源应用安装）
         files: |
-          ./artifacts/windows-builds/*
+          ./artifacts/*/*
 
