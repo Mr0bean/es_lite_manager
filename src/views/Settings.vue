@@ -99,7 +99,10 @@
             <div class="logo-section">
               <el-icon :size="80" color="#409EFF"><Platform /></el-icon>
               <h2>ES Manager</h2>
-              <p class="version">{{ $t('pages.settings.about.version') }}</p>
+              <p class="version">v{{ currentVersion }}</p>
+              <el-tag v-if="versionStatus" :type="versionStatus.type" size="small" style="margin-top: 8px">
+                {{ versionStatus.text }}
+              </el-tag>
             </div>
             
             <el-descriptions :column="1" border class="info-table">
@@ -128,9 +131,22 @@
                 <el-icon><Link /></el-icon>
                 GitHub
               </el-button>
-              <el-button text type="primary" @click="checkUpdate">
+              <el-button 
+                text 
+                type="primary" 
+                @click="checkUpdate"
+                :loading="checkingUpdate"
+              >
                 <el-icon><Download /></el-icon>
                 {{ $t('pages.settings.about.checkUpdate') }}
+              </el-button>
+              <el-button text type="warning" @click="openFeedback">
+                <el-icon><ChatLineSquare /></el-icon>
+                {{ $t('pages.settings.about.feedback', 'Feedback') }}
+              </el-button>
+              <el-button text type="danger" @click="reportBug">
+                <el-icon><CircleCloseFilled /></el-icon>
+                {{ $t('pages.settings.about.reportBug', 'Report Bug') }}
               </el-button>
             </div>
           </div>
@@ -146,19 +162,40 @@
       </div>
     </el-card>
   </div>
+  
+  <!-- 反馈对话框 -->
+  <FeedbackDialog
+    v-model="feedbackVisible"
+    :initial-type="feedbackType"
+    :initial-data="feedbackData"
+    @submitted="handleFeedbackSubmitted"
+  />
 </template>
 
 <script setup>
 import { ref, reactive, onMounted, computed } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 import { useI18n } from 'vue-i18n'
-import { Setting, Delete, Platform, Link, Download, Check } from '@element-plus/icons-vue'
+import { Setting, Delete, Platform, Link, Download, Check, ChatLineSquare, CircleCloseFilled } from '@element-plus/icons-vue'
 import { config, ENV, isElectron } from '../config/env'
 import { getSettings, saveSettings as saveSettingsToStorage, defaultSettings } from '../config/settings'
 import { updateApiBaseUrl } from '../api/elasticsearch'
+import { checkForUpdates, formatVersionInfo, getVersionStatus } from '../api/version'
+import FeedbackDialog from '../components/FeedbackDialog.vue'
 
 const { t } = useI18n()
 const activeTab = ref('basic')
+
+// 版本相关
+const currentVersion = ref('1.0.0')
+const latestVersionInfo = ref(null)
+const checkingUpdate = ref(false)
+const versionStatus = ref(null)
+
+// 反馈对话框
+const feedbackVisible = ref(false)
+const feedbackType = ref('bug')
+const feedbackData = ref({})
 
 // 设置数据
 const settings = reactive({
@@ -286,13 +323,149 @@ const openGithub = () => {
   window.open('https://github.com/your-repo/es-manager', '_blank')
 }
 
-// 检查更新
-const checkUpdate = () => {
-  ElMessage.info(t('info.currentLatestVersion'))
+// 打开反馈对话框
+const openFeedback = () => {
+  feedbackType.value = 'feature'
+  feedbackData.value = {}
+  feedbackVisible.value = true
 }
 
-onMounted(() => {
+// 报告Bug
+const reportBug = () => {
+  feedbackType.value = 'bug'
+  feedbackData.value = {
+    title: '',
+    description: '',
+    steps: [''],
+    expected: '',
+    actual: ''
+  }
+  feedbackVisible.value = true
+}
+
+// 处理反馈提交
+const handleFeedbackSubmitted = (data) => {
+  console.log('Feedback submitted:', data)
+  ElMessage.success('Thank you for your feedback!')
+}
+
+// 检查更新
+const checkUpdate = async () => {
+  if (checkingUpdate.value) return
+  
+  checkingUpdate.value = true
+  try {
+    const result = await checkForUpdates()
+    
+    if (!result.success) {
+      ElMessage.error(result.error || 'Failed to check for updates')
+      return
+    }
+    
+    currentVersion.value = result.currentVersion
+    latestVersionInfo.value = formatVersionInfo(result)
+    versionStatus.value = getVersionStatus(result)
+    
+    if (result.updateAvailable) {
+      // 有更新可用
+      ElNotification({
+        title: 'New Version Available',
+        message: `Version ${result.latestVersion} is available. Current version: ${result.currentVersion}`,
+        type: 'info',
+        duration: 0,
+        dangerouslyUseHTMLString: true,
+        customClass: 'update-notification',
+        onClick: () => {
+          if (result.releaseInfo?.downloadUrl) {
+            window.open(result.releaseInfo.downloadUrl, '_blank')
+          }
+        },
+        onClose: () => {
+          // 用户关闭通知
+        }
+      })
+      
+      // 显示更新详情对话框
+      showUpdateDialog(result)
+    } else if (result.isSame) {
+      ElMessage.success('You are using the latest version')
+    } else if (result.isNewer) {
+      ElMessage.info('You are using a development version')
+    }
+    
+    // 如果数据来自缓存，显示提示
+    if (result.fromCache && result.cacheAge) {
+      const minutes = Math.floor(result.cacheAge / 60)
+      console.log(`Version info from cache (${minutes} minutes old)`)
+    }
+  } catch (error) {
+    console.error('Error checking for updates:', error)
+    ElMessage.error('Failed to check for updates: ' + (error.message || 'Unknown error'))
+  } finally {
+    checkingUpdate.value = false
+  }
+}
+
+// 显示更新对话框
+const showUpdateDialog = (versionData) => {
+  const h = ElMessageBox.$createElement || document.createElement
+  
+  const releaseDate = versionData.releaseInfo?.publishedAt 
+    ? new Date(versionData.releaseInfo.publishedAt).toLocaleDateString() 
+    : 'Unknown'
+  
+  const content = `
+    <div>
+      <p><strong>Current Version:</strong> ${versionData.currentVersion}</p>
+      <p><strong>Latest Version:</strong> ${versionData.latestVersion}</p>
+      <p><strong>Release Date:</strong> ${releaseDate}</p>
+      ${versionData.releaseInfo?.releaseNotes ? 
+        `<div style="margin-top: 12px;">
+          <strong>Release Notes:</strong>
+          <div style="max-height: 200px; overflow-y: auto; margin-top: 8px; padding: 8px; background: #f5f5f5; border-radius: 4px;">
+            ${versionData.releaseInfo.releaseNotes.replace(/\n/g, '<br>')}
+          </div>
+        </div>` : ''}
+    </div>
+  `
+  
+  ElMessageBox.confirm(
+    content,
+    'Update Available',
+    {
+      confirmButtonText: 'Download Update',
+      cancelButtonText: 'Later',
+      type: 'info',
+      dangerouslyUseHTMLString: true,
+      distinguishCancelAndClose: true,
+      customClass: 'update-dialog'
+    }
+  ).then(() => {
+    // 用户点击下载
+    if (versionData.releaseInfo?.downloadUrl) {
+      window.open(versionData.releaseInfo.downloadUrl, '_blank')
+      ElMessage.success('Opening download page...')
+    }
+  }).catch((action) => {
+    if (action === 'cancel') {
+      // 用户点击稍后
+      ElMessage.info('You can check for updates later from the settings page')
+    }
+  })
+}
+
+onMounted(async () => {
   loadSettings()
+  
+  // 获取当前版本
+  try {
+    const packageInfo = await fetch('/package.json').then(r => r.json()).catch(() => null)
+    if (packageInfo?.version) {
+      currentVersion.value = packageInfo.version
+    }
+  } catch (error) {
+    console.error('Failed to get package version:', error)
+  }
 })
 </script>
 

@@ -59,7 +59,7 @@
               >
                 <div class="analyzer-grid">
                   <el-tooltip 
-                    :content="`自定义分词器: ${name}\n类型: ${config.type || '未知'}\n${getAnalyzerDescription(name) || '用户自定义的分词器配置'}`"
+                    :content="`${$t('analyzers.customAnalyzers')}: ${name}\n${$t('analyzers.fields.type')}: ${config.type || $t('common.unknown')}\n${getAnalyzerDescription(name) || $t('analyzers.noDescriptionAvailable')}`"
                     placement="top"
                     effect="dark"
                   >
@@ -203,7 +203,7 @@
                   v-for="(token, index) in analyzeResult.tokens" 
                   :key="index"
                   class="token-tag"
-                  :title="`位置: ${token.start_offset}-${token.end_offset}, 类型: ${token.type}`"
+                  :title="`${$t('analyzers.fields.position')}: ${token.start_offset}-${token.end_offset}, ${$t('analyzers.fields.type')}: ${token.type}`"
                 >
                   {{ token.token }}
                 </el-tag>
@@ -338,9 +338,18 @@ const STORAGE_KEYS = {
   ANALYZE_FORM: 'analyzer_form_data'
 }
 
-// 获取分词器描述
+// Get analyzer description from i18n
 const getAnalyzerDescription = (name) => {
-  return analyzerDescriptions[name] || t('analyzers.noDescriptionAvailable')
+  try {
+    const description = t(`analyzers.descriptions.${name}`)
+    // If translation key not found, it returns the key itself
+    if (description === `analyzers.descriptions.${name}`) {
+      return ''
+    }
+    return description
+  } catch {
+    return ''
+  }
 }
 
 // 本地存储工具函数
@@ -362,8 +371,9 @@ const loadFromStorage = (key, defaultValue = null) => {
   }
 }
 
-// 分词器描述数据
-const analyzerDescriptions = {
+// Analyzer descriptions removed - now in i18n files
+// See src/i18n/locales/*/common.json under analyzers.descriptions
+const analyzerDescriptions_DEPRECATED = {
   // 通用分词器
   standard: '标准分词器，使用Unicode文本分割算法，适用于大多数语言',
   simple: '简单分词器，按非字母字符分割文本，并转换为小写',
@@ -441,7 +451,7 @@ const analyzerDescriptions = {
   snowball: 'Snowball词干提取器，多语言词干提取算法',
   kstem: 'KStem词干提取器，较温和的英语词干提取',
   phonetic: '语音过滤器，生成词的语音编码'
-}
+} // This object is deprecated and should not be used
 
 // 响应式数据
 const indices = ref([])

@@ -1,0 +1,36 @@
+{
+  "timestamp": "2025-09-08T03:57:09.038Z",
+  "results": {
+    "backend": {
+      "passed": 5,
+      "failed": 0,
+      "duration": 556
+    },
+    "frontend": {
+      "passed": 3,
+      "failed": 0,
+      "duration": 911
+    },
+    "integration": {
+      "passed": 19,
+      "failed": 0,
+      "duration": 1160
+    },
+    "performance": {
+      "passed": 11,
+      "failed": 0,
+      "duration": 5214
+    },
+    "total": {
+      "passed": 38,
+      "failed": 0,
+      "duration": 7841
+    }
+  },
+  "metrics": {
+    "totalTests": 38,
+    "successRate": "100.00",
+    "totalDuration": 7841,
+    "rating": "完美 🌟"
+  }
+}

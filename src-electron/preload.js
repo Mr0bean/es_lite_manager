@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer, shell } from 'electron'
 
 // 暴露安全的 API 给渲染进程
 contextBridge.exposeInMainWorld('electronAPI', {
@@ -28,4 +28,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // 平台信息
   platform: process.platform,
   versions: process.versions
+})
+
+// 暴露 electron 对象用于外部链接
+contextBridge.exposeInMainWorld('electron', {
+  openExternal: (url) => ipcRenderer.invoke('open-external', url)
 })

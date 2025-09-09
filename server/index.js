@@ -5,6 +5,7 @@ import fs from 'fs'
 import { fileURLToPath } from 'url'
 import { serverConfig, validateConfig } from './config.js'
 import connectionManager from './connectionManager.js'
+import { checkForUpdatesCached, clearUpdateCache } from './versionChecker.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -564,6 +565,34 @@ app.get('/nodes/stats', async (req, res) => {
   } catch (error) {
     console.error('获取节点统计失败:', error)
     res.status(500).json({ error: error.message })
+  }
+})
+
+// 版本检查接口
+app.get('/check-update', async (req, res) => {
+  try {
+    const result = await checkForUpdatesCached()
+    res.json(result)
+  } catch (error) {
+    console.error('Failed to check for updates:', error)
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    })
+  }
+})
+
+// 清除版本检查缓存
+app.post('/clear-update-cache', async (req, res) => {
+  try {
+    clearUpdateCache()
+    res.json({ success: true, message: 'Update cache cleared' })
+  } catch (error) {
+    console.error('Failed to clear update cache:', error)
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    })
   }
 })
 

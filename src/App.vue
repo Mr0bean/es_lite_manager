@@ -94,49 +94,61 @@
     </el-header>
     
     <el-container>
-      <el-aside width="200px" class="app-aside">
-        <el-menu :default-active="$route.path" router>
-          <el-menu-item index="/">
-            <el-icon><Search /></el-icon>
-            <span>{{ $t('menu.search') }}</span>
-          </el-menu-item>
-          <el-menu-item index="/indices">
-            <el-icon><Files /></el-icon>
-            <span>{{ $t('menu.indices') }}</span>
-          </el-menu-item>
-          <el-menu-item index="/documents">
-            <el-icon><Document /></el-icon>
-            <span>{{ $t('menu.documents') }}</span>
-          </el-menu-item>
-          <el-menu-item index="/stats">
-            <el-icon><DataAnalysis /></el-icon>
-            <span>{{ $t('menu.stats') }}</span>
-          </el-menu-item>
-          <el-menu-item index="/policies">
-            <el-icon><Setting /></el-icon>
-            <span>{{ $t('menu.policies') }}</span>
-          </el-menu-item>
-          <el-menu-item index="/analyzers">
-            <el-icon><Tools /></el-icon>
-            <span>{{ $t('menu.analyzers') }}</span>
-          </el-menu-item>
-          <el-menu-item index="/mappings">
-            <el-icon><Grid /></el-icon>
-            <span>{{ $t('menu.mappings') }}</span>
-          </el-menu-item>
-          <el-menu-item index="/plugins">
-            <el-icon><Box /></el-icon>
-            <span>{{ $t('menu.plugins') }}</span>
-          </el-menu-item>
-          <el-menu-item index="/connections">
-            <el-icon><Link /></el-icon>
-            <span>{{ $t('menu.connections') }}</span>
-          </el-menu-item>
-          <el-menu-item index="/settings">
-            <el-icon><Setting /></el-icon>
-            <span>{{ $t('menu.settings') }}</span>
-          </el-menu-item>
-        </el-menu>
+      <el-aside width="260px" class="app-aside">
+        <div class="aside-content">
+          <el-menu :default-active="$route.path" router>
+            <el-menu-item index="/">
+              <el-icon><Search /></el-icon>
+              <span>{{ $t('menu.search') }}</span>
+            </el-menu-item>
+            <el-menu-item index="/indices">
+              <el-icon><Files /></el-icon>
+              <span>{{ $t('menu.indices') }}</span>
+            </el-menu-item>
+            <el-menu-item index="/documents">
+              <el-icon><Document /></el-icon>
+              <span>{{ $t('menu.documents') }}</span>
+            </el-menu-item>
+            <el-menu-item index="/stats">
+              <el-icon><DataAnalysis /></el-icon>
+              <span>{{ $t('menu.stats') }}</span>
+            </el-menu-item>
+            <el-menu-item index="/policies">
+              <el-icon><Setting /></el-icon>
+              <span>{{ $t('menu.policies') }}</span>
+            </el-menu-item>
+            <el-menu-item index="/analyzers">
+              <el-icon><Tools /></el-icon>
+              <span>{{ $t('menu.analyzers') }}</span>
+            </el-menu-item>
+            <el-menu-item index="/mappings">
+              <el-icon><Grid /></el-icon>
+              <span>{{ $t('menu.mappings') }}</span>
+            </el-menu-item>
+            <el-menu-item index="/plugins">
+              <el-icon><Box /></el-icon>
+              <span>{{ $t('menu.plugins') }}</span>
+            </el-menu-item>
+            <el-menu-item index="/connections">
+              <el-icon><Link /></el-icon>
+              <span>{{ $t('menu.connections') }}</span>
+            </el-menu-item>
+            <el-menu-item index="/settings">
+              <el-icon><Setting /></el-icon>
+              <span>{{ $t('menu.settings') }}</span>
+            </el-menu-item>
+          </el-menu>
+          
+          <!-- 广告展示区域 -->
+          <div class="ads-wrapper">
+            <AdsDisplay 
+              position="sidebar"
+              :show-header="true"
+              :show-refresh="true"
+              :auto-rotate="true"
+            />
+          </div>
+        </div>
       </el-aside>
       
       <el-main class="app-main">
@@ -144,16 +156,27 @@
       </el-main>
     </el-container>
   </el-container>
+  
+  <!-- 全局反馈对话框 -->
+  <FeedbackDialog
+    v-model="feedbackVisible"
+    :initial-type="feedbackType"
+    :initial-data="feedbackData"
+    @submitted="(data) => console.log('Feedback submitted:', data)"
+  />
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Search, Files, Document, DataAnalysis, Setting, Tools, Grid, Box, CircleCheckFilled, CircleCloseFilled, ArrowDown, InfoFilled, Refresh, Link } from '@element-plus/icons-vue'
 import { checkConnection, getConnections, getCurrentConnection, switchConnection } from './api/elasticsearch'
 import { ElMessage } from 'element-plus'
 import LanguageSwitcher from './components/LanguageSwitcher.vue'
+import AdsDisplay from './components/AdsDisplay.vue'
+import FeedbackDialog from './components/FeedbackDialog.vue'
+import { useKeyboardShortcuts } from './composables/useKeyboardShortcuts'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -163,6 +186,14 @@ const connectionTime = ref(null)
 const currentConnectionName = ref('')
 const availableConnections = ref([])
 const switchingConnection = ref(false)
+
+// 反馈对话框
+const feedbackVisible = ref(false)
+const feedbackType = ref('bug')
+const feedbackData = ref({})
+
+// 启用快捷键
+useKeyboardShortcuts()
 
 // 格式化时间显示
 const formatTime = (time) => {
@@ -233,16 +264,37 @@ const handleConnectionCommand = async (command) => {
   }
 }
 
+// 监听自定义事件
+const handleOpenFeedback = (event) => {
+  feedbackType.value = event.detail?.type || 'bug'
+  feedbackData.value = event.detail?.data || {}
+  feedbackVisible.value = true
+}
+
+const handleCloseDialog = () => {
+  feedbackVisible.value = false
+}
+
+const handleConnectionChanged = async () => {
+  await Promise.all([checkESConnection(), loadConnections()])
+}
+
 onMounted(async () => {
   await Promise.all([checkESConnection(), loadConnections()])
   
   // 定期检查连接状态
   setInterval(checkESConnection, 30000) // 每30秒检查一次
   
-  // 监听连接变更事件
-  window.addEventListener('connectionChanged', async () => {
-    await Promise.all([checkESConnection(), loadConnections()])
-  })
+  // 监听各种事件
+  window.addEventListener('connectionChanged', handleConnectionChanged)
+  window.addEventListener('open-feedback', handleOpenFeedback)
+  window.addEventListener('close-dialog', handleCloseDialog)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('connectionChanged', handleConnectionChanged)
+  window.removeEventListener('open-feedback', handleOpenFeedback)
+  window.removeEventListener('close-dialog', handleCloseDialog)
 })
 </script>
 
@@ -507,6 +559,26 @@ onMounted(async () => {
 .app-aside {
   background-color: #f5f7fa;
   border-right: 1px solid #e4e7ed;
+  display: flex;
+  flex-direction: column;
+}
+
+.aside-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.el-menu {
+  flex: 1;
+  overflow-y: auto;
+  border-right: none;
+}
+
+.ads-wrapper {
+  padding: 10px;
+  border-top: 1px solid #e4e7ed;
+  background: #fff;
 }
 
 .app-main {

@@ -1,0 +1,66 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-01-09T00:00:00Z",
+  "enabled": true,
+  "ads": [
+    {
+      "id": "deepchat-recommend",
+      "type": "banner",
+      "title": "🚀 DeepChat - AI 对话工具",
+      "description": "强大的 AI 聊天平台，支持多种模型，提升你的工作效率",
+      "link": "https://deepchat.thinkinai.xyz/",
+      "image": "https://via.placeholder.com/260x100/667eea/ffffff?text=DeepChat",
+      "priority": 1,
+      "startDate": "2025-01-01",
+      "endDate": "2025-12-31",
+      "target": "_blank",
+      "style": {
+        "backgroundColor": "#f7f9fc",
+        "borderColor": "#667eea"
+      }
+    },
+    {
+      "id": "deepchat-features",
+      "type": "text",
+      "title": "✨ 体验 DeepChat",
+      "description": "智能对话、代码生成、文档分析，一站式 AI 解决方案",
+      "link": "https://deepchat.thinkinai.xyz/",
+      "priority": 2,
+      "startDate": "2025-01-01",
+      "endDate": "2025-12-31"
+    },
+    {
+      "id": "tool-recommendation",
+      "type": "card",
+      "title": "🔧 推荐工具",
+      "items": [
+        {
+          "name": "DeepChat",
+          "description": "AI 智能对话平台",
+          "link": "https://deepchat.thinkinai.xyz/",
+          "icon": "🤖"
+        },
+        {
+          "name": "Kibana",
+          "description": "ES 数据可视化",
+          "link": "https://www.elastic.co/kibana",
+          "icon": "📊"
+        },
+        {
+          "name": "GitHub",
+          "description": "查看项目源码",
+          "link": "https://github.com/yourusername/es-manager",
+          "icon": "📦"
+        }
+      ],
+      "priority": 3
+    }
+  ],
+  "settings": {
+    "refreshInterval": 3600000,
+    "maxAdsToShow": 2,
+    "position": "sidebar",
+    "animation": true,
+    "rotationInterval": 10000
+  }
+}

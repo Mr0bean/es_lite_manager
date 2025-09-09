@@ -416,6 +416,12 @@ function setupIpcHandlers() {
       mainWindow.reload()
     }
   })
+  
+  // 在系统浏览器中打开外部链接
+  ipcMain.handle('open-external', async (event, url) => {
+    const { shell } = await import('electron')
+    await shell.openExternal(url)
+  })
 }
 
 // 应用就绪

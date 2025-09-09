@@ -1,0 +1,50 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景渐变 -->
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="es-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f0f0f0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 圆角背景 -->
+  <rect width="512" height="512" rx="100" ry="100" fill="url(#bg-gradient)"/>
+  
+  <!-- ES 字母设计 -->
+  <g transform="translate(256, 256)">
+    <!-- E 字母 -->
+    <path d="M -120 -80 L -40 -80 L -40 -60 L -100 -60 L -100 -10 L -50 -10 L -50 10 L -100 10 L -100 60 L -40 60 L -40 80 L -120 80 Z" 
+          fill="url(#es-gradient)" 
+          opacity="0.95"/>
+    
+    <!-- S 字母 -->
+    <path d="M 40 -80 L 120 -80 Q 140 -80 140 -60 L 140 -30 Q 140 -10 120 -10 L 60 -10 Q 40 -10 40 10 L 40 40 Q 40 60 60 60 L 120 60 L 120 80 L 40 80 Q 20 80 20 60 L 20 30 Q 20 10 40 10 L 100 10 Q 120 10 120 -10 L 120 -40 Q 120 -60 100 -60 L 40 -60 Z" 
+          fill="url(#es-gradient)" 
+          opacity="0.95"/>
+    
+    <!-- 数据流动效果 -->
+    <circle cx="-80" cy="0" r="8" fill="white" opacity="0.8">
+      <animate attributeName="cy" values="0;-100;0;100;0" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0.3;0.8;0.3;0.8" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    
+    <circle cx="0" cy="0" r="8" fill="white" opacity="0.8">
+      <animate attributeName="cy" values="0;100;0;-100;0" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0.3;0.8;0.3;0.8" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    
+    <circle cx="80" cy="0" r="8" fill="white" opacity="0.8">
+      <animate attributeName="cy" values="0;-100;0;100;0" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0.3;0.8;0.3;0.8" dur="3s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Manager 文字 -->
+  <text x="256" y="420" font-family="Arial, sans-serif" font-size="36" font-weight="600" fill="white" text-anchor="middle" opacity="0.9">
+    MANAGER
+  </text>
+</svg>
