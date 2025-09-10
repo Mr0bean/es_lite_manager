@@ -62,7 +62,7 @@ jobs:
       run: npm run build:prod
 
     - name: Clean dist folder
-      run: rm -rf dist-electron
+      run: node -e "const fs=require('fs'); if(fs.existsSync('dist-electron')) fs.rmSync('dist-electron', {recursive:true, force:true})"
 
     - name: Build Electron app
       run: ${{ matrix.build-command }}
