@@ -26,7 +26,14 @@ jobs:
             node-version: 20
           - os: macos-latest
             build-command: npm run dist:mac:prod
-            artifact-name: macos-builds
+            artifact-name: macos-builds-x64
+            artifact-path: |
+              dist-electron/*.dmg
+              dist-electron/*.zip
+            node-version: 20
+          - os: macos-latest
+            build-command: npm run dist:mac:prod:arm64
+            artifact-name: macos-builds-arm64
             artifact-path: |
               dist-electron/*.dmg
               dist-electron/*.zip
@@ -53,6 +60,9 @@ jobs:
 
     - name: Build web application
       run: npm run build:prod
+
+    - name: Clean dist folder
+      run: rm -rf dist-electron
 
     - name: Build Electron app
       run: ${{ matrix.build-command }}
