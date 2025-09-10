@@ -2,17 +2,17 @@
   <div class="plugins-container">
     <div class="page-header">
       <div class="header-top">
-        <h2>插件管理</h2>
+        <h2>{{ $t('pages.plugins.title') }}</h2>
         <RefreshTimer :on-refresh="loadPluginsData" />
       </div>
-      <p class="page-description">查看和管理Elasticsearch集群中已安装的插件及其版本信息</p>
+      <p class="page-description">{{ $t('pages.plugins.description') }}</p>
     </div>
 
-    <!-- 统计信息卡片 -->
+    <!-- Statistics Cards -->
     <el-row :gutter="20" style="margin-bottom: 24px;">
       <el-col :span="6">
         <el-card class="stats-card">
-          <el-statistic title="节点数量" :value="pluginsData?.totalNodes || 0" suffix="个">
+          <el-statistic :title="$t('pages.plugins.stats.nodes')" :value="pluginsData?.totalNodes || 0" :suffix="$t('common.units.count')">
             <template #prefix>
               <el-icon color="#409EFF"><Monitor /></el-icon>
             </template>
@@ -21,7 +21,7 @@
       </el-col>
       <el-col :span="6">
         <el-card class="stats-card">
-          <el-statistic title="插件总数" :value="pluginsData?.totalPlugins || 0" suffix="个">
+          <el-statistic :title="$t('pages.plugins.stats.total')" :value="pluginsData?.totalPlugins || 0" :suffix="$t('common.units.count')">
             <template #prefix>
               <el-icon color="#67C23A"><Grid /></el-icon>
             </template>
@@ -30,7 +30,7 @@
       </el-col>
       <el-col :span="6">
         <el-card class="stats-card">
-          <el-statistic title="分词器插件" :value="analyzerPluginsCount" suffix="个">
+          <el-statistic :title="$t('pages.plugins.stats.analyzers')" :value="analyzerPluginsCount" :suffix="$t('common.units.count')">
             <template #prefix>
               <el-icon color="#E6A23C"><Tools /></el-icon>
             </template>
@@ -39,7 +39,7 @@
       </el-col>
       <el-col :span="6">
         <el-card class="stats-card">
-          <el-statistic title="其他插件" :value="otherPluginsCount" suffix="个">
+          <el-statistic :title="$t('pages.plugins.stats.others')" :value="otherPluginsCount" :suffix="$t('common.units.count')">
             <template #prefix>
               <el-icon color="#F56C6C"><Box /></el-icon>
             </template>
@@ -48,15 +48,15 @@
       </el-col>
     </el-row>
 
-    <!-- 插件列表 -->
+    <!-- Plugin List -->
     <el-card>
       <template #header>
         <div class="card-header">
-          <span>已安装插件列表</span>
+          <span>{{ $t('pages.plugins.installedList') }}</span>
           <div class="header-actions">
             <el-input
               v-model="searchText"
-              placeholder="搜索插件..."
+              :placeholder="$t('pages.plugins.searchPlaceholder')"
               style="width: 250px;"
               clearable
             >
@@ -64,19 +64,19 @@
                 <el-icon><Search /></el-icon>
               </template>
             </el-input>
-            <el-select v-model="filterType" placeholder="插件类型" style="width: 150px; margin-left: 12px;">
-              <el-option label="全部" value="all" />
-              <el-option label="分词器" value="analyzer" />
-              <el-option label="安全" value="security" />
-              <el-option label="监控" value="monitoring" />
-              <el-option label="其他" value="other" />
+            <el-select v-model="filterType" :placeholder="$t('pages.plugins.typePlaceholder')" style="width: 150px; margin-left: 12px;">
+              <el-option :label="$t('pages.plugins.types.all')" value="all" />
+              <el-option :label="$t('pages.plugins.types.analyzer')" value="analyzer" />
+              <el-option :label="$t('pages.plugins.types.security')" value="security" />
+              <el-option :label="$t('pages.plugins.types.monitoring')" value="monitoring" />
+              <el-option :label="$t('pages.plugins.types.other')" value="other" />
             </el-select>
           </div>
         </div>
       </template>
 
       <el-table :data="filteredPlugins" v-loading="loading" stripe>
-        <el-table-column prop="name" label="插件名称" width="200">
+        <el-table-column prop="name" :label="$t('pages.plugins.fields.name')" width="200">
           <template #default="scope">
             <div class="plugin-name">
               <el-icon class="plugin-icon" :color="getPluginIconColor(scope.row)">
@@ -87,19 +87,19 @@
           </template>
         </el-table-column>
         
-        <el-table-column prop="version" label="版本" width="120">
+        <el-table-column prop="version" :label="$t('pages.plugins.fields.version')" width="120">
           <template #default="scope">
             <el-tag size="small" type="info">{{ scope.row.version || 'N/A' }}</el-tag>
           </template>
         </el-table-column>
         
-        <el-table-column prop="description" label="描述" min-width="300">
+        <el-table-column prop="description" :label="$t('pages.plugins.fields.description')" min-width="300">
           <template #default="scope">
-            <span class="plugin-desc">{{ scope.row.description || '暂无描述' }}</span>
+            <span class="plugin-desc">{{ scope.row.description || $t('pages.plugins.noDescription') }}</span>
           </template>
         </el-table-column>
         
-        <el-table-column label="插件类型" width="120">
+        <el-table-column :label="$t('pages.plugins.fields.type')" width="120">
           <template #default="scope">
             <el-tag :type="getPluginTypeTag(scope.row)" size="small">
               {{ getPluginType(scope.row) }}
@@ -107,27 +107,27 @@
           </template>
         </el-table-column>
         
-        <el-table-column label="安装节点" width="120">
+        <el-table-column :label="$t('pages.plugins.fields.installedNodes')" width="120">
           <template #default="scope">
             <el-tag type="success" size="small">
-              {{ getInstalledNodesCount(scope.row) }} 个节点
+              {{ getInstalledNodesCount(scope.row) }} {{ $t('pages.plugins.nodeUnit') }}
             </el-tag>
           </template>
         </el-table-column>
         
-        <el-table-column label="操作" width="150">
+        <el-table-column :label="$t('pages.plugins.fields.actions')" width="150">
           <template #default="scope">
-            <el-button size="small" @click="showPluginDetails(scope.row)">查看详情</el-button>
+            <el-button size="small" @click="showPluginDetails(scope.row)">{{ $t('pages.plugins.viewDetails') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
 
-    <!-- 插件详情对话框 -->
-    <el-dialog v-model="showDetailsDialog" title="插件详情" width="700px">
+    <!-- Plugin Details Dialog -->
+    <el-dialog v-model="showDetailsDialog" :title="$t('pages.plugins.detailsTitle')" width="700px">
       <div v-if="currentPlugin">
         <el-descriptions :column="1" border>
-          <el-descriptions-item label="插件名称">
+          <el-descriptions-item :label="$t('pages.plugins.fields.name')">
             <div class="plugin-name">
               <el-icon class="plugin-icon" :color="getPluginIconColor(currentPlugin)">
                 <component :is="getPluginIcon(currentPlugin)" />
@@ -135,21 +135,21 @@
               {{ currentPlugin.name }}
             </div>
           </el-descriptions-item>
-          <el-descriptions-item label="版本">
+          <el-descriptions-item :label="$t('pages.plugins.fields.version')">
             <el-tag type="info">{{ currentPlugin.version || 'N/A' }}</el-tag>
           </el-descriptions-item>
-          <el-descriptions-item label="描述">
-            {{ currentPlugin.description || '暂无描述' }}
+          <el-descriptions-item :label="$t('pages.plugins.fields.description')">
+            {{ currentPlugin.description || $t('pages.plugins.noDescription') }}
           </el-descriptions-item>
-          <el-descriptions-item label="主类">
+          <el-descriptions-item :label="$t('pages.plugins.fields.mainClass')">
             <code>{{ currentPlugin.classname || 'N/A' }}</code>
           </el-descriptions-item>
-          <el-descriptions-item label="插件类型">
+          <el-descriptions-item :label="$t('pages.plugins.fields.type')">
             <el-tag :type="getPluginTypeTag(currentPlugin)">
               {{ getPluginType(currentPlugin) }}
             </el-tag>
           </el-descriptions-item>
-          <el-descriptions-item label="安装节点">
+          <el-descriptions-item :label="$t('pages.plugins.fields.installedNodes')">
             <div class="nodes-list">
               <div v-for="nodeId in getPluginNodes(currentPlugin)" :key="nodeId" class="node-item">
                 <el-tag type="success" size="small">
@@ -167,10 +167,13 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { ElMessage } from 'element-plus'
 import { Monitor, Grid, Tools, Box, Search, Setting, Lock, TrendCharts, Document } from '@element-plus/icons-vue'
 import * as api from '../api/elasticsearch'
 import RefreshTimer from '../components/RefreshTimer.vue'
+
+const { t } = useI18n()
 
 const loading = ref(false)
 const pluginsData = ref(null)
@@ -233,52 +236,64 @@ const getPluginType = (plugin) => {
   const desc = (plugin.description || '').toLowerCase()
   
   if (name.includes('analysis') || name.includes('analyzer') || name.includes('ik') || name.includes('pinyin')) {
-    return '分词器'
+    return t('pages.plugins.types.analyzer')
   } else if (name.includes('security') || name.includes('xpack-security')) {
-    return '安全'
+    return t('pages.plugins.types.security')
   } else if (name.includes('monitoring') || name.includes('watcher')) {
-    return '监控'
+    return t('pages.plugins.types.monitoring')
   } else if (name.includes('ingest')) {
-    return '数据处理'
+    return t('pages.plugins.types.dataProcessing')
   } else {
-    return '其他'
+    return t('pages.plugins.types.other')
   }
 }
 
 const getPluginTypeTag = (plugin) => {
-  const type = getPluginType(plugin)
-  const tagMap = {
-    '分词器': 'warning',
-    '安全': 'danger',
-    '监控': 'success',
-    '数据处理': 'info',
-    '其他': ''
+  const name = plugin.name.toLowerCase()
+  
+  if (name.includes('analysis') || name.includes('analyzer') || name.includes('ik') || name.includes('pinyin')) {
+    return 'warning'
+  } else if (name.includes('security') || name.includes('xpack-security')) {
+    return 'danger'
+  } else if (name.includes('monitoring') || name.includes('watcher')) {
+    return 'success'
+  } else if (name.includes('ingest')) {
+    return 'info'
+  } else {
+    return ''
   }
-  return tagMap[type] || ''
 }
 
 const getPluginIcon = (plugin) => {
-  const type = getPluginType(plugin)
-  const iconMap = {
-    '分词器': Tools,
-    '安全': Lock,
-    '监控': TrendCharts,
-    '数据处理': Document,
-    '其他': Setting
+  const name = plugin.name.toLowerCase()
+  
+  if (name.includes('analysis') || name.includes('analyzer') || name.includes('ik') || name.includes('pinyin')) {
+    return Tools
+  } else if (name.includes('security') || name.includes('xpack-security')) {
+    return Lock
+  } else if (name.includes('monitoring') || name.includes('watcher')) {
+    return TrendCharts
+  } else if (name.includes('ingest')) {
+    return Document
+  } else {
+    return Setting
   }
-  return iconMap[type] || Setting
 }
 
 const getPluginIconColor = (plugin) => {
-  const type = getPluginType(plugin)
-  const colorMap = {
-    '分词器': '#E6A23C',
-    '安全': '#F56C6C',
-    '监控': '#67C23A',
-    '数据处理': '#409EFF',
-    '其他': '#909399'
+  const name = plugin.name.toLowerCase()
+  
+  if (name.includes('analysis') || name.includes('analyzer') || name.includes('ik') || name.includes('pinyin')) {
+    return '#E6A23C'
+  } else if (name.includes('security') || name.includes('xpack-security')) {
+    return '#F56C6C'
+  } else if (name.includes('monitoring') || name.includes('watcher')) {
+    return '#67C23A'
+  } else if (name.includes('ingest')) {
+    return '#409EFF'
+  } else {
+    return '#909399'
   }
-  return colorMap[type] || '#909399'
 }
 
 const getInstalledNodesCount = (plugin) => {
@@ -316,8 +331,8 @@ const loadPluginsData = async () => {
     const data = await api.getPlugins()
     pluginsData.value = data
   } catch (error) {
-    ElMessage.error('获取插件信息失败: ' + error.message)
-    console.error('获取插件信息失败:', error)
+    ElMessage.error(t('pages.plugins.messages.loadFailed') + ': ' + error.message)
+    console.error('Failed to load plugins:', error)
   } finally {
     loading.value = false
   }

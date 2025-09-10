@@ -2,11 +2,11 @@
   <div class="stats-container">
     <div class="page-header">
       <div class="header-top">
-        <h2>统计信息</h2>
+        <h2>{{ $t('pages.stats.title') }}</h2>
         <RefreshTimer :on-refresh="loadStats" :disabled="!selectedIndex" />
       </div>
       <div class="stats-header">
-        <el-select v-model="selectedIndex" placeholder="选择索引" @change="loadStats">
+        <el-select v-model="selectedIndex" :placeholder="$t('pages.stats.selectIndex')" @change="loadStats">
           <el-option v-for="idx in indices" :key="idx.index" :label="idx.index" :value="idx.index" />
         </el-select>
       </div>
@@ -16,22 +16,22 @@
       <el-row :gutter="20">
         <el-col :span="6">
           <el-card>
-            <el-statistic title="文档总数" :value="stats._all?.primaries?.docs?.count || 0" />
+            <el-statistic :title="$t('pages.stats.metrics.totalDocs')" :value="stats._all?.primaries?.docs?.count || 0" />
           </el-card>
         </el-col>
         <el-col :span="6">
           <el-card>
-            <el-statistic title="存储大小" :value="formatBytes(stats._all?.primaries?.store?.size_in_bytes || 0)" />
+            <el-statistic :title="$t('pages.stats.metrics.storageSize')" :value="formatBytes(stats._all?.primaries?.store?.size_in_bytes || 0)" />
           </el-card>
         </el-col>
         <el-col :span="6">
           <el-card>
-            <el-statistic title="段数量" :value="stats._all?.primaries?.segments?.count || 0" />
+            <el-statistic :title="$t('pages.stats.metrics.segments')" :value="stats._all?.primaries?.segments?.count || 0" />
           </el-card>
         </el-col>
         <el-col :span="6">
           <el-card>
-            <el-statistic title="索引次数" :value="stats._all?.primaries?.indexing?.index_total || 0" />
+            <el-statistic :title="$t('pages.stats.metrics.indexingTotal')" :value="stats._all?.primaries?.indexing?.index_total || 0" />
           </el-card>
         </el-col>
       </el-row>
@@ -39,13 +39,13 @@
       <el-row :gutter="20" style="margin-top: 20px">
         <el-col :span="12">
           <el-card>
-            <template #header>索引性能</template>
+            <template #header>{{ $t('pages.stats.charts.indexingPerformance') }}</template>
             <canvas ref="indexingChart"></canvas>
           </el-card>
         </el-col>
         <el-col :span="12">
           <el-card>
-            <template #header>查询性能</template>
+            <template #header>{{ $t('pages.stats.charts.queryPerformance') }}</template>
             <canvas ref="searchChart"></canvas>
           </el-card>
         </el-col>
@@ -54,30 +54,30 @@
       <el-row :gutter="20" style="margin-top: 20px">
         <el-col :span="24">
           <el-card>
-            <template #header>详细统计</template>
+            <template #header>{{ $t('pages.stats.detailedStats') }}</template>
             <el-descriptions :column="2" border>
-              <el-descriptions-item label="查询总数">
+              <el-descriptions-item :label="$t('pages.stats.fields.queryTotal')">
                 {{ stats._all?.primaries?.search?.query_total || 0 }}
               </el-descriptions-item>
-              <el-descriptions-item label="查询耗时">
+              <el-descriptions-item :label="$t('pages.stats.fields.queryTime')">
                 {{ stats._all?.primaries?.search?.query_time_in_millis || 0 }}ms
               </el-descriptions-item>
-              <el-descriptions-item label="获取总数">
+              <el-descriptions-item :label="$t('pages.stats.fields.getTotal')">
                 {{ stats._all?.primaries?.get?.total || 0 }}
               </el-descriptions-item>
-              <el-descriptions-item label="获取耗时">
+              <el-descriptions-item :label="$t('pages.stats.fields.getTime')">
                 {{ stats._all?.primaries?.get?.time_in_millis || 0 }}ms
               </el-descriptions-item>
-              <el-descriptions-item label="索引总数">
+              <el-descriptions-item :label="$t('pages.stats.fields.indexTotal')">
                 {{ stats._all?.primaries?.indexing?.index_total || 0 }}
               </el-descriptions-item>
-              <el-descriptions-item label="索引耗时">
+              <el-descriptions-item :label="$t('pages.stats.fields.indexTime')">
                 {{ stats._all?.primaries?.indexing?.index_time_in_millis || 0 }}ms
               </el-descriptions-item>
-              <el-descriptions-item label="删除总数">
+              <el-descriptions-item :label="$t('pages.stats.fields.deleteTotal')">
                 {{ stats._all?.primaries?.indexing?.delete_total || 0 }}
               </el-descriptions-item>
-              <el-descriptions-item label="刷新次数">
+              <el-descriptions-item :label="$t('pages.stats.fields.refreshTotal')">
                 {{ stats._all?.primaries?.refresh?.total || 0 }}
               </el-descriptions-item>
             </el-descriptions>
@@ -86,17 +86,20 @@
       </el-row>
     </div>
 
-    <el-empty v-else description="请选择索引查看统计信息" />
+    <el-empty v-else :description="$t('pages.stats.emptyDescription')" />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, nextTick, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { ElMessage } from 'element-plus'
 import { Chart, registerables } from 'chart.js'
 import * as api from '../api/elasticsearch'
 import RefreshTimer from '../components/RefreshTimer.vue'
 import storageManager from '../utils/storage'
+
+const { t } = useI18n()
 
 Chart.register(...registerables)
 
@@ -126,7 +129,7 @@ const loadStats = async () => {
     await nextTick()
     drawCharts()
   } catch (error) {
-    ElMessage.error('获取统计信息失败: ' + error.message)
+    ElMessage.error(t('pages.stats.messages.loadFailed') + ': ' + error.message)
   }
 }
 
@@ -144,7 +147,7 @@ const drawCharts = () => {
     indexingChartInstance = new Chart(indexingChart.value, {
       type: 'doughnut',
       data: {
-        labels: ['索引操作', '删除操作', '更新操作'],
+        labels: [t('pages.stats.operations.index'), t('pages.stats.operations.delete'), t('pages.stats.operations.update')],
         datasets: [{
           data: [
             primaries?.indexing?.index_total || 0,
@@ -165,9 +168,9 @@ const drawCharts = () => {
     searchChartInstance = new Chart(searchChart.value, {
       type: 'bar',
       data: {
-        labels: ['查询', '获取', '建议', '滚动'],
+        labels: [t('pages.stats.operations.query'), t('pages.stats.operations.get'), t('pages.stats.operations.suggest'), t('pages.stats.operations.scroll')],
         datasets: [{
-          label: '操作次数',
+          label: t('pages.stats.operationCount'),
           data: [
             primaries?.search?.query_total || 0,
             primaries?.get?.total || 0,
@@ -194,22 +197,22 @@ const loadIndices = async () => {
   try {
     indices.value = await api.getIndices()
     
-    // 更新可用索引列表到存储
+    // Update available indices to storage
     storageManager.updateAvailableIndices(indices.value)
     
-    // 恢复上次选择的索引
+    // Restore last selected index
     const lastSelectedIndex = storageManager.getLastSelectedIndex(indices.value)
     if (lastSelectedIndex) {
       selectedIndex.value = lastSelectedIndex
-      await loadStats() // 自动加载统计信息
+      await loadStats() // Auto load stats
     }
   } catch (error) {
     console.error('Failed to load indices:', error)
-    ElMessage.error('加载索引失败: ' + error.message)
+    ElMessage.error(t('pages.stats.messages.loadIndicesFailed') + ': ' + error.message)
   }
 }
 
-// 监听索引选择变化，保存到本地存储
+// Watch index selection changes, save to local storage
 watch(() => selectedIndex.value, (newIndex) => {
   storageManager.setLastSelectedIndex(newIndex)
 })

@@ -189,7 +189,7 @@ const testingConnections = ref(new Set())
 const connectionStatus = ref({})
 const switchingConnection = ref(null)
 
-// 表单数据
+// Form Data
 const connectionForm = reactive({
   name: '',
   protocol: 'http',
@@ -199,7 +199,7 @@ const connectionForm = reactive({
   password: ''
 })
 
-// 表单验证规则
+// Form Validation Rules
 const connectionRules = {
   name: [
     { required: true, message: '请输入连接名称', trigger: 'blur' },
@@ -221,25 +221,25 @@ const connectionRules = {
 
 const connectionFormRef = ref(null)
 
-// 格式化时间
+// Format Time
 const formatTime = (time) => {
   if (!time) return 'N/A'
   return new Date(time).toLocaleString('zh-CN')
 }
 
-// 获取连接列表
+// Get Connection List
 const refreshConnections = async () => {
   loading.value = true
   try {
     connections.value = await getConnections()
   } catch (error) {
-    ElMessage.error('获取连接列表失败: ' + error.message)
+    ElMessage.error(t('pages.connections.messages.getListFailed') + ': ' + error.message)
   } finally {
     loading.value = false
   }
 }
 
-// 测试单个连接
+// Test Single Connection
 const testSingleConnection = async (connection) => {
   testingConnections.value.add(connection.id)
   try {
@@ -247,39 +247,39 @@ const testSingleConnection = async (connection) => {
     connectionStatus.value[connection.id] = result.success
     
     if (result.success) {
-      ElMessage.success(`连接 ${connection.name} 测试成功`)
+      ElMessage.success(t('pages.connections.messages.testSuccess', { name: connection.name }))
     } else {
-      ElMessage.error(`连接 ${connection.name} 测试失败: ${result.error}`)
+      ElMessage.error(t('pages.connections.messages.testFailed', { name: connection.name, error: result.error }))
     }
   } catch (error) {
     connectionStatus.value[connection.id] = false
-    ElMessage.error(`连接 ${connection.name} 测试失败: ${error.message}`)
+    ElMessage.error(t('pages.connections.messages.testFailed', { name: connection.name, error: error.message }))
   } finally {
     testingConnections.value.delete(connection.id)
   }
 }
 
-// 切换连接
+// Switch Connection
 const switchToConnection = async (connectionId) => {
   switchingConnection.value = connectionId
   try {
     await switchConnection(connectionId)
-    ElMessage.success('连接切换成功')
+    ElMessage.success(t('pages.connections.messages.switchSuccess'))
     await refreshConnections()
     
-    // 通知父组件刷新连接状态
+    // Notify parent component to refresh connection status
     window.dispatchEvent(new CustomEvent('connectionChanged'))
   } catch (error) {
-    ElMessage.error('连接切换失败: ' + error.message)
+    ElMessage.error(t('pages.connections.messages.switchFailed') + ': ' + error.message)
   } finally {
     switchingConnection.value = null
   }
 }
 
-// 编辑连接
+// Edit Connection
 const editConnection = async (connection) => {
   try {
-    // 获取连接详情（包含密码）
+    // Get connection details (including password)
     const details = await getConnectionDetails(connection.id)
     
     isEditing.value = true
@@ -294,28 +294,28 @@ const editConnection = async (connection) => {
     })
     showAddDialog.value = true
   } catch (error) {
-    ElMessage.error('获取连接详情失败: ' + error.message)
+    ElMessage.error(t('pages.connections.messages.getDetailsFailed') + ': ' + error.message)
   }
 }
 
-// 测试当前表单连接
+// Test Current Form Connection
 const testCurrentConnection = async () => {
   testingForm.value = true
   try {
     const result = await testConnection(connectionForm)
     if (result.success) {
-      ElMessage.success('连接测试成功！')
+      ElMessage.success(t('pages.connections.messages.testFormSuccess'))
     } else {
-      ElMessage.error('连接测试失败: ' + result.error)
+      ElMessage.error(t('pages.connections.messages.testFormFailed') + ': ' + result.error)
     }
   } catch (error) {
-    ElMessage.error('连接测试失败: ' + error.message)
+    ElMessage.error(t('pages.connections.messages.testFormFailed') + ': ' + error.message)
   } finally {
     testingForm.value = false
   }
 }
 
-// 保存连接
+// Save Connection
 const saveConnection = async () => {
   if (!connectionFormRef.value) return
   
@@ -329,22 +329,22 @@ const saveConnection = async () => {
   try {
     if (isEditing.value) {
       await updateConnection(editingId.value, connectionForm)
-      ElMessage.success('连接更新成功')
+      ElMessage.success(t('pages.connections.messages.updateSuccess'))
     } else {
       await addConnection(connectionForm)
-      ElMessage.success('连接添加成功')
+      ElMessage.success(t('pages.connections.messages.addSuccess'))
     }
     
     showAddDialog.value = false
     await refreshConnections()
   } catch (error) {
-    ElMessage.error((isEditing.value ? '更新' : '添加') + '连接失败: ' + error.message)
+    ElMessage.error((isEditing.value ? t('pages.connections.messages.updateFailed') : t('pages.connections.messages.addFailed')) + ': ' + error.message)
   } finally {
     saving.value = false
   }
 }
 
-// 取消编辑
+// Cancel Edit
 const cancelEdit = () => {
   showAddDialog.value = false
   isEditing.value = false
@@ -363,31 +363,31 @@ const cancelEdit = () => {
   }
 }
 
-// 确认删除
+// Confirm Delete
 const confirmDelete = async (connection) => {
   try {
     await ElMessageBox.confirm(
-      `确定要删除连接 "${connection.name}" 吗？此操作不可恢复。`,
-      '确认删除',
+      t('pages.connections.messages.deleteConfirm', { name: connection.name }),
+      t('pages.connections.deleteTitle'),
       {
-        confirmButtonText: '删除',
-        cancelButtonText: '取消',
+        confirmButtonText: t('actions.delete'),
+        cancelButtonText: t('actions.cancel'),
         type: 'warning',
       }
     )
     
     await deleteConnection(connection.id)
-    ElMessage.success('连接删除成功')
+    ElMessage.success(t('pages.connections.messages.deleteSuccess'))
     await refreshConnections()
   } catch (error) {
     if (error !== 'cancel') {
-      ElMessage.error('删除连接失败: ' + error.message)
+      ElMessage.error(t('pages.connections.messages.deleteFailed') + ': ' + error.message)
     }
   }
 }
 
 
-// 组件挂载时获取连接列表
+// Get connection list on mount
 onMounted(() => {
   refreshConnections()
 })
