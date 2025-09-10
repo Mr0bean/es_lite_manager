@@ -423,7 +423,7 @@ const loadIndexMapping = async () => {
   try {
     const result = await api.getIndexMapping(selectedIndex.value)
     indexMapping.value = result
-    console.log('Loaded mapping:', result)
+    // Mapping loaded successfully
   } catch (error) {
     console.error('Failed to load mapping:', error)
     ElMessage.error(t('errors.loadMappingsFailed') + ': ' + error.message)

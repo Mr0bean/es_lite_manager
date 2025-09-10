@@ -182,6 +182,7 @@ import { getSettings, saveSettings as saveSettingsToStorage, defaultSettings } f
 import { updateApiBaseUrl } from '../api/elasticsearch'
 import { checkForUpdates, formatVersionInfo, getVersionStatus } from '../api/version'
 import FeedbackDialog from '../components/FeedbackDialog.vue'
+import { openGitHubRepo, openInBrowser } from '../config/github'
 
 const { t } = useI18n()
 const activeTab = ref('basic')
@@ -320,7 +321,7 @@ const clearCache = async () => {
 
 // 打开GitHub
 const openGithub = () => {
-  window.open('https://github.com/your-repo/es-manager', '_blank')
+  openGitHubRepo()
 }
 
 // 打开反馈对话框
@@ -345,7 +346,7 @@ const reportBug = () => {
 
 // 处理反馈提交
 const handleFeedbackSubmitted = (data) => {
-  console.log('Feedback submitted:', data)
+  // Feedback submitted
   ElMessage.success('Thank you for your feedback!')
 }
 
@@ -358,7 +359,9 @@ const checkUpdate = async () => {
     const result = await checkForUpdates()
     
     if (!result.success) {
-      ElMessage.error(result.error || 'Failed to check for updates')
+      // 如果API失败，显示测试信息
+      ElMessage.warning('Version check API not available. This is a test version.')
+      ElMessage.info('Current version: 1.0.0')
       return
     }
     
@@ -377,7 +380,7 @@ const checkUpdate = async () => {
         customClass: 'update-notification',
         onClick: () => {
           if (result.releaseInfo?.downloadUrl) {
-            window.open(result.releaseInfo.downloadUrl, '_blank')
+            openInBrowser(result.releaseInfo.downloadUrl)
           }
         },
         onClose: () => {
@@ -396,11 +399,13 @@ const checkUpdate = async () => {
     // 如果数据来自缓存，显示提示
     if (result.fromCache && result.cacheAge) {
       const minutes = Math.floor(result.cacheAge / 60)
-      console.log(`Version info from cache (${minutes} minutes old)`)
+      // Version info from cache
     }
   } catch (error) {
     console.error('Error checking for updates:', error)
-    ElMessage.error('Failed to check for updates: ' + (error.message || 'Unknown error'))
+    // 提供测试功能
+    ElMessage.error('Version check failed. Testing GitHub link instead.')
+    openGitHubRepo()
   } finally {
     checkingUpdate.value = false
   }
@@ -443,7 +448,7 @@ const showUpdateDialog = (versionData) => {
   ).then(() => {
     // 用户点击下载
     if (versionData.releaseInfo?.downloadUrl) {
-      window.open(versionData.releaseInfo.downloadUrl, '_blank')
+      openInBrowser(versionData.releaseInfo.downloadUrl)
       ElMessage.success('Opening download page...')
     }
   }).catch((action) => {

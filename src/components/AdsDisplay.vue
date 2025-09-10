@@ -1,5 +1,6 @@
 <template>
-  <div v-if="adsEnabled && visibleAds.length > 0" class="ads-container" :class="`ads-${position}`">
+  <transition name="fade-slide" mode="out-in">
+  <div v-if="adsEnabled && visibleAds.length > 0" class="ads-container" :class="`ads-${position}`" :key="currentPage">
     <div class="ads-header" v-if="showHeader">
       <span class="ads-title">社区推荐</span>
       <el-button 
@@ -13,7 +14,7 @@
       </el-button>
     </div>
     
-    <transition-group name="fade" tag="div" class="ads-content">
+    <div class="ads-content">
       <div 
         v-for="ad in currentAds" 
         :key="ad.id"
@@ -60,7 +61,7 @@
           </div>
         </div>
       </div>
-    </transition-group>
+    </div>
     
     <!-- 轮播指示器 -->
     <div v-if="showIndicators && totalPages > 1" class="ads-indicators">
@@ -73,6 +74,7 @@
       ></span>
     </div>
   </div>
+  </transition>
 </template>
 
 <script>
@@ -186,6 +188,7 @@ export default {
     }
     
     const goToPage = (page) => {
+      if (page === currentPage.value) return
       currentPage.value = page
       resetRotation()
     }
@@ -202,7 +205,7 @@ export default {
       if (!props.autoRotate || totalPages.value <= 1) return
       
       stopRotation()
-      const interval = settings.value.rotationInterval || 10000
+      const interval = settings.value.rotationInterval || 15000 // Increased for better UX
       rotationTimer.value = setInterval(nextPage, interval)
     }
     
@@ -213,9 +216,16 @@ export default {
       }
     }
     
+    // Debounce rotation reset to prevent rapid restarts
+    let resetTimeout = null
     const resetRotation = () => {
-      stopRotation()
-      startRotation()
+      if (resetTimeout) {
+        clearTimeout(resetTimeout)
+      }
+      resetTimeout = setTimeout(() => {
+        stopRotation()
+        startRotation()
+      }, 100)
     }
     
     const scheduleRefresh = () => {
@@ -278,6 +288,22 @@ export default {
 </script>
 
 <style scoped>
+/* Smooth transitions for better performance */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.3s ease;
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateX(10px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
 .ads-container {
   background: #fff;
   border-radius: 8px;
@@ -329,6 +355,8 @@ export default {
 
 .ads-content {
   min-height: 60px;
+  will-change: transform, opacity;
+  transform: translateZ(0); /* Enable GPU acceleration */
 }
 
 .ad-item {

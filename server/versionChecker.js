@@ -8,20 +8,40 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // GitHub仓库信息配置
 const GITHUB_REPO = {
-  owner: 'your-username', // 需要替换为实际的GitHub用户名
-  repo: 'es-manager',
+  owner: 'Mr0bean',
+  repo: 'es_lite_manager',
   apiUrl: 'https://api.github.com'
 };
 
 // 获取当前应用版本
 export function getCurrentVersion() {
   try {
-    const packageJsonPath = path.join(__dirname, '..', 'package.json');
-    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-    return packageJson.version;
+    // 尝试多个可能的路径
+    const possiblePaths = [
+      path.join(__dirname, '..', 'package.json'),
+      path.join(__dirname, '../..', 'package.json'),
+      path.join(process.cwd(), 'package.json')
+    ];
+    
+    for (const packageJsonPath of possiblePaths) {
+      try {
+        if (fs.existsSync(packageJsonPath)) {
+          const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+          console.log(`Version loaded from: ${packageJsonPath}, version: ${packageJson.version}`);
+          return packageJson.version;
+        }
+      } catch (err) {
+        console.warn(`Failed to read ${packageJsonPath}:`, err.message);
+        continue;
+      }
+    }
+    
+    // 如果都失败了，返回默认版本
+    console.warn('Could not find package.json, using default version');
+    return '1.0.0';
   } catch (error) {
     console.error('Error reading package.json:', error);
-    return null;
+    return '1.0.0';
   }
 }
 

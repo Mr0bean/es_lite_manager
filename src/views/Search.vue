@@ -626,7 +626,7 @@ const handleSizeChange = () => {
 const loadIndices = async () => {
   try {
     indices.value = await api.getIndices()
-    console.log('Loaded indices:', indices.value)
+    // Loaded indices successfully
     
     // 更新可用索引列表到存储
     storageManager.updateAvailableIndices(indices.value)

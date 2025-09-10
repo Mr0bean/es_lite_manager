@@ -104,22 +104,30 @@ class ConnectionManager {
     }
   }
 
-  // 简单加密（使用base64编码）
+  // Simple encryption using base64 (WARNING: This is encoding, not encryption!)
+  // TODO: Replace with proper encryption like AES for production use
   encrypt(text) {
+    if (!text) return ''
     try {
       return Buffer.from(text, 'utf8').toString('base64')
     } catch (error) {
-      console.warn('加密失败，使用明文存储:', error)
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Encryption failed, using plaintext:', error)
+      }
       return text
     }
   }
 
-  // 简单解密（使用base64解码）
+  // Simple decryption using base64 (WARNING: This is decoding, not decryption!)
+  // TODO: Replace with proper decryption like AES for production use
   decrypt(encryptedText) {
+    if (!encryptedText) return ''
     try {
       return Buffer.from(encryptedText, 'base64').toString('utf8')
     } catch (error) {
-      console.warn('解密失败，可能是明文密码:', error)
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Decryption failed, assuming plaintext:', error)
+      }
       return encryptedText // 兼容明文密码
     }
   }

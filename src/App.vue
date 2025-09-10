@@ -4,6 +4,12 @@
       <div class="header-content">
         <h1>{{ $t('app.title') }}</h1>
         <div class="header-right">
+          <!-- Feedback Button -->
+          <el-button @click="feedbackVisible = true" type="primary" plain size="small" class="feedback-btn">
+            <el-icon><ChatLineSquare /></el-icon>
+            {{ $t('feedback.button', 'Feedback') }}
+          </el-button>
+          
           <!-- 语言切换器 -->
           <LanguageSwitcher />
           
@@ -162,7 +168,7 @@
     v-model="feedbackVisible"
     :initial-type="feedbackType"
     :initial-data="feedbackData"
-    @submitted="(data) => console.log('Feedback submitted:', data)"
+    @submitted="handleFeedbackSubmitted"
   />
 </template>
 
@@ -170,7 +176,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { Search, Files, Document, DataAnalysis, Setting, Tools, Grid, Box, CircleCheckFilled, CircleCloseFilled, ArrowDown, InfoFilled, Refresh, Link } from '@element-plus/icons-vue'
+import { Search, Files, Document, DataAnalysis, Setting, Tools, Grid, Box, CircleCheckFilled, CircleCloseFilled, ArrowDown, InfoFilled, Refresh, Link, ChatLineSquare } from '@element-plus/icons-vue'
 import { checkConnection, getConnections, getCurrentConnection, switchConnection } from './api/elasticsearch'
 import { ElMessage } from 'element-plus'
 import LanguageSwitcher from './components/LanguageSwitcher.vue'
@@ -271,6 +277,10 @@ const handleOpenFeedback = (event) => {
   feedbackVisible.value = true
 }
 
+const handleFeedbackSubmitted = (data) => {
+  // Feedback submitted successfully
+}
+
 const handleCloseDialog = () => {
   feedbackVisible.value = false
 }
@@ -279,11 +289,14 @@ const handleConnectionChanged = async () => {
   await Promise.all([checkESConnection(), loadConnections()])
 }
 
+// Store interval ID for cleanup
+let connectionCheckInterval = null
+
 onMounted(async () => {
   await Promise.all([checkESConnection(), loadConnections()])
   
   // 定期检查连接状态
-  setInterval(checkESConnection, 30000) // 每30秒检查一次
+  connectionCheckInterval = setInterval(checkESConnection, 30000) // 每30秒检查一次
   
   // 监听各种事件
   window.addEventListener('connectionChanged', handleConnectionChanged)
@@ -292,6 +305,12 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
+  // Clear interval to prevent memory leak
+  if (connectionCheckInterval) {
+    clearInterval(connectionCheckInterval)
+    connectionCheckInterval = null
+  }
+  
   window.removeEventListener('connectionChanged', handleConnectionChanged)
   window.removeEventListener('open-feedback', handleOpenFeedback)
   window.removeEventListener('close-dialog', handleCloseDialog)
@@ -358,6 +377,21 @@ onUnmounted(() => {
   align-items: center;
   gap: 20px;
   animation: fadeInRight 0.8s ease-out;
+}
+
+.feedback-btn {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  color: white !important;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.feedback-btn:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.8) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .connection-status {

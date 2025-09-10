@@ -1,4 +1,5 @@
 // GitHub Issue 助手 - 帮助用户快速创建结构化的issue
+import { GITHUB_CONFIG, openInBrowser } from '../config/github'
 
 /**
  * Issue类型配置
@@ -237,8 +238,8 @@ ${data.docs || '[Link to any related documentation you have consulted]'}
  */
 export function buildGitHubIssueUrl(options = {}) {
   const {
-    owner = 'your-username', // 需要替换为实际的GitHub用户名
-    repo = 'es-manager',
+    owner = GITHUB_CONFIG.owner,
+    repo = GITHUB_CONFIG.repo,
     title = '',
     body = '',
     labels = [],
@@ -366,6 +367,6 @@ export function quickCreateIssue(type, data = {}) {
  */
 export function openIssueCreator(type, data = {}) {
   const issue = quickCreateIssue(type, data)
-  window.open(issue.url, '_blank')
+  openInBrowser(issue.url)
   return issue
 }

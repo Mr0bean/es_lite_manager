@@ -32,5 +32,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
 // 暴露 electron 对象用于外部链接
 contextBridge.exposeInMainWorld('electron', {
-  openExternal: (url) => ipcRenderer.invoke('open-external', url)
+  // 使用IPC调用主进程的shell.openExternal (推荐方式)
+  openExternal: (url) => {
+    console.log('Opening external URL:', url)
+    return ipcRenderer.invoke('open-external', url)
+  },
+  
+  // 检测是否在Electron环境中
+  isElectron: true,
+  
+  // 获取平台信息
+  platform: process.platform
 })

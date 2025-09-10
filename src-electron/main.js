@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, ipcMain, dialog } from 'electron'
+import { app, BrowserWindow, Menu, ipcMain, dialog, shell } from 'electron'
 import { spawn } from 'child_process'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -194,6 +194,29 @@ async function createMainWindow() {
   mainWindow.on('closed', () => {
     log('INFO', 'Main window closed')
     mainWindow = null
+  })
+  
+  // 阻止在应用内打开外部链接，强制使用默认浏览器
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    log('INFO', `Preventing internal opening of: ${url}`)
+    // 使用系统默认浏览器打开外部链接
+    shell.openExternal(url)
+    return { action: 'deny' }
+  })
+  
+  // 监听导航到外部URL的请求
+  mainWindow.webContents.on('will-navigate', (event, navigationUrl) => {
+    const parsedUrl = new URL(navigationUrl)
+    const currentUrl = new URL(mainWindow.webContents.getURL())
+    
+    // 如果是外部链接（不同域名），阻止并用默认浏览器打开
+    if (parsedUrl.origin !== currentUrl.origin && 
+        !navigationUrl.startsWith('file://') && 
+        !navigationUrl.startsWith('devtools://')) {
+      log('INFO', `Redirecting external navigation to system browser: ${navigationUrl}`)
+      event.preventDefault()
+      shell.openExternal(navigationUrl)
+    }
   })
   
   // 错误处理

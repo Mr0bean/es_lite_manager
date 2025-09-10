@@ -193,7 +193,7 @@ const closeDialog = () => {
 
 const handleJsonValidation = (result) => {
   if (result.valid) {
-    console.log('JSON validation passed:', result.data)
+    // JSON validation passed
   } else {
     console.error('JSON validation failed:', result.error)
   }
@@ -202,7 +202,7 @@ const handleJsonValidation = (result) => {
 const loadIndices = async () => {
   try {
     indices.value = await api.getIndices()
-    console.log('Loaded indices:', indices.value)
+    // Indices loaded successfully
     
     // 更新可用索引列表到存储
     storageManager.updateAvailableIndices(indices.value)

@@ -553,7 +553,7 @@ const validateCachedData = async () => {
   if (selectedIndex.value) {
     const indexExists = indices.value.some(index => index.index === selectedIndex.value)
     if (!indexExists) {
-      console.log(`Cached index '${selectedIndex.value}' no longer exists, cleared selection`)
+      // Cached index no longer exists, cleared selection
       selectedIndex.value = ''
       saveToStorage(STORAGE_KEYS.SELECTED_INDEX, '')
     }
@@ -563,7 +563,7 @@ const validateCachedData = async () => {
   if (analyzeForm.index) {
     const indexExists = indices.value.some(index => index.index === analyzeForm.index)
     if (!indexExists) {
-      console.log(`Analyzer test index '${analyzeForm.index}' no longer exists, cleared selection`)
+      // Analyzer test index no longer exists, cleared selection
       analyzeForm.index = ''
     }
   }

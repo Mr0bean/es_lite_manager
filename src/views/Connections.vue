@@ -1,43 +1,43 @@
 <template>
   <div class="connections-container">
     <div class="page-header">
-      <h2>连接管理</h2>
+      <h2>{{ $t('pages.connections.title') }}</h2>
       <el-button type="primary" @click="showAddDialog = true" :icon="Plus">
-        添加连接
+        {{ $t('pages.connections.addConnection') }}
       </el-button>
     </div>
 
-    <!-- 连接列表 -->
+    <!-- Connection List -->
     <el-card class="connections-card">
       <template #header>
         <div class="card-header">
-          <span>连接列表</span>
-          <el-button text @click="refreshConnections" :icon="Refresh">刷新</el-button>
+          <span>{{ $t('pages.connections.connectionList') }}</span>
+          <el-button text @click="refreshConnections" :icon="Refresh">{{ $t('actions.refresh') }}</el-button>
         </div>
       </template>
 
       <el-table :data="connections" v-loading="loading" stripe>
-        <el-table-column label="连接名称" prop="name" min-width="150">
+        <el-table-column :label="$t('pages.connections.fields.name')" prop="name" min-width="150">
           <template #default="{ row }">
             <div class="connection-name">
               <el-icon v-if="row.isCurrent" class="current-icon" color="#67c23a">
                 <CircleCheckFilled />
               </el-icon>
               {{ row.name }}
-              <el-tag v-if="row.isCurrent" type="success" size="small">当前</el-tag>
+              <el-tag v-if="row.isCurrent" type="success" size="small">{{ $t('pages.connections.current') }}</el-tag>
             </div>
           </template>
         </el-table-column>
         
-        <el-table-column label="连接地址" min-width="200">
+        <el-table-column :label="$t('pages.connections.fields.address')" min-width="200">
           <template #default="{ row }">
             {{ row.protocol }}://{{ row.host }}:{{ row.port }}
           </template>
         </el-table-column>
         
-        <el-table-column label="用户名" prop="username" min-width="120" />
+        <el-table-column :label="$t('pages.connections.fields.username')" prop="username" min-width="120" />
         
-        <el-table-column label="状态" min-width="100">
+        <el-table-column :label="$t('pages.connections.fields.status')" min-width="100">
           <template #default="{ row }">
             <el-button
               text
@@ -45,25 +45,25 @@
               @click="testSingleConnection(row)"
             >
               <template v-if="connectionStatus[row.id] === true">
-                <el-tag type="success" size="small">已连接</el-tag>
+                <el-tag type="success" size="small">{{ $t('pages.connections.connected') }}</el-tag>
               </template>
               <template v-else-if="connectionStatus[row.id] === false">
-                <el-tag type="danger" size="small">连接失败</el-tag>
+                <el-tag type="danger" size="small">{{ $t('pages.connections.disconnected') }}</el-tag>
               </template>
               <template v-else>
-                <el-tag type="info" size="small">未测试</el-tag>
+                <el-tag type="info" size="small">{{ $t('pages.connections.untested') }}</el-tag>
               </template>
             </el-button>
           </template>
         </el-table-column>
         
-        <el-table-column label="创建时间" min-width="150">
+        <el-table-column :label="$t('pages.connections.fields.createdAt')" min-width="150">
           <template #default="{ row }">
             {{ formatTime(row.createdAt) }}
           </template>
         </el-table-column>
         
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column :label="$t('pages.connections.fields.actions')" width="200" fixed="right">
           <template #default="{ row }">
             <el-button 
               v-if="!row.isCurrent" 
@@ -72,10 +72,10 @@
               @click="switchToConnection(row.id)"
               :loading="switchingConnection === row.id"
             >
-              切换
+              {{ $t('pages.connections.switchTo') }}
             </el-button>
             <el-button size="small" @click="editConnection(row)">
-              编辑
+              {{ $t('actions.edit') }}
             </el-button>
             <el-button 
               v-if="!row.isCurrent" 
@@ -83,16 +83,16 @@
               type="danger" 
               @click="confirmDelete(row)"
             >
-              删除
+              {{ $t('actions.delete') }}
             </el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
 
-    <!-- 添加/编辑连接对话框 -->
+    <!-- Add/Edit Connection Dialog -->
     <el-dialog 
-      :title="isEditing ? '编辑连接' : '添加连接'" 
+      :title="isEditing ? $t('pages.connections.editConnection') : $t('pages.connections.addConnection')" 
       v-model="showAddDialog"
       width="600px"
       :close-on-click-modal="false"
@@ -103,22 +103,22 @@
         :rules="connectionRules" 
         label-width="100px"
       >
-        <el-form-item label="连接名称" prop="name">
-          <el-input v-model="connectionForm.name" placeholder="请输入连接名称" />
+        <el-form-item :label="$t('pages.connections.fields.name')" prop="name">
+          <el-input v-model="connectionForm.name" :placeholder="$t('pages.connections.placeholders.name')" />
         </el-form-item>
         
-        <el-form-item label="协议" prop="protocol">
+        <el-form-item :label="$t('pages.connections.fields.protocol')" prop="protocol">
           <el-select v-model="connectionForm.protocol" style="width: 100%">
             <el-option label="HTTP" value="http" />
             <el-option label="HTTPS" value="https" />
           </el-select>
         </el-form-item>
         
-        <el-form-item label="主机地址" prop="host">
-          <el-input v-model="connectionForm.host" placeholder="请输入主机地址" />
+        <el-form-item :label="$t('pages.connections.fields.host')" prop="host">
+          <el-input v-model="connectionForm.host" :placeholder="$t('pages.connections.placeholders.host')" />
         </el-form-item>
         
-        <el-form-item label="端口" prop="port">
+        <el-form-item :label="$t('pages.connections.fields.port')" prop="port">
           <el-input-number 
             v-model="connectionForm.port" 
             :min="1" 
@@ -127,15 +127,15 @@
           />
         </el-form-item>
         
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="connectionForm.username" placeholder="请输入用户名（可选）" />
+        <el-form-item :label="$t('pages.connections.fields.username')" prop="username">
+          <el-input v-model="connectionForm.username" :placeholder="$t('pages.connections.placeholders.username')" />
         </el-form-item>
         
-        <el-form-item label="密码" prop="password">
+        <el-form-item :label="$t('pages.connections.fields.password')" prop="password">
           <el-input 
             type="password" 
             v-model="connectionForm.password" 
-            placeholder="请输入密码（可选）"
+            :placeholder="$t('pages.connections.placeholders.password')"
             show-password
           />
         </el-form-item>
@@ -143,16 +143,16 @@
       
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="cancelEdit">取消</el-button>
+          <el-button @click="cancelEdit">{{ $t('actions.cancel') }}</el-button>
           <el-button type="info" @click="testCurrentConnection" :loading="testingForm">
-            测试连接
+            {{ $t('pages.connections.testConnection') }}
           </el-button>
           <el-button 
             type="primary" 
             @click="saveConnection" 
             :loading="saving"
           >
-            {{ isEditing ? '更新' : '添加' }}
+            {{ isEditing ? $t('actions.update') : $t('actions.add') }}
           </el-button>
         </div>
       </template>
@@ -161,7 +161,8 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Refresh, CircleCheckFilled } from '@element-plus/icons-vue'
 import { 
@@ -174,7 +175,9 @@ import {
   getConnectionDetails
 } from '../api/elasticsearch'
 
-// 响应式数据
+const { t } = useI18n()
+
+// Reactive Data
 const connections = ref([])
 const loading = ref(false)
 const showAddDialog = ref(false)
