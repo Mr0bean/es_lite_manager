@@ -3,7 +3,7 @@
     "unknown": "Unknown"
   },
   "app": {
-    "title": "ES Manager",
+    "title": "ES Manager | Elasticsearch 管理器",
     "loading": "Loading...",
     "error": "An error occurred",
     "success": "Success",
@@ -114,6 +114,18 @@
     "eastAsian": "East Asian Languages",
     "european": "European Languages",
     "others": "Other Languages"
+  },
+  "feedback": {
+    "button": "Feedback | 反馈",
+    "title": "Feedback & Support | 反馈与支持",
+    "bugTitle": "Bug Report | 错误报告",
+    "featureTitle": "Feature Request | 功能请求",
+    "questionTitle": "Question | 问题咨询",
+    "bugTitlePlaceholder": "Brief description of the bug | 简要描述错误",
+    "bugDescPlaceholder": "Describe what happened | 描述发生了什么",
+    "description": "Description | 描述",
+    "submit": "Submit Feedback | 提交反馈",
+    "cancel": "Cancel | 取消"
   },
   "pages": {
     "search": {

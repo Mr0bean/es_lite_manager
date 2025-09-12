@@ -3,7 +3,7 @@
     "unknown": "未知"
   },
   "app": {
-    "title": "ES 管理器",
+    "title": "ES 管理器 | ES Manager",
     "loading": "加载中...",
     "error": "发生错误",
     "success": "成功",
@@ -114,6 +114,18 @@
     "eastAsian": "东亚语言",
     "european": "欧洲语言",
     "others": "其他语言"
+  },
+  "feedback": {
+    "button": "反馈 | Feedback",
+    "title": "反馈与支持 | Feedback & Support",
+    "bugTitle": "错误报告 | Bug Report",
+    "featureTitle": "功能请求 | Feature Request",
+    "questionTitle": "问题咨询 | Question",
+    "bugTitlePlaceholder": "简要描述错误 | Brief description of the bug",
+    "bugDescPlaceholder": "描述发生了什么 | Describe what happened",
+    "description": "描述 | Description",
+    "submit": "提交反馈 | Submit Feedback",
+    "cancel": "取消 | Cancel"
   },
   "pages": {
     "search": {
