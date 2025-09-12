@@ -127,6 +127,14 @@
     "submit": "Submit Feedback | 提交反馈",
     "cancel": "Cancel | 取消"
   },
+  "ads": {
+    "title": "Community Recommendations | 社区推荐",
+    "refresh": "Refresh | 刷新"
+  },
+  "settings": {
+    "clearCacheConfirmMessage": "Are you sure you want to clear all cache data? This will clear all locally stored data. | 确定要清除所有缓存数据吗？这将清除所有本地存储的数据。",
+    "confirmClear": "Confirm Clear | 确认清除"
+  },
   "pages": {
     "search": {
       "title": "Search Management",

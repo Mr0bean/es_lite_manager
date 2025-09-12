@@ -289,11 +289,11 @@ const resetSettings = async () => {
 const clearCache = async () => {
   try {
     await ElMessageBox.confirm(
-      '确定要清除所有缓存数据吗？这将清除所有本地存储的数据。',
-      '确认清除',
+      $t('settings.clearCacheConfirmMessage'),
+      $t('settings.confirmClear'),
       {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+        confirmButtonText: $t('actions.confirm'),
+        cancelButtonText: $t('actions.cancel'),
         type: 'warning'
       }
     )

@@ -2,7 +2,7 @@
   <transition name="fade-slide" mode="out-in">
   <div v-if="adsEnabled && visibleAds.length > 0" class="ads-container" :class="`ads-${position}`" :key="currentPage">
     <div class="ads-header" v-if="showHeader">
-      <span class="ads-title">社区推荐</span>
+      <span class="ads-title">{{ $t('ads.title') }}</span>
       <el-button 
         v-if="showRefresh"
         size="small" 
