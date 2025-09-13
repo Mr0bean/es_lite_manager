@@ -1,6 +1,6 @@
 {
   "name": "es-manager",
-  "version": "1.1.0",
+  "version": "1.9.0",
   "type": "module",
   "main": "src-electron/main.js",
   "homepage": "./",
