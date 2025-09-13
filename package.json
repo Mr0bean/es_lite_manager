@@ -89,7 +89,7 @@
     "@capacitor/core": "^6.0.0",
     "@intlify/unplugin-vue-i18n": "^6.0.8",
     "@testing-library/vue": "^8.0.0",
-    "@vitejs/plugin-vue": "^5.2.4",
+    "@vitejs/plugin-vue": "^6.0.1",
     "@vitest/coverage-v8": "^2.1.9",
     "@vitest/ui": "^2.1.9",
     "@vue/test-utils": "^2.4.3",
