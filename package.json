@@ -101,7 +101,7 @@
     "jest": "^29.7.0",
     "playwright": "^1.40.0",
     "sharp": "^0.34.3",
-    "supertest": "^6.3.3",
+    "supertest": "^7.1.4",
     "svg2png": "^4.1.1",
     "vite": "^5.4.20",
     "vitest": "^2.1.9",
